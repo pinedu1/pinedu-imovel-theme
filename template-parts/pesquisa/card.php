@@ -1,7 +1,7 @@
 <?php
   global $post;
 
-  $icons = [ 'DOR' => 'fa fa-bed', 'SUI' => 'fa fa-shower', 'BAN' => 'fa fa-bath', 'GAR' => 'fa fa-car', 'COZ' => 'fa-solid fa-kitchen-set', 'PIS' => 'fa-solid fa-person-swimming', 'PISPRV' => 'fa-solid fa-person-swimming', 'SAL' => 'fa-solid fa-couch', 'ARS' => 'fa fa-brush', 'INTERFON' => 'fa fa-bell', 'ARCOND' => 'fa fa-snowflake', 'ARUTIL' => 'fa-solid fa-ruler-combined', 'ARCONS' => 'fa-solid fa-draw-polygon' ];
+  $icons = [ 'DOR' => 'fa fa-bed', 'SUI' => 'fa fa-shower', 'BAN' => 'fa fa-bath', 'GAR' => 'fa fa-car', 'COZ' => 'fa-solid fa-kitchen-set', 'PIS' => 'fa-solid fa-person-swimming', 'PISPRV' => 'fa-solid fa-person-swimming', 'SAL' => 'fa-solid fa-couch', 'ARS' => 'fa fa-brush', 'INTERFON' => 'fa fa-bell', 'ARCOND' => 'fa fa-snowflake', 'ARUTIL' => 'fa-solid fa-ruler-combined', 'ARCONS' => 'fa-solid fa-draw-polygon', 'ARTOT' => 'fa-solid fa-circle-nodes' ];
 ?>
 <section class="property-card pesquisa" itemscope itemtype="http://schema.org/RealEstateListing">
   <!-- Seção da Foto -->
@@ -15,7 +15,7 @@
     <tbody>
       <tr>
       <?php if ( true ): ?>
-        <?php if( $post->ARUTIL ): ?><td itemprop="floorSize" title="<?php echo  $post->ARUTILNome; ?>"><?php echo formata_valor( $post->ARUTIL, 2); ?> <i class="<?php echo  $icons[ 'ARUTIL' ]; ?>"></i></td><?php endif;?>
+        <?php if( $post->ARUTIL ): ?><td itemprop="floorSize" title="<?php echo  $post->ARUTILNome; ?>"><?php echo formata_valor( $post->ARUTIL, 0); ?> <i class="<?php echo  $icons[ 'ARUTIL' ]; ?>"></i></td><?php endif;?>
         <?php if( $post->DOR ): ?><td itemprop="numberOfRooms" title="<?php echo  $post->DORNome; ?>"><?php echo $post->DOR; ?> <i class="<?php echo $icons[ 'DOR' ]; ?>"></i></td><?php endif;?>
         <?php if( $post->SUI ): ?><td itemprop="numberOfRooms" title="<?php echo  $post->SUINome; ?>"><?php echo $post->SUI; ?> <i class="<?php echo $icons[ 'SUI' ]; ?>"></i></td><?php endif;?>
         <?php if( $post->BAN ): ?><td itemprop="numberOfBathroomsTotal" title="<?php echo  $post->BANNome; ?>"><?php echo $post->BAN; ?> <i class="<?php echo $icons[ 'BAN' ]; ?>"></i></td><?php endif;?>

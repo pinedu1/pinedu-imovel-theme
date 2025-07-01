@@ -6,7 +6,7 @@ $secondary-text-color: #555;
 $bg-light-gray: #f9f9f9;
 $border-color: #eee;
 $shadow-color: rgba(0, 0, 0, 0.1);
-$gap-spacing: 20px;
+$gap-spacing: 0.5em;
 $padding-base: 0;
 $border-radius-base: 8px;
 
@@ -53,7 +53,6 @@ main.site-main.imovel {
     justify-content: space-between;
     gap: $gap-spacing;
     margin-top: $gap-spacing;
-    /*font-size: 90%;*/
     padding: 0;
     @media (max-width: 1024px) {
       grid-template-columns: 1fr 2fr;
@@ -124,20 +123,25 @@ main.site-main.imovel {
         &::after{
           content: ":";
           display: inline-block;
-          width: 1em;
-          margin-right: 10px;
+          width: 0.5em;
+          margin-right: 0.25em;
           vertical-align: middle;
         }
         &::before{
           content: '';
           display: inline-block;
-          width: 1em;
+          width: 0.5em;
           vertical-align: middle;
         }
       }
       .value {
         font-weight: bold;
         color: $secondary-text-color;
+        white-space: nowrap;      /* Impede a quebra de linha */
+        overflow: hidden;         /* Esconde o conteúdo que ultrapassar */
+        text-overflow: ellipsis;  /* Adiciona "..." se o texto for cortado */
+        display: inline-block;    /* Necessário para overflow funcionar em elementos inline */
+        max-width: 140px;         /* Ajuste conforme necessário */
       }
     }
     .info-row.valor {
