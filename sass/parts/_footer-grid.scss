@@ -1,0 +1,90 @@
+.site-footer {
+  background: #333;
+  color: white;
+  padding: 2rem;
+  text-align: left;
+  .footer-grid {
+    display: grid;
+    grid-template-columns:
+      minmax(200px, 0.5fr)  // logo
+      minmax(300px, 2fr)  // Lojas
+      minmax(250px, 1fr)  // Redes
+      minmax(250px, 1fr); // Links
+    gap: 2rem;
+    width: 90%;
+    margin: 0 auto;
+
+    h3 {
+      margin-top: 0;
+      color: #fff;
+      font-size: 1.2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .footer-column {
+      &.footer-stores {
+        .store {
+          margin-bottom: 1.5rem;
+          padding-bottom: 1.5rem;
+          border-bottom: 1px dashed rgba(255,255,255,0.05);
+
+          &:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+          }
+
+          .store-name {
+            color: #fff;
+            font-size: 1rem;
+          }
+          .contact {
+            padding: 0.5rem 0 0.25rem 0;
+          }
+          .store-address, .store-contact {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #ccc;
+            font-style: normal;
+          }
+        }
+      }
+
+      a {
+        color: #ccc;
+        text-decoration: none;
+        display: block;
+        margin-bottom: 0.5rem;
+
+        &:hover {
+          color: white;
+        }
+      }
+      .custom-logo {
+        width: 200px;
+        height: auto;
+      }
+    }
+  }
+  .social-contact {
+    span {
+      display: inline;
+    }
+    .dashicons {
+      line-height: 150%;
+    }
+  }
+}
+.footer-copyright {
+  width: 100%;
+  text-align: center;
+  background-color: var( --color-black );
+  color: var( --color-white );
+  font-size: 0.75rem;
+  padding: 0.5rem 1rem;
+  P {
+    margin: 0;
+    padding: 0;
+  }
+}

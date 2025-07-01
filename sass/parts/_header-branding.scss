@@ -1,0 +1,37 @@
+/* Pinedu Header -  */
+.site-branding {
+  width: 100%;
+  .branding-header {
+    text-align: center;
+    padding: 1rem 0;
+    //border-bottom: 1px solid var(--color-border-branding);
+
+    .branding-row {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .branding-logo img {
+      max-height: 120px;
+      width: auto;
+    }
+
+    .branding-title {
+      margin: 0;
+      font-size: var(--typography-size-hero);
+      color: var(--color-heading);
+    }
+
+    .branding-description {
+      margin: 0;
+      font-size: var(--typography-size-h4);
+      color: var(--color-paragraph);
+    }
+  }
+  a {
+    /*color: var(--color-heading);*/
+    color: unset;
+  }
+}

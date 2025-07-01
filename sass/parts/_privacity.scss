@@ -1,0 +1,102 @@
+#privacy-compliance-container {
+  bottom: 0.5rem;
+  position: fixed;
+  margin-left: 9%;
+  margin-right: 9%;
+  width: 80%;
+  background-color: var( --color-pattens-blue );
+  max-height: 12em; /* Altura máxima para não ser muito grande */
+  border: 1px solid var(--color-border-branding );
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 1em;
+  padding: 20px;
+  z-index: 9999;
+  font-family: Arial, sans-serif;
+  color: var( --color-valhalla );
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  text-align: center;
+}
+.privacy-compliance-hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+}
+.privacy-compliance-content {
+  h3 {
+    margin-top: 0;
+    color: var( --color-science-blue );
+    font-size: 1.2em;
+    margin-bottom: 15px;
+  }
+  p {
+    font-size: 0.9em;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    a {
+      color: var( --color-compliance-link );
+      text-decoration: underline;
+    }
+  }
+}
+.privacy-compliance-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.privacy-button {
+  display: inline-block;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.privacy-accept {
+  background-color: var( --color-wordPress-blue );
+  color: var( --color-white );
+}
+
+.privacy-accept:hover {
+  background-color: var( --color-compliance-link-hover );
+}
+
+.privacy-more-info {
+  background-color: var( --color-cinza-d );
+  color: var( --color-cinza-2 );
+  border: 1px solid var( --color-cinza-c );
+}
+.privacy-more-info:hover {
+  background-color: var( --color-cinza-1 );
+}
+
+@media (max-width: 768px) {
+  #privacy-compliance-container {
+    width: 90%;
+    height: 60%;
+    top: 35%;
+    left: -4%;
+    bottom: unset;
+    right: unset;
+    border-radius: 1em;
+    padding: 20px;
+    overflow-y: auto;
+    max-height: none;
+  }
+  .privacy-compliance-actions {
+    flex-direction: column;
+  }
+  .privacy-button {
+    width: 100%;
+  }
+}

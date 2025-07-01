@@ -1,0 +1,73 @@
+@use 'sass:color';
+@use 'variaveis' as input;
+@mixin meu-input {
+  box-sizing: border-box;
+  color: input.$input-text-color;
+  background-color: input.$input-background-color;
+  height: 2.5em;
+  border-radius: input.$border-radius;
+  border: 2px solid input.$input-border-color;
+  padding: 10px;
+  margin-bottom: 15px;
+  &::placeholder {
+    color: color.adjust(input.$input-text-color, $lightness: 30%);
+  }
+  &:focus {
+    outline: none;
+    border-color: color.adjust(input.$input-border-color, $lightness: 10%);
+    box-shadow: 0 0 8px rgba(input.$input-border-color, 0.2);
+    color: input.$input-text-color;
+  }
+}
+@mixin meu-textarea {
+  box-sizing: border-box;
+  color: input.$input-text-color;
+  background-color: input.$input-background-color;
+  border-radius: input.$border-radius;
+  border: 2px solid input.$input-border-color;
+  padding: 10px;
+  margin-bottom: 15px;
+  min-height: 6em;
+  line-height: 1.5;
+  resize: vertical;
+  &::placeholder {
+    color: color.adjust(input.$input-text-color, $lightness: 30%);
+  }
+  &:focus {
+    outline: none;
+    border-color: color.adjust(input.$input-border-color, $lightness: 10%);
+    box-shadow: 0 0 8px rgba(input.$input-border-color, 0.2);
+    color: input.$input-text-color;
+  }
+}
+@mixin meu-select {
+  box-sizing: border-box;
+  color: input.$input-text-color;
+  background-color: input.$input-background-color;
+  height: 2.5em;
+  border-radius: input.$border-radius;
+  border: 2px solid input.$input-border-color;
+  padding: 0 10px;
+  margin-bottom: 15px;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+  padding-right: 30px;
+  option {
+    color: input.$input-text-color;
+    background-color: input.$input-background-color;
+    padding: 8px;
+  }
+  &:focus {
+    outline: none;
+    border-color: color.adjust(input.$input-border-color, $lightness: 10%);
+    box-shadow: 0 0 8px rgba(input.$input-border-color, 0.2);
+    color: input.$input-text-color;
+  }
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}

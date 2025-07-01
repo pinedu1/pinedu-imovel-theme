@@ -1,0 +1,369 @@
+section.contato {
+  font-size: 90%;
+  .mensagem {
+    p {
+      font-size: 14px;
+      width: 100%;
+    }
+  }
+  form {
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      flex-grow: 1;
+      width: 100%;
+      .col {
+        flex: 1;
+        label {
+          display: block;
+          font-weight: bold;
+        }
+        input[type=checkbox] {
+          max-width: 2.7em;
+        }
+        input {
+          @include meu-input;
+        }
+        select {
+          @include meu-select;
+        }
+      }
+      .col-checkbox {
+        max-width: 4em;
+      }
+      .col-tipo {
+        max-width: 20em;
+      }
+      .col-label {
+        max-width: 20em;
+        min-width: 15em;
+        display: flex;
+        align-items: flex-end;
+        padding-bottom: 1.2em;
+      }
+      .col-valor {
+        max-width: 20em;
+        min-width: 15em;
+      }
+      .col-nome {
+        min-width: 35em;
+      }
+      .col-email, .col-cidade, .col-bairro {
+        min-width: 20em;
+      }
+      .col-telefone, .col-cpf {
+        max-width: 18em;
+      }
+      .col-estado {
+        max-width: 8em;
+        min-width: 5em;
+      }
+      .col-logradouro {
+        min-width: 35em;
+      }
+      .col-numero, .col-apt, .col-blc {
+        max-width: 8em;
+        min-width: 6em;
+      }
+      .col-cep {
+        max-width: 10em;
+        min-width: 8em;
+      }
+      .col-cidade, .col-bairro {
+        position: relative;
+        display: inline-block;
+      }
+      .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.6);
+        pointer-events: none;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+        &::after {
+          content: "";
+          width: 20px;
+          height: 20px;
+          border: 3px solid #999;
+          border-top-color: transparent;
+          border-radius: 50%;
+          animation: spin 0.7s linear infinite;
+        }
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      input {
+        width: 100%;
+      }
+      .flex-spacer {
+        display: flex;
+        flex-wrap: wrap;
+        flex-grow: 1; /* Esta é a propriedade chave! */
+        width: 100%;
+      }
+    }
+    .row-half {
+      flex: 0 0 40%;
+      .col-checkbox {
+        width: 4em;
+        min-width: 4em;
+        max-width: 5em;
+        flex-shrink: 0;
+        flex-basis: 4em;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+      }
+    }
+    header.row {
+      margin: 0.5em 0;
+      h4 {
+        margin: 0.5em 0;
+      }
+    }
+    footer.row {
+      margin: 0;
+      padding: 0.5em 0;
+      .row.buttom {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 1rem;
+
+        button {
+          padding: 0.75rem 1.5rem;
+          background-color: #007bff;
+          color: #fff;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 1rem;
+        }
+
+        button:hover {
+          background-color: #0056b3;
+        }
+      }
+    }
+  }
+  .mensagem {
+    p {
+      margin: 0;
+    }
+  }
+}
+#detalhesCaracteristicas {
+  display: grid;                               /* 1. Habilita o Grid no contêiner pai */
+  grid-template-columns: 1fr 1fr;              /* 2. Define duas colunas de tamanho igual */
+  gap: 20px;                                   /* 3. Adiciona um espaçamento entre as colunas e linhas */
+  .col-grid {
+    box-sizing: border-box; /* Boa prática: garante que padding/border sejam incluídos na largura */
+  }
+  .row {
+    width: 100%;
+    display: flex;
+    box-sizing: border-box; /* Boa prática: garante que padding/border sejam incluídos na largura */
+  }
+  .row-half {
+    width: 50%;
+    display: block;
+    box-sizing: border-box; /* Boa prática: garante que padding/border sejam incluídos na largura */
+  }
+  .col-texto {
+    width: 100%;
+  }
+  .col-inteiro, .col-float {
+    max-width: 20em;
+    min-width: 10em;
+  }
+  header {
+    margin-bottom: 0.5em;
+  }
+  h4 {
+    text-align: left;
+    margin-bottom: 0.5em;
+  }
+}
+#caracteristicas {
+  #btnCaracteristicas {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none; /* Remove sublinhado padrão do btn-link */
+    color: #007bff; /* Cor padrão de link do Bootstrap, ou defina a sua */
+    padding: 10px 0; /* Um pouco de padding para o botão */
+    background-color: transparent;
+    border: none;
+
+    #collapseIcon {
+      transition: transform 0.3s ease; /* Animação de rotação para o ícone */
+    }
+
+    /*
+     * Quando o botão tem a classe 'collapsed' (conteúdo oculto),
+     * o ícone deve estar para baixo (estado padrão do fa-chevron-down).
+     * O Air-light ou seu próprio JS precisará adicionar/remover esta classe.
+     */
+    &.collapsed {
+      #collapseIcon {
+        transform: rotate(0deg); /* Ícone para baixo */
+      }
+    }
+
+    /*
+     * Quando o botão NÃO tem a classe 'collapsed' (conteúdo visível),
+     * o ícone deve girar para cima.
+     */
+    &:not(.collapsed) {
+      #collapseIcon {
+        transform: rotate(180deg); /* Gira o ícone para cima */
+      }
+    }
+  }
+
+  /* Estilos para o contêiner #detalhesCaracteristicas (o conteúdo que colapsa) */
+  #detalhesCaracteristicas {
+    display: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Duas colunas de tamanho igual */
+    gap: 20px; /* Espaçamento entre colunas */
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+    .col-grid {
+      box-sizing: border-box; /* Garante que padding/border não aumentem a largura */
+      padding: 15px; /* Exemplo de padding para os cards internos */
+      border: 1px solid #eee; /* Exemplo de borda */
+      border-radius: 5px; /* Exemplo de borda arredondada */
+
+      header {
+        margin-bottom: 15px; /* Espaço abaixo do título da seção */
+        h4 {
+          margin: 0; /* Remove margem padrão do h4 */
+          color: #333; /* Cor do título */
+        }
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem; /* Espaçamento entre colunas internas (col, col-inteiro, col-checkbox) */
+        margin-bottom: 10px; /* Espaçamento entre cada "linha" de campo */
+
+        /* Estilos específicos para col-inteiro (se tiver largura fixa) */
+        .col-inteiro {
+          flex: 0 0 auto; /* Não cresce, não encolhe, largura definida por conteúdo/input */
+          width: 80px; /* Exemplo de largura fixa para o input de número */
+          max-width: 100%;
+        }
+
+        /* Estilos para o .col padrão (o que pega o resto do espaço) */
+        .col {
+          flex-grow: 1; /* Permite que ele cresça para preencher o espaço restante */
+          flex-basis: 150px; /* Largura mínima antes de quebrar */
+        }
+
+        /* Estilos específicos para col-checkbox */
+        .col-checkbox {
+          max-width: 4em; /* Largura do checkbox */
+          width: 4em;
+          flex-shrink: 0;
+          flex-basis: 4em;
+          display: flex;
+          justify-content: flex-end; /* Alinha o checkbox à direita */
+          align-items: center; /* Alinha verticalmente ao centro */
+        }
+
+        /* Estilos específicos para col-label */
+        .col-label {
+          display: flex;
+          align-items: center; /* Alinha o texto do label ao centro */
+          flex-grow: 1; /* Permite que o label ocupe o resto do espaço na linha */
+        }
+
+        /* Estilos para col-float (se tiver largura fixa como col-inteiro) */
+        .col-float {
+          flex: 0 0 auto;
+          width: 120px; /* Exemplo de largura para inputs de float */
+          max-width: 100%;
+        }
+      }
+    }
+  }
+}
+/* Dropzone Custom Styles */
+#property-dropzone {
+  border: 2px dashed #ccc;
+  border-radius: 5px;
+  background: #f8f9fa;
+  min-height: 150px;
+  padding: 20px;
+  margin-top: 10px;
+  .dz-message {
+    text-align: center;
+    margin: 2em 0;
+    color: #666;
+    .note {
+      font-size: 0.8em;
+      color: #999;
+      margin-top: 5px;
+      display: block;
+    }
+  }
+  .dz-preview {
+    .dz-image {
+      border-radius: 3px;
+      width: 120px;
+      height: 120px;
+      .dz-details {
+        color: white;
+      }
+    }
+    .dz-error-message {
+      top: 130px;
+    }
+  }
+}
+
+#loading-curtain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.9);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  .loading-content {
+    text-align: center;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 250px;
+  }
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+}

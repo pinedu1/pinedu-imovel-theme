@@ -1,0 +1,245 @@
+// Variáveis (mantidas do exemplo anterior)
+$primary-color: #007bff;
+$secondary-color: #007b00;
+$text-color: #333;
+$secondary-text-color: #555;
+$bg-light-gray: #f9f9f9;
+$border-color: #eee;
+$shadow-color: rgba(0, 0, 0, 0.1);
+$gap-spacing: 20px;
+$padding-base: 0;
+$border-radius-base: 8px;
+
+main.site-main.imovel {
+  width: 90%;
+  margin: 0 auto;
+  section.block-single {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 2rem;
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr 2fr;
+    }
+
+    @media (max-width: 800px) {
+      grid-template-columns: 1fr 1.5fr;
+    }
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr; // ↳ stack: sidebar e conteúdo um abaixo do outro
+      gap: 0;
+    }
+
+    @media (max-width: 420px) {
+      grid-template-columns: 1fr; // mantém o empilhamento
+      gap: 0;
+    }
+  }
+
+  .referencia .container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+    margin-left: auto;
+  }
+  .misc .container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: $gap-spacing;
+    margin-top: $gap-spacing;
+    /*font-size: 90%;*/
+    padding: 0;
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr 2fr;
+    }
+
+    @media (max-width: 800px) {
+    }
+    @media (max-width: 768px) {
+    }
+    @media (max-width: 640px) {
+      flex-direction: column;
+    }
+    @media (max-width: 420px) {
+      flex-direction: column;
+    }
+  }
+  .informacoes {
+    flex: 1;
+    padding: $padding-base;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: auto;
+    min-height: 250px;
+    .info-top {
+      // Nada de especial aqui, apenas um agrupador
+    }
+    .info-bottom {
+      margin-top: auto;
+    }
+    .separador-vertical {
+      flex-grow: 1;
+      border-left: 1px solid $border-color;
+      margin: 10px auto;
+      width: 1px;
+      height: auto;
+    }
+  }
+  .detalhes {
+    flex: 1;
+    background-color: $bg-light-gray;
+    padding: 1em;
+    border: 1px solid #ddd;
+    border-top-left-radius: 0;
+    border-top-right-radius: 3%;
+    border-bottom-right-radius: 3%;
+    border-bottom-left-radius: 3%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    &:hover {
+      box-shadow: $card-hover-effect, inset -3px -3px 6px rgba(255, 255, 255, 0.8);
+      transform: translateY(-2px);
+    }
+    h4 {
+      border-bottom: 1px solid $border-color;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+      color: $text-color;
+    }
+    .info-row {
+      display: flex;
+      align-items: center;
+      i {
+        margin-right: 10px;
+        color: $primary-color;
+      }
+      .label {
+        margin-right: 5px;
+        &::after{
+          content: ":";
+          display: inline-block;
+          width: 1em;
+          margin-right: 10px;
+          vertical-align: middle;
+        }
+        &::before{
+          content: '';
+          display: inline-block;
+          width: 1em;
+          vertical-align: middle;
+        }
+      }
+      .value {
+        font-weight: bold;
+        color: $secondary-text-color;
+      }
+    }
+    .info-row.valor {
+      i {
+        margin-right: 10px;
+        color: $secondary-color;
+      }
+    }
+  }
+}
+section.fotos {
+  padding: 2em 0 4em 0;
+  background-color: #f8f8f8;
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .glide-wrapper {
+    display: block;
+    width: 100%;
+    height: auto;
+    grid-column: auto;
+    grid-row: auto;
+    align-self: auto;
+    justify-self: auto;
+    overflow: hidden; // Pode ajudar a conter o layout interno do Glide
+    position: relative; // Para o posicionamento das setas dentro do .glide
+  }
+
+  .glide {
+    position: relative; // Essencial para posicionar as setas e thumbnails
+    width: 100%; // Garante que o Glide preencha o .glide-wrapper
+    max-width: 100%; // Previne que ele transborde
+
+    &__track {
+      overflow: hidden;
+    }
+
+    &__slides {
+      display: flex;
+      align-items: center; // Centraliza verticalmente as imagens no slide
+    }
+
+    &__slide {
+      // Garante que o slide ocupe todo o espaço da sua célula no Flexbox do Glide
+      width: 100%;
+      img.imovel-foto {
+        display: block;
+        width: 100%; // Preenche a largura do slide
+        height: auto; // Mantém a proporção
+        max-height: 400px; // Adicione um limite de altura para as fotos principais
+        object-fit: contain; // Garante que a imagem inteira seja visível, pode adicionar barras brancas
+        // object-fit: cover; // Corta a imagem para preencher o espaço, sem barras brancas
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    // Estilos para as setas de navegação
+    &__arrows {
+      position: absolute;
+      top: 110%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      z-index: 2;
+      padding: 0 10px; // Adiciona um padding para as setas não ficarem coladas nas bordas
+      box-sizing: border-box; // Garante que o padding não aumente a largura total
+    }
+
+    &__arrow {
+      background-color: rgba(0, 0, 0, 0.5);
+      border: none;
+      color: white;
+      font-size: 24px;
+      padding: 10px 15px; // Ajuste o padding para o tamanho desejado
+      cursor: pointer;
+      border-radius: 50%;
+      transition: background-color 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.7);
+      }
+
+      // As margens negativas que você tinha antes (margin-left: -20px;) são para o caso de
+      // as setas estarem *fora* do track. Se elas estiverem *sobre* o track, não são necessárias.
+      // Com 'width: 100%' e 'justify-content: space-between' no '__arrows', elas se posicionam nas pontas.
+      // Se você quer que elas fiquem um pouco para fora do limite visual das imagens,
+      // considere adicionar padding no .container ou no .glide-wrapper.
+
+      svg {
+        fill: currentColor;
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+  }
+}

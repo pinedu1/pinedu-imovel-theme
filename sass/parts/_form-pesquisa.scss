@@ -1,0 +1,37 @@
+/* Transição de carga */
+.select-container {
+  position: relative;
+  max-width: 300px;
+
+  .loading-spinner {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: #0073aa; // Cor do tema
+    animation: spin 1s linear infinite;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  &.loading {
+    .loading-spinner {
+      opacity: 1;
+    }
+    select {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+  }
+}
+aside.sidebar-pesquisa {
+  box-sizing: content-box;
+  display: block;
+}
+@keyframes spin {
+  to { transform: translateY(-50%) rotate(360deg); }
+}

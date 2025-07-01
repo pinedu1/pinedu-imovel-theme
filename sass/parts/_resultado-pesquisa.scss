@@ -1,0 +1,48 @@
+main.site-main {
+  div.content {
+    width: 90%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    /*grid-template-columns: 1fr fit-content(75%);*/
+    gap: 0.5rem;
+  }
+}
+.exibir-resultado {
+  font-size: 70%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 2rem 0.5em 0;
+  form {
+    font-size: inherit;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    label {
+      font-size: inherit;
+      font-weight: 600;
+    }
+
+    select {
+      font-size: inherit;
+      min-width: 10em;
+      padding: 0.4rem 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #fff;
+      appearance: none;
+      cursor: pointer;
+      &:focus {
+        outline: none;
+        border-color: #666;
+      }
+    }
+    select[name=max] {
+      min-width: 5em;
+    }
+  }
+}

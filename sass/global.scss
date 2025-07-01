@@ -1,0 +1,79 @@
+@charset "utf-8";
+// Reset
+@import 'helpers/sanitize';
+// Helpers
+@import 'helpers/animations';
+@import 'helpers/box-model';
+@import 'helpers/clamp';
+@import 'helpers/images';
+@import 'helpers/font';
+@import 'helpers/variablefont';
+
+// Variables
+@import 'variables/colors';
+@import 'variables/breakpoints';
+@import 'variables/typography';
+@import 'variables/forms';
+@import 'variables/spacings';
+
+// Accessibility
+@import 'base/accessibility';
+
+// Style components
+@import 'components/components';
+
+// Navigation
+@import 'navigation/navigation';
+
+// Structure
+@import 'layout/general';
+@import 'layout/print';
+@import 'layout/typography';
+@import 'layout/site-header';
+@import 'layout/site-footer';
+@import 'layout/forms';
+@import 'layout/wordpress';
+
+// Global features
+@import 'features/top';
+@import 'features/gallery';
+@import 'features/pagination';
+@import 'features/gravity-forms';
+
+// Views
+@import 'views/front-page';
+@import 'views/search';
+@import 'views/404';
+@import 'views/single';
+@import 'views/comments';
+
+// Gutenberg layout outside blocks
+@import 'gutenberg/layout/content';
+
+// Gutenberg blocks
+@import 'gutenberg/blocks';
+
+// Gutenberg formatting
+@import 'gutenberg/formatting';
+
+// Minhas classes
+@import 'parts/vendors/swipe/swiper-bundle';
+@import 'parts/vendors/swipe/swiper-custom';
+@import 'parts/vendors/glide/glide.core';
+@import 'parts/vendors/glide/glide.theme';
+@import 'parts/header-branding';
+@import 'parts/form';
+@import 'parts/form-pesquisa';
+@import 'parts/privacity';
+@import 'parts/footer-grid';
+@import 'parts/card-promocao';
+@import 'parts/card-pesquisa';
+@import 'parts/card-visitado';
+@import 'parts/card-visinhanca';
+@import 'parts/paginacao';
+@import 'parts/imovel';
+@import 'parts/barra-pesquisa';
+@import 'parts/resultado-pesquisa';
+@import 'parts/contato';
+@import 'parts/cadastre-imovel';
+@import 'parts/autocomplete';
