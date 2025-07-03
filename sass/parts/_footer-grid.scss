@@ -1,3 +1,4 @@
+@import './variaveis';
 .site-footer {
   background: #333;
   color: white;
@@ -69,11 +70,15 @@
   }
   .social-contact {
     span {
-      display: inline;
+      display: inline-block;
+      line-height:  1.2em;
     }
-    .dashicons {
-      line-height: 150%;
+  }
+  .social-contact.whatsapp {
+    span {
+      color: $cor-whatsapp;
     }
+
   }
 }
 .footer-copyright {

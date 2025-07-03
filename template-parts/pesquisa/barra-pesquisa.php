@@ -32,6 +32,7 @@
   $terms_contrato = lista_contratos();
   $terms_tipo_imovel = lista_tipo_imovel();
   $terms_cidade = lista_cidade();
+  $terms_regiao = [];
   if ( $cidade_padrao == '' ) {
     $terms_regiao = lista_regiao($cidade_padrao);
   }

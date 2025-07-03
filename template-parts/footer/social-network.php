@@ -36,7 +36,7 @@
     </div>
   <?php endif; ?>
   <?php if ( isset( $post->whatsapp ) && ( !empty( $post->whatsapp ) ) ) : ?>
-    <div class="social-contact instagram">
+    <div class="social-contact whatsapp">
       <a href="<?php echo esc_url('https://api.whatsapp.com/send?1=pt_BR&phone=55' . $post->whatsapp . '&text=Olá! Estou visitando seu WebSite, e gostaria de uma atenção.'); ?>" target="_blank" rel="noopener noreferrer">
         <span class="dashicons dashicons-whatsapp"></span>
         <span style="margin-left: 5px;">WhatsApp</span>

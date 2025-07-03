@@ -4,19 +4,24 @@ $secondary-color: #007b00;
 $text-color: #333;
 $secondary-text-color: #555;
 $bg-light-gray: #f9f9f9;
-$border-color: #eee;
+$border-color: #999;
 $shadow-color: rgba(0, 0, 0, 0.1);
 $gap-spacing: 0.5em;
 $padding-base: 0;
 $border-radius-base: 8px;
+$cor-whatsapp: #25D366;
+$success-color: $primary-color;
 
 main.site-main.imovel {
+  article.article-content {
+    padding-top: 0;
+  }
   width: 90%;
   margin: 0 auto;
   section.block-single {
     display: grid;
     grid-template-columns: 1fr 3fr;
-    gap: 2rem;
+    gap: 0.5em;
     @media (max-width: 1024px) {
       grid-template-columns: 1fr 2fr;
     }
@@ -85,7 +90,6 @@ main.site-main.imovel {
     }
     .separador-vertical {
       flex-grow: 1;
-      border-left: 1px solid $border-color;
       margin: 10px auto;
       width: 1px;
       height: auto;
@@ -245,5 +249,146 @@ section.fotos {
       }
     }
 
+  }
+}
+section.contato-error, section.contato-success, section.solicita-visita {
+  margin-bottom: 2em;
+  header {
+    h4 {
+      width: 100%;
+      color: $text-color;
+      display: inline-block;
+    }
+  }
+  .container {
+    margin: 0;
+    padding: 0;
+    #botoes-contato {
+      display: flex;
+      flex-wrap: wrap;
+      gap: $gap-spacing;
+      margin-bottom: $gap-spacing * 2;
+      .contato-button {
+        flex: 1 1 100%;
+        max-width: 100%;
+        .contato-whatsapp {
+          margin-top: calc( $gap-spacing * 2 );
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          color: $cor-whatsapp;
+          background-color: unset;
+          padding: $gap-spacing;
+          border-radius: 0.25rem;
+          text-decoration: none;
+          font-size: 1.1rem;
+          &:hover {
+            background-color: darken(#25d366, 10%);
+            color: white;
+          }
+          .fa-whatsapp {
+            width: 50%;
+            height: auto;
+          }
+        }
+      }
+    }
+    div#div-contato {
+      display: none;
+    }
+    .contato-form {
+      width: 100%;
+      form {
+        .row {
+          margin-bottom: $gap-spacing;
+          display: flex;
+          flex-direction: column;
+        }
+        label {
+          display: block;
+          margin-bottom: 0.25rem;
+          font-weight: 500;
+          color: $text-color;
+          .required {
+            color: red;
+            margin-left: 0.2rem;
+          }
+        }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="password"], input[type="number"] {
+          width: 100%;
+          padding: 0.75rem;
+          border: 1px solid $border-color;
+          border-radius: 0.25rem;
+          font-size: 1rem;
+          box-sizing: border-box;
+        }
+        input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus {
+          border-color: $primary-color;
+          outline: 0;
+          box-shadow: 0 0 0 0.2rem rgba($primary-color, 0.25);
+        }
+        .captcha-wrapper {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          align-items: flex-end;
+          gap: 0.5rem;
+          .col:first-child {
+            flex: 0 0 calc(75% - 0.25rem);
+            max-width: calc(75% - 0.25rem);
+            img {
+              max-width: 100%;
+              height: auto;
+              display: block;
+              border: 1px solid #ddd;
+              border-radius: 0.25rem;
+            }
+          }
+          .col:nth-child(2) {
+            flex: 0 0 calc(25% - 0.25rem);
+            max-width: calc(25% - 0.25rem);
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+          }
+        }
+      }
+    }
+    .button {
+      width: 100%;
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      white-space: nowrap;
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+    button#fechar {
+      margin-top: 2em;
+    }
+  }
+  @media (max-width: 768px) {
+    padding: $gap-spacing;
+    header h4 {
+      font-size: 1.5rem;
+    }
+    #botoes-contato {
+      flex-direction: column;
+      gap: $gap-spacing * 0.8;
+    }
+    .contato-form {
+      padding: $gap-spacing;
+    }
+  }
+  @media (max-width: 576px) {
+    header h4 {
+      font-size: 1.3rem;
+    }
   }
 }

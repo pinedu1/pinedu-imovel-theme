@@ -30,12 +30,16 @@
   $terms_contrato = lista_contratos();
   $terms_tipo_imovel = lista_tipo_imovel();
   $terms_cidade = lista_cidade();
+  $terms_regiao = [];
   if ( $cidade_padrao != '' ) {
     $terms_regiao = lista_regiao($cidade_padrao);
   }
   $terms_faixa_valor = lista_faixa_valor($contrato_padrao);
 ?>
 <aside class="sidebar-pesquisa">
+  <?php if (is_singular('imovel')):
+    get_template_part( 'template-parts/imovel/solicita-visita', 'imovel' );
+  endif; ?>
   <section class="sidebar pesquisa">
     <header class="pesquisa-header">
       <h4>Pesquisa</h4>
@@ -108,9 +112,9 @@
                 <option value="">Selecione...</option>
                 <?php if ( $terms_faixa_valor && !empty( $terms_faixa_valor ) ): ?>
                   <?php foreach ((array) $terms_faixa_valor as $faixa): ?>
-                    <option value="<?php echo esc_attr($faixa->slug); ?>"
-                            valor-inicial="<?php echo esc_attr(get_term_meta($faixa->term_id, 'valor-inicial', true)); ?>"
-                            valor-final="<?php echo esc_attr(get_term_meta($faixa->term_id, 'valor-final', true)); ?>">
+                    <option valor-inicial="<?php echo esc_attr(get_term_meta($faixa->term_id, 'valor-inicial', true)); ?>"
+                            valor-final="<?php echo esc_attr(get_term_meta($faixa->term_id, 'valor-final', true)); ?>"
+                            value="<?php echo esc_attr($faixa->slug); ?>">
                       <?php echo esc_html($faixa->name); ?>
                     </option>
                   <?php endforeach; ?>

@@ -10,6 +10,7 @@ class Pinedu_Form_Cadastre {
   const HOOK_ESTADOCHANGE = 'ESTADOGPBCHANGE';
   const HOOK_CIDADECHANGE = 'CIDADEGPBCHANGE';
   const HOOK_AUTOCOMPLETE = 'AUTOCOMPLETEGPBLOGRADOURO';
+  const HOOK_CONTATOIMOVEL = 'CONTATOIMOVEL';
   public static function init() {
     add_action(self::PREFIXO . self::HOOK_IDENTIFICACAO, [__CLASS__, 'carregar_tipo_imovel' ], 99, 1);
     add_action(self::PREFIXO . self::HOOK_LOCALIZACAO, [__CLASS__, 'carregar_localizacao' ], 99, 1);
@@ -19,6 +20,7 @@ class Pinedu_Form_Cadastre {
     add_action(self::PREFIXO . self::HOOK_ESTADOCHANGE, [__CLASS__, 'carregar_cidades' ], 99, 1);
     add_action(self::PREFIXO . self::HOOK_CIDADECHANGE, [__CLASS__, 'carregar_bairros' ], 99, 1);
     add_action(self::PREFIXO . self::HOOK_AUTOCOMPLETE, [__CLASS__, 'auto_complete_logradouro' ], 99, 1);
+    add_action(self::PREFIXO . self::HOOK_CONTATOIMOVEL, [__CLASS__, 'contato_imovel' ], 99, 1);
   }
   public static function carregar_tipo_imovel( $form_data ) {
     parse_str( $_POST['form_data'], $dados );
@@ -93,6 +95,22 @@ class Pinedu_Form_Cadastre {
     $args = [ 'cidade' => $cidade, 'nome' => $nome ];
     $data = $do->do_get( $token, $server, self::ENDPOINT . 'autocompleteEndereco', $args);
     wp_send_json_success( $data );
+    return false;
+  }
+  public static function contato_imovel( $form_data ) {
+    parse_str( $_POST['form_data'], $args );
+    $mensagem = isset( $args['mensagem'] )? $args['mensagem']: '';
+    $referencia = isset( $args['referencia'] )? $args['referencia']: '';
+    $data = enviarCliente( $args['nome'], $args['telefone'], $args['email'], $mensagem, getCookieId(), $referencia );
+    if ( $data['success'] === true ) {
+      ob_start();
+      get_template_part( 'template-parts/imovel/contato-success', 'imovel' );
+      wp_send_json_success( self::clean_result( ob_get_clean( ) ) );
+    } else {
+      ob_start();
+      get_template_part( 'template-parts/imovel/contato-error', 'imovel' );
+      wp_send_json_error( self::clean_result( ob_get_clean( ) ) );
+    }
     return false;
   }
 }

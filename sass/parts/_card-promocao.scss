@@ -3,7 +3,7 @@
 // Variáveis (ajuste conforme seu design system)
 $card-border: #ddd;
 $card-bg: var( --color-cinza-f8 );
-$card-radius: 2%;
+$card-radius: 10px;
 $card-light: inset 2px 2px 4px rgba(255, 255, 255, 0.7);  /* Luz topo/esquerda */
 $card-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);             /* Sombra bottom/right */
 $card-hover-effect: 3px 3px 8px rgba(0, 0, 0, 0.2);       /* Sombra hover mais intensa */
@@ -72,12 +72,11 @@ section.promocao {
     justify-content: center;
     align-items: center;
     width: 100%;
-    max-height: 230px; // altura fixa se necessário (pode ser ajustada)
+    max-height: 230px;
+    height: 230px; // altura fixa se necessário (pode ser ajustada)
 
     img {
-      max-width: 100%;
-      max-height: 100%;
-      height: auto;
+      height: 230px; // altura fixa se necessário (pode ser ajustada)
       width: auto;
       object-fit: contain; // mantém a proporção, sem cortar ou distorcer
       display: block;

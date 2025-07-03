@@ -14,9 +14,7 @@ the_post();
 get_header(); ?>
 <main class="site-main imovel">
   <section class="block block-single">
-    <?php
-      get_template_part( 'template-parts/pesquisa/sidebar-pesquisa' , 'imovel' );
-    ?>
+    <?php get_template_part( 'template-parts/pesquisa/sidebar-pesquisa' , 'imovel' ); ?>
     <article class="article-content">
       <!-- Marca imóvel visitado -->
       <?php registra_visita_imovel( ); ?>
@@ -27,8 +25,8 @@ get_header(); ?>
         <?php the_content(); ?>
       </section>
       <?php
-      get_template_part( 'template-parts/imovel/imovel-caracteristicas', 'imovel' );
-      get_template_part( 'template-parts/imovel/imovel-mapa', 'imovel' );
+      get_template_part( 'template-parts/imovel/caracteristicas', 'imovel' );
+      get_template_part( 'template-parts/imovel/mapa', 'imovel' );
       get_template_part( 'template-parts/visinhanca', 'imovel' );
       entry_footer();
 

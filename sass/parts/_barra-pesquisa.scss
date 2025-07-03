@@ -1,4 +1,7 @@
 section.barra-pesquisa, aside.sidebar-pesquisa {
+  label {
+    font-size: 90%;
+  }
   width: 100%;
   margin: 0 auto;
   header {
@@ -24,8 +27,12 @@ section.barra-pesquisa, aside.sidebar-pesquisa {
       &.referencia, &.consulta {
       }
       &.submit {
+        width: 100%;
         flex: 0 0 auto;
         align-self: flex-end;
+        button {
+          width: 100%;
+        }
       }
       .select-container select {
         width: 100%;
@@ -44,7 +51,8 @@ section.barra-pesquisa, aside.sidebar-pesquisa {
   }
   header {
     h4 {
-      margin-bottom: 15px;
+      margin: 1em 0;
+      padding: 0 1em;
       color: #333;
       font-size: 1.2em;
     }
@@ -66,6 +74,7 @@ section.barra-pesquisa, aside.sidebar-pesquisa {
     }
   }
   .submit-container {
+    width:  100%;
     margin-top: 0;
     padding-bottom: 1px;
   }
