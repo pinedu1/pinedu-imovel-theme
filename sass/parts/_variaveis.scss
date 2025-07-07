@@ -1,7 +1,66 @@
-$input-border-color: #007bff;
-$input-text-color: #000;
-$input-background-color: #fff;
-$input-placeholder: #aaa;
-$input-shadow-focus: rgba($input-text-color, 0.2);
-$border-radius: 4px;
+$footer-background: #333;
+$footer-color: #fff;
+$footer-text-color: #ccc;
+$color: #333;
+$alert-color: #e63946;
+$bg-light-gray: #e8f8f8;
+$border-color: #999;
+$border-sep-color: #eee;
+$border-radius: 5px;
+$border-radius-base: 8px;
+$card-bg: var( --color-cinza-f8 );
+$card-border: #ddd;
+$card-hover-effect: 3px 3px 8px rgba(0, 0, 0, 0.2);
+$card-hover-effect-inset: $card-hover-effect, inset -3px -3px 6px rgba(255, 255, 255, 0.8);
+$card-light: inset 2px 2px 4px rgba(255, 255, 255, 0.7);
+$card-radius: 10px;
+$card-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
+$card-hover-effect: 3px 3px 8px rgba(0, 0, 0, 0.2);
+$card-transiction: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+$cor_fundo: #f9f9f9;
+$cor_hashura: #007bff;
+$cor_h: #f2f2f2;
 $cor-whatsapp: #25d366;
+$cz9: #999;
+$czf: #fff;
+$font-size-base: --typography-size-12;
+$font-size-title: --typography-size-18;
+$gap: 1em;
+$gap-spacing: 0.5em;
+$input-background-color: #fff;
+$input-border-color: $cor_h;
+$input-border-color: #007bff;
+$input-border-focus: $cor_hashura;
+$input-placeholder: #aaa;
+$input-shadow-focus: rgba($color, 0.2);
+$input-text-color: $color;
+$link-color: var( --color-link-text );
+$padding-base: 0;
+$primary-color: #007bff;
+$secondary-color: #007b00;
+$secondary-text-color: #555;
+$shadow-color: rgba(0, 0, 0, 0.1);
+$success-color: $primary-color;
+$text-color: $color;
+
+
+@mixin card-style(
+  $border: $card-border,
+  $radius: $card-radius,
+  $bg: $card-bg,
+  $shadow: 0 2px 8px rgba(0, 0, 0, 0.05),
+  $transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+  $hover-shadow: $card-hover-effect, // Novo parâmetro para o hover
+  $hover-transform: translateY(-2px) // Efeito de levantar no hover
+) {
+  border: 1px solid $border;
+  border-radius: 0 $radius $radius $radius;
+  overflow: hidden;
+  background-color: $bg;
+  box-shadow: $shadow;
+  transition: $transition;
+  &:hover {
+    box-shadow: $card-hover-effect-inset;
+    transform: translateY(-2px);
+  }
+}

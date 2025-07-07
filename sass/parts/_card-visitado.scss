@@ -1,3 +1,6 @@
+@use 'sass:color';
+@import 'variaveis';
+
 section.visitados {
   width: 90%;
   margin: auto;
@@ -23,19 +26,9 @@ article.visitados {
   margin: 0 auto;
   padding: 2rem;
 
-  header {
-    text-align: center;
-    margin-bottom: 2rem;
-
-    h3 {
-      display: inline-block;
-    }
-  }
-
-  /* Grid de 4 colunas */
   .visitados-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 colunas iguais */
+    grid-template-columns: repeat(4, 1fr);
     gap: 0.5rem;
     margin-bottom: 2rem;
   }
@@ -44,29 +37,14 @@ article.visitados {
   width: 100%;
   display: flex;
   flex-direction: column;
-  border: 1px solid #ddd;
-  border-top-left-radius: 0;
-  border-top-right-radius: 3%;
-  border-bottom-right-radius: 3%;
-  border-bottom-left-radius: 3%;
-  overflow: hidden;
-  background-color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   padding: 0.25rem;
-  background-color: $card-bg;
   font-size: 0.85rem;
-
+  @include card-style;
   .property-container {
     display: flex;
     flex-direction: row;
     width: 100%;
   }
-
-  &:hover {
-    box-shadow: $card-hover-effect, inset -3px -3px 6px rgba(255, 255, 255, 0.8);
-    transform: translateY(-2px);
-  }
-
   .property-image {
     width: 50%;
     height: 180px;
@@ -122,7 +100,7 @@ article.visitados {
     justify-content: space-between;
     align-items: center;
     padding: 0.25rem 0.5rem;
-    border-top: 1px solid #eee;
+    border-top: 1px solid $border-sep-color;
     margin-top: auto; // Garante que fique sempre na base
     font-size: 0.9rem;
 

@@ -42,6 +42,14 @@ get_header();
           <?php echo get_template_part('template-parts/promocao'); ?>
         </div>
       </section>
+      <section class="content nuvem-tag">
+        <div class="container">
+          <header><h3>Links úteis</h3></header>
+          <?php echo get_template_part('template-parts/nuvem-tag/cidade'); ?>
+          <?php echo get_template_part('template-parts/nuvem-tag/tipo-imovel'); ?>
+          <?php echo get_template_part('template-parts/nuvem-tag/regiao'); ?>
+        </div>
+      </section>
       <section class="content visitados">
         <div class="container">
           <?php echo get_template_part('template-parts/visitados'); ?>

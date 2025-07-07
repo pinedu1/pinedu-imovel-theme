@@ -14,11 +14,18 @@
  * @package air-light
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  */
-
 namespace Air_Light;
+/* Começa aqui
+global $wp_query;
+echo '<pre>';
+print_r( $wp_query->query_vars );
+print_r( $_REQUEST );
+echo '</pre>';
+Termina aqui  */
 
 get_header(); ?>
 <main class="site-main">
+  <?php echo get_template_part('template-parts/slider-home-topo'); ?>
   <div class="content">
     <?php
       get_template_part( 'template-parts/pesquisa/sidebar-pesquisa' , 'imovel' );
@@ -43,29 +50,35 @@ get_header(); ?>
             <?php endwhile; ?>
           </div>
           <?php
-          the_posts_pagination(
-            array(
-              'add_args'  => array(
-                'cidade' => $_REQUEST['cidade'] ?? ''
-                , 'contrato' => $_REQUEST['contrato'] ?? ''
-                , 'faixa-valor' => $_REQUEST['faixa-valor'] ?? ''
-                , 'max' => $_REQUEST['max'] ?? 12
-                , 'ordem' => $_REQUEST['ordem'] ?? 'DESC'
-                , 'post_type' => $_REQUEST['post_type'] ?? 'imovel'
-                , 'regiao' => $_REQUEST['regiao'] ?? ''
-                , 'sort' => $_REQUEST['sort'] ?? 'dataPreco'
-                , 'tipo-imovel' => $_REQUEST['tipo-imovel'] ?? ''
-                , 'tipo_pesquisa_submit' => 'imovel'
-                , 'valor-final' => $_REQUEST['valor-final'] ?? ''
-                , 'valor-inicial' => $_REQUEST['valor-inicial'] ?? ''
-              )
-            )
-          );
+          $my_args = array( );
+          $my_par = [ 'contrato', 'cidade', 'regiao', 'tipo-imovel', 'faixa-valor', 'tipo_pesquisa_submit', 'valor-final', 'valor-inicial', 'max', 'ordem', 'post_type', 'sort' ];
+          foreach ( $my_par as $par ) {
+            if ( !empty( $_REQUEST[ $par ] ) ) {
+              $my_args[ $par ] = $_REQUEST[ $par ];
+            }
+          }
+          the_posts_pagination( array( 'add_args'  => $my_args ) );
           ?>
         <?php endif; ?>
-
       </div>
     </section>
+    <?php
+      // Novo formato com acessibilidade
+      wp_tag_cloud(array(
+        'smallest' => 12,
+        'largest' => 24,
+        'unit' => 'px',
+        'format' => 'flat',
+        'separator' => "\n",
+        'orderby' => 'count',
+        'order' => 'DESC',
+        'show_count' => 1,
+        'echo' => true,
+        'taxonomy' => 'post_tag',
+        'aria_label' => __('Nuvem de tags') // Acessibilidade
+      ));
+
+    ?>
   </div>
 </main>
 <?php get_footer();

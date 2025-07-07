@@ -1,8 +1,9 @@
+import './utilitarios';
 import './front-end';
 import './form-pesquisa';
+import './form-consulta';
 import './promocao';
 import './pesquisa';
-import './form-consulta-event';
 import './privacy-compliance';
 import './imovel';
 import './cadastre-imovel';

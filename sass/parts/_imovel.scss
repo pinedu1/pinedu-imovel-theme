@@ -1,16 +1,5 @@
-// Variáveis (mantidas do exemplo anterior)
-$primary-color: #007bff;
-$secondary-color: #007b00;
-$text-color: #333;
-$secondary-text-color: #555;
-$bg-light-gray: #f9f9f9;
-$border-color: #999;
-$shadow-color: rgba(0, 0, 0, 0.1);
-$gap-spacing: 0.5em;
-$padding-base: 0;
-$border-radius-base: 8px;
-$cor-whatsapp: #25D366;
-$success-color: $primary-color;
+@use 'sass:color';
+@import 'variaveis';
 
 main.site-main.imovel {
   article.article-content {
@@ -25,27 +14,22 @@ main.site-main.imovel {
     @media (max-width: 1024px) {
       grid-template-columns: 1fr 2fr;
     }
-
     @media (max-width: 800px) {
       grid-template-columns: 1fr 1.5fr;
     }
-
     @media (max-width: 768px) {
       grid-template-columns: 1fr 1fr;
       gap: 0;
     }
-
     @media (max-width: 640px) {
       grid-template-columns: 1fr; // ↳ stack: sidebar e conteúdo um abaixo do outro
       gap: 0;
     }
-
     @media (max-width: 420px) {
       grid-template-columns: 1fr; // mantém o empilhamento
       gap: 0;
     }
   }
-
   .referencia .container {
     display: flex;
     justify-content: flex-end;
@@ -62,7 +46,6 @@ main.site-main.imovel {
     @media (max-width: 1024px) {
       grid-template-columns: 1fr 2fr;
     }
-
     @media (max-width: 800px) {
     }
     @media (max-width: 768px) {
@@ -163,7 +146,6 @@ section.fotos {
     max-width: 1200px;
     margin: 0 auto;
   }
-
   .glide-wrapper {
     display: block;
     width: 100%;
@@ -175,21 +157,17 @@ section.fotos {
     overflow: hidden; // Pode ajudar a conter o layout interno do Glide
     position: relative; // Para o posicionamento das setas dentro do .glide
   }
-
   .glide {
     position: relative; // Essencial para posicionar as setas e thumbnails
     width: 100%; // Garante que o Glide preencha o .glide-wrapper
     max-width: 100%; // Previne que ele transborde
-
     &__track {
       overflow: hidden;
     }
-
     &__slides {
       display: flex;
       align-items: center; // Centraliza verticalmente as imagens no slide
     }
-
     &__slide {
       // Garante que o slide ocupe todo o espaço da sua célula no Flexbox do Glide
       width: 100%;
@@ -204,7 +182,6 @@ section.fotos {
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       }
     }
-
     // Estilos para as setas de navegação
     &__arrows {
       position: absolute;
@@ -216,7 +193,6 @@ section.fotos {
       padding: 0 10px; // Adiciona um padding para as setas não ficarem coladas nas bordas
       box-sizing: border-box; // Garante que o padding não aumente a largura total
     }
-
     &__arrow {
       background-color: rgba(0, 0, 0, 0.5);
       border: none;
@@ -231,24 +207,20 @@ section.fotos {
       justify-content: center;
       width: 40px;
       height: 40px;
-
       &:hover {
         background-color: rgba(0, 0, 0, 0.7);
       }
-
       // As margens negativas que você tinha antes (margin-left: -20px;) são para o caso de
       // as setas estarem *fora* do track. Se elas estiverem *sobre* o track, não são necessárias.
       // Com 'width: 100%' e 'justify-content: space-between' no '__arrows', elas se posicionam nas pontas.
       // Se você quer que elas fiquem um pouco para fora do limite visual das imagens,
       // considere adicionar padding no .container ou no .glide-wrapper.
-
       svg {
         fill: currentColor;
         width: 20px;
         height: 20px;
       }
     }
-
   }
 }
 section.contato-error, section.contato-success, section.solicita-visita {
@@ -284,7 +256,7 @@ section.contato-error, section.contato-success, section.solicita-visita {
           text-decoration: none;
           font-size: 1.1rem;
           &:hover {
-            background-color: darken(#25d366, 10%);
+            background-color: color.adjust($cor-whatsapp, $lightness: -10%);
             color: white;
           }
           .fa-whatsapp {

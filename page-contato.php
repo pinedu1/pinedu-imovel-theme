@@ -66,11 +66,13 @@ get_header(); ?>
             <?php endif; ?>
             </div>
           <?php endforeach; ?>
-          <div class="contact-item">
-          <?php foreach ($redes as $r): ?>
-            <a href="<?php echo $r['value']; ?>" target="_blank" ><i class="<?php echo $r['icon'];  ?>"></i></a>
-          <?php endforeach; ?>
-          </div>
+          <?php if ( !empty( $redes ) ): ?>
+            <div class="contact-item">
+            <?php foreach ($redes as $r): ?>
+              <a href="<?php echo $r['value']; ?>" target="_blank" ><i class="<?php echo $r['icon'];  ?>"></i></a>
+            <?php endforeach; ?>
+            </div>
+          <?php endif; ?>
         </div>
       </aside>
     </div>

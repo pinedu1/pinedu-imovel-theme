@@ -25,21 +25,21 @@ if ( !empty( $fotografias ) ): ?>
 <script>
 jQuery(document).ready(($) => {
   new Glide('#imovel-carousel', {
-    type: 'carousel', // Tipo 'carousel' para loop infinito
-    perView: 3,      // 3 fotos por vez
-    focusAt: 'center', // Centraliza o slide ativo (opcional, pode ser 0 para alinhar à esquerda)
-    gap: 10,         // Espaçamento entre as fotos
-    keyboard: true,  // Navegação por teclado
-    autoplay: 5000,  // Autoplay a cada 3 segundos (opcional)
-    hoverpause: true, // Pausa o autoplay ao passar o mouse
+    type: 'carousel',
+    perView: 2,
+    focusAt: 'center',
+    gap: 10,
+    keyboard: true,
+    autoplay: 5000,
+    hoverpause: true,
     breakpoints: {
-      768: { // Em telas de até 768px de largura
-        perView: 2, // Mostra 2 fotos
-        gap: 8
+      768: {
+        perView: 2,
+        gap: 5
       },
       480: { // Em telas de até 480px de largura
         perView: 1, // Mostra 1 foto
-        gap: 5
+        gap: 1
       }
     }
   }).mount( );

@@ -1,19 +1,22 @@
+@use 'sass:color';
+@import 'variaveis';
+
 .autocomplete-item {
   padding: 8px 12px;
   line-height: 1.4;
   .main-text {
     font-weight: bold;
-    color: #333;
+    color: $cz9;
   }
   .secondary-text {
     font-size: 0.85em;
-    color: #666;
+    color: $input-text-color;
     display: flex;
     justify-content: space-between;
     margin-top: 3px;
   }
   .cep {
-    color: #0073aa;
+    color: $primary-color;
     font-weight: bold;
   }
 }

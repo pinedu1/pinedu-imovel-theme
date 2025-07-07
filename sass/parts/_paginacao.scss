@@ -1,19 +1,28 @@
-.paginacao {
+@use 'sass:color';
+@import 'variaveis';
+
+.pagination, .paginacao {
   display: flex;
   justify-content: center;
   width: 100%;
   overflow-x: auto;
-  .page-numbers {
-    align-items: center;
-    background-color: var(--color-white);
-    border: 1px solid var(--color-blue-chalk);
-    color: var(--color-pagination-text);
-    font-weight: var(--typography-weight-medium);
-    height: 2rem;
-    width: 2rem;
-    justify-content: center;
-    margin: 0;
+  padding: 2px;
 
+  span.page-numbers, a.page-numbers {
+    background-color: $bg-light-gray;
+    border: 1px solid $primary-color;
+    align-items: center;
+    color: $text-color;
+    font-weight: var(--typography-weight-medium);
+    justify-content: center;
+    margin: 0.125em;
+  }
+  span.page-numbers.current {
+    background: $alert-color;
+    color: white !important;
+    font-weight: bold;
+  }
+  ul.page-numbers {
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
@@ -21,10 +30,9 @@
     padding: 0;
     margin: 0.25em;
     padding: 0.5rem 1rem;
-    .dots {
-      border: 0 !important;
+    &:last-child {
+      width: 6em;
     }
-    /*box-shadow: 0 2px 5px var( --color-cinza-d );*/
     li {
       display: flex;
       align-items: center;
@@ -35,41 +43,32 @@
         min-width: 2.5rem;
         height: 2.5rem;
         padding: 0 0.5rem;
-        /*border-radius: 5%;*/
         font-size: 0.75rem;
         text-decoration: none;
-        color: #495057;
-        background: var( --color-cinza-e );
+        color: $text-color;
+        background: $bg-light-gray;
         transition: all 0.3s ease;
         &:hover:not(.current, .dots) {
-          background: #e9ecef;
-          color: #212529;
+          background: $bg-light-gray;
+          color: $secondary-text-color;
         }
-      }
-      .current {
-        background: #e63946;
-        color: white !important;
-        font-weight: bold;
       }
       .dots {
         pointer-events: none;
-        background: transparent;
       }
-      .next {
+      .next, .prev {
         font-weight: bold;
         padding: 0 1rem;
         border-radius: 5%;
-        background: #e9ecef;
+        background: $bg-light-gray;
         min-width: 8em;
         &:hover {
-          background: #dee2e6;
+          background: color.adjust($bg-light-gray, $lightness: -15%);
         }
       }
     }
-    .next, .prev {
-      min-width: 10em;
-    }
   }
+
   // Responsividade
   @media (max-width: 768px) {
     justify-content: flex-start;

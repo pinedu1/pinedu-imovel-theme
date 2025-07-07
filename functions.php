@@ -236,12 +236,6 @@ add_theme_support('custom-logo', array(
   'flex-width'  => true, // Permite largura flexível
   'header-text' => array('site-title', 'site-description'), // Texto alternativo
 ));
-add_filter( 'template_include', function( $template ) {
-  if ( false && wp_get_environment_type() === 'development' ) {
-    echo '<pre>Template usado: ' . $template . '</pre>';
-  }
-  return $template;
-});
 function formata_endereco_loja( $tipo, $logradouro, $numero, $complemento, $bairro, $cidade, $estado, $cep ) {
   $end = $tipo . ' ' . $logradouro;
   if ( ! empty( $numero ) ) {
@@ -264,3 +258,9 @@ function formata_endereco_loja( $tipo, $logradouro, $numero, $complemento, $bair
   }
   return $end;
 }
+add_filter( 'template_include', function( $template ) {
+  if ( false && wp_get_environment_type() === 'development' ) {
+    echo '<pre>Template usado: ' . $template . '</pre>';
+  }
+  return $template;
+});

@@ -1,3 +1,6 @@
+@use 'sass:color';
+@import 'variaveis';
+
 section.barra-pesquisa, aside.sidebar-pesquisa {
   label {
     font-size: 90%;
@@ -41,7 +44,7 @@ section.barra-pesquisa, aside.sidebar-pesquisa {
         display: block;
         margin-bottom: 5px;
         font-weight: bold;
-        color: #555;
+        color: $secondary-text-color;
       }
       input[type="text"] {
         width: 100%;
@@ -53,7 +56,7 @@ section.barra-pesquisa, aside.sidebar-pesquisa {
     h4 {
       margin: 1em 0;
       padding: 0 1em;
-      color: #333;
+      color: $secondary-text-color;
       font-size: 1.2em;
     }
   }
@@ -63,14 +66,14 @@ section.barra-pesquisa, aside.sidebar-pesquisa {
   }
   button.button {
     padding: 10px 15px;
-    background-color: #007bff;
+    background-color: $primary-color;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     white-space: nowrap;
     &:hover {
-      background-color: #0056b3;
+      background-color: color.adjust($primary-color, $lightness: -15%);
     }
   }
   .submit-container {
@@ -82,7 +85,7 @@ section.barra-pesquisa, aside.sidebar-pesquisa {
 
 
 section.barra-pesquisa {
-  width: 90%;
+  width: 100%;
   form ul {
     li {
       &.contrato, &.tipo-imovel, &.cidade, &.regiao, &.faixa-valor {

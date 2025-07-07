@@ -61,11 +61,13 @@
 @import 'parts/vendors/swipe/swiper-custom';
 @import 'parts/vendors/glide/glide.core';
 @import 'parts/vendors/glide/glide.theme';
+@import 'parts/mini-reset';
+@import 'parts/tags';
+@import 'parts/site-header';
 @import 'parts/header-branding';
 @import 'parts/form';
 @import 'parts/form-pesquisa';
 @import 'parts/privacity';
-@import 'parts/footer-grid';
 @import 'parts/card-promocao';
 @import 'parts/card-pesquisa';
 @import 'parts/card-visitado';
@@ -77,3 +79,7 @@
 @import 'parts/contato';
 @import 'parts/cadastre-imovel';
 @import 'parts/autocomplete';
+@import 'parts/top';
+@import 'parts/tag_cloud';
+@import 'parts/site-footer';
+@import 'parts/footer-grid';

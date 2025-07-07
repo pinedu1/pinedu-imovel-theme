@@ -144,16 +144,12 @@
     <?php endif; ?>
   </div>
   <footer class="property-footer">
-    <table role="table" aria-label="Identificar Unidade">
-      <tbody>
-      <tr>
-        <td colspan="2" itemscope itemtype="https://schema.org/Product">
-          <link itemprop="url" href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" />
-          <meta itemprop="availability" content="https://schema.org/InStock" />
-          <a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>">Referência: <span itemprop="sku"><?php echo $post->referencia; ?></a>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+    <div aria-label="Identificar Unidade">
+      <span colspan="2" itemscope itemtype="https://schema.org/Product">
+        <link itemprop="url" href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" />
+        <meta itemprop="availability" content="https://schema.org/InStock" />
+        <a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>">Referência: <span itemprop="sku"><?php echo $post->referencia; ?></a>
+      </span>
+    </div>
   </footer>
 </section>

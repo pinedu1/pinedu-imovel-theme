@@ -1,0 +1,30 @@
+// The very top of the site, element that usually includes
+// the site navigation and search for example.
+.site-header {
+  align-items: flex-start;
+  column-gap: 1em;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+  max-width: 90%;
+  position: relative;
+  z-index: 15;
+}
+
+.site-title {
+  line-height: 1em;
+  margin: 0;
+
+  a {
+    align-items: center;
+    display: flex;
+  }
+}
+
+// And of course this:
+// stylelint-disable-next-line
+.site-footer {
+  display: grid;
+}
+
+// --clip--
