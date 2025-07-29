@@ -79,5 +79,16 @@
     "copy:dropzone": "mkdir -p assets/js/vendor assets/css/vendor && cp node_modules/dropzone/dist/dropzone-min.js assets/js/vendor/ && cp node_modules/dropzone/dist/dropzone.css assets/css/vendor/",
     "postinstall": "npm run copy:dropzone",
     "watch:dropzone": "chokidar 'node_modules/dropzone/dist/**/*' -c 'npm run copy:dropzone'"
-  }
+  },
+  "main": ".eslintrc.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pinedu1/pinedu-imovel-theme.git"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pinedu1/pinedu-imovel-theme/issues"
+  },
+  "homepage": "https://github.com/pinedu1/pinedu-imovel-theme#readme"
 }

@@ -1,7 +1,7 @@
 <?php
 
 class SalvarImovel {
-  const ENDPOINT = '/pndWordpress/api/';
+  const ENDPOINT = '/pndPortal/wordpress/';
   public static function salvar() {
     $options = get_option('pinedu_imovel_options', []);
     $server = $options['url_servidor'] ?? '';

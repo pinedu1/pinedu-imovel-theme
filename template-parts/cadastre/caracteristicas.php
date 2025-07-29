@@ -7,7 +7,7 @@ $options = get_option('pinedu_imovel_options', []);
 $server = $options['url_servidor'] ?? '';
 $token = $options['token'];
 $do = new DoGet();
-$data = $do->do_get( $token, $server, '/pndWordpress/api/tipoImovel', [ 'tipoImovel' => $tipoImovel ] );
+$data = $do->do_get( $token, $server, '/pndPortal/wordpress/tipoImovel', [ 'tipoImovel' => $tipoImovel ] );
 if ( $data->success === true ): $tipoImovel = $data->tipoImovel; $relativo = $tipoImovel->relativo; ?>
 <section id="caracteristicas">
   <button id="btnCaracteristicas" class="btn btn-link" type="button" data-toggle="collapse" data-target="#detalhesCaracteristicas" aria-expanded="false" aria-controls="detalhesCaracteristicas">
