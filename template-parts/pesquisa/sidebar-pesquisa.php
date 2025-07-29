@@ -61,7 +61,7 @@
             <div class="select-container">
               <select id="contrato" name="contrato">
                 <option value="" <?php echo ('' == $contrato_padrao)? 'selected': '' ?>>Selecione...</option>
-                <?php if ( $terms_contrato && !empty( $terms_contrato ) ): ?>
+                <?php if ( isset($terms_contrato) && !empty( $terms_contrato ) ): ?>
                   <?php foreach ((array) $terms_contrato as $contrato): ?>
                     <option value="<?php echo esc_attr($contrato->slug); ?>" <?php echo ($contrato->slug == $contrato_padrao)? 'selected': '' ?>><?php echo esc_html($contrato->name); ?></option>
                   <?php endforeach; ?>
@@ -74,7 +74,7 @@
             <div class="select-container">
               <select id="tipo-imovel" name="tipo-imovel">
                 <option value="" <?php echo ('' == $tipo_imovel_padrao)? 'selected': '' ?>>Selecione...</option>
-                <?php if ( $terms_tipo_imovel && !empty( $terms_tipo_imovel ) ): ?>
+                <?php if ( isset($terms_tipo_imovel) && !empty( $terms_tipo_imovel ) ): ?>
                   <?php foreach ((array) $terms_tipo_imovel as $tipo_imovel): ?>
                     <option value="<?php echo esc_attr($tipo_imovel->slug); ?>" <?php echo ($tipo_imovel->slug == $tipo_imovel_padrao)? 'selected': '' ?>><?php echo esc_html($tipo_imovel->name); ?></option>
                   <?php endforeach; ?>
@@ -87,7 +87,7 @@
             <div class="select-container">
               <select id="cidade" name="cidade">
                 <option value="" <?php echo ('' == $cidade_padrao)? 'selected': '' ?>>Selecione...</option>
-                <?php if ( $terms_cidade && !empty( $terms_cidade ) ): ?>
+                <?php if ( isset($terms_cidade) && !empty( $terms_cidade ) ): ?>
                   <?php foreach ((array) $terms_cidade as $cidade): ?>
                     <option value="<?php echo esc_attr($cidade->slug); ?>" <?php echo ($cidade->slug == $cidade_padrao)? 'selected': '' ?>><?php echo esc_html($cidade->name); ?></option>
                   <?php endforeach; ?>
@@ -100,7 +100,7 @@
             <div class="select-container">
               <select id="regiao" name="regiao">
                 <option value="" <?php echo ('' == $regiao_padrao)? 'selected': '' ?>>Selecione...</option>
-                <?php if ( $terms_regiao && !empty( $terms_regiao ) ): ?>
+                <?php if ( isset($terms_regiao ) && !empty( $terms_regiao ) ): ?>
                   <?php foreach ((array) $terms_regiao as $regiao): ?>
                     <option value="<?php echo esc_attr($regiao->slug); ?>" <?php echo ($regiao->slug == $regiao_padrao)? 'selected': '' ?>><?php echo esc_html($regiao->name); ?></option>
                   <?php endforeach; ?>
@@ -113,7 +113,7 @@
             <div class="select-container">
               <select id="faixa-valor" name="faixa-valor">
                 <option value="">Selecione...</option>
-                <?php if ( $terms_faixa_valor && !empty( $terms_faixa_valor ) ): ?>
+                <?php if ( isset($terms_faixa_valor) && !empty( $terms_faixa_valor ) ): ?>
                   <?php foreach ((array) $terms_faixa_valor as $faixa): ?>
                     <option valor-inicial="<?php echo esc_attr(get_term_meta($faixa->term_id, 'valor-inicial', true)); ?>"
                             valor-final="<?php echo esc_attr(get_term_meta($faixa->term_id, 'valor-final', true)); ?>"

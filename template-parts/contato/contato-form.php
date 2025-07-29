@@ -5,7 +5,7 @@ $telefone = isset($_REQUEST['telefone']) ? htmlspecialchars($_REQUEST['telefone'
 $mensagem = isset($_REQUEST['mensagem']) ? htmlspecialchars($_REQUEST['mensagem'], ENT_QUOTES, 'UTF-8'): '';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-  $options = get_option( 'pinedu_imovel_options' );
+  $options = get_option( 'pinedu_imovel_options', [] );
 	$destinatario = $options['email_contato'];
   if ( empty($destinatario) ) {
     wp_die('Por favor, Não está configurado DEstinatário para este email!.');

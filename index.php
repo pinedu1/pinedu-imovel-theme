@@ -42,7 +42,7 @@ get_header(); ?>
           <?php endif; ?>
           <div class="pesquisa-grid">
             <?php while ( have_posts() ): the_post(); ?>
-            <?php if ( $post->ID != null ): ?>
+            <?php if ( ($post->ID != null) && get_post_type( $post->ID ) === 'imovel' ): ?>
                 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
                   <?php echo get_template_part('template-parts/pesquisa/card', 'imovel'); ?>
                 </article>

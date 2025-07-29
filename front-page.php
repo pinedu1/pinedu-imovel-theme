@@ -56,6 +56,5 @@ get_header();
         </div>
       </section>
     </div>
-  <!--<?php air_edit_link(); ?>-->
 </main>
 <?php get_footer();
