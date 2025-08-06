@@ -2,6 +2,7 @@
 @import 'variaveis';
 
 section.barra-pesquisa, aside.sidebar-pesquisa {
+  position: relative;
   label {
     font-size: 90%;
   }
@@ -48,6 +49,7 @@ section.barra-pesquisa, aside.sidebar-pesquisa {
       }
       input[type="text"] {
         width: 100%;
+        max-width: 300px;
         padding: 8px;
       }
     }
@@ -66,6 +68,8 @@ section.barra-pesquisa, aside.sidebar-pesquisa {
   }
   button.button {
     padding: 10px 15px;
+    max-width: 300px;
+    width: 100%;
     background-color: $primary-color;
     color: white;
     border: none;
@@ -82,7 +86,10 @@ section.barra-pesquisa, aside.sidebar-pesquisa {
     padding-bottom: 1px;
   }
 }
-
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 
 section.barra-pesquisa {
   width: 100%;
@@ -99,7 +106,6 @@ section.barra-pesquisa {
     }
   }
 }
-
 aside.sidebar-pesquisa {
   width: 100%;
   form ul {
@@ -109,6 +115,27 @@ aside.sidebar-pesquisa {
       }
       &.referencia, &.consulta {
         width: 100%;
+      }
+    }
+  }
+  @media (max-width: 390px) {
+    form ul {
+      li {
+        &.contrato, &.tipo-imovel, &.cidade, &.regiao, &.faixa-valor {
+          flex-basis: 100%;
+          max-width: 100%;
+        }
+        &.referencia, &.consulta {
+          flex-basis: 100%;
+          max-width: 100%;
+        }
+        .select-container select {
+          width: 100%;
+        }
+        input[type="text"] {
+          max-width: 300px;
+          padding: 8px;
+        }
       }
     }
   }

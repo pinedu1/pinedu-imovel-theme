@@ -17,7 +17,11 @@ function move_jquery_into_footer( $wp_scripts ) {
     $wp_scripts->add_data( 'jquery-migrate', 'group', 1 );
   }
 } // end air_light_move_jquery_into_footer
-
+function ajax_link_nom_priv() {
+  wp_localize_script( 'scripts', 'ajax_object', [
+    'ajaxurl' => admin_url( 'admin-ajax.php' ),
+  ] );
+}
 /**
  * Enqueue scripts and styles.
  */
@@ -34,23 +38,17 @@ function enqueue_theme_scripts() {
   enqueue_dropzone_assets();
   enqueue_jquery_ui();
   enqueue_swiper_js();
+  //enqueue_glide_js();
   enqueue_font_awesome();
 
-  wp_enqueue_script( 'scripts',
-    get_theme_file_uri( get_asset_file( 'main.js' ) ),
-    [],
-    filemtime( get_theme_file_path( get_asset_file( 'main.js' ) ) ),
-    true
-  );
-  wp_localize_script( 'scripts', 'ajax_object', [
-    'ajaxurl' => admin_url( 'admin-ajax.php' ),
-  ] );
+  wp_enqueue_script( 'scripts', get_theme_file_uri( get_asset_file( 'main.js' ) ), [], filemtime( get_theme_file_path( get_asset_file( 'main.js' ) ) ), true );
+  wp_localize_script( 'scripts', 'ajax_object', [ 'ajaxurl' => admin_url( 'admin-ajax.php' ) ] );
   // Required comment-reply script
   if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
     wp_enqueue_script( 'comment-reply' );
   }
 
-  wp_localize_script( 'scripts', 'air_light_screenReaderText', [
+wp_localize_script( 'scripts', 'air_light_screenReaderText', [
     'expand_for'      => get_default_localization( 'Open child menu for' ),
     'collapse_for'    => get_default_localization( 'Close child menu for' ),
     'expand_toggle'   => get_default_localization( 'Open main menu' ),
@@ -106,6 +104,10 @@ function enqueue_jquery_ui() {
 function enqueue_swiper_js() {
   wp_enqueue_script( 'swiper-js', get_theme_file_uri('/assets/js/vendor/swiper/swiper-element-bundle.js'), array(), '11.2.8', true );
   wp_enqueue_style( 'swiper-css', get_theme_file_uri('/assets/css/vendor/swiper/swiper-bundle.css'), array(), '11.2.8' );
+}
+function enqueue_glide_js() {
+  wp_enqueue_script( 'swiper-js', get_theme_file_uri('/assets/js/vendor/glide/glide.esm.js'), array(), '11.2.8', true );
+  wp_enqueue_style( 'swiper-css', get_theme_file_uri('/assets/css/vendor/glide/glide.core.css'), array(), '11.2.8' );
 }
 function enqueue_font_awesome() {
   //wp_enqueue_style( 'font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css', array(), '6.4.0' );

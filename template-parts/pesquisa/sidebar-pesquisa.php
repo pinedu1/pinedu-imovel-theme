@@ -18,6 +18,10 @@
   if ( empty( $regiao_padrao ) && isset( $_REQUEST[ 'regiao' ] ) ) {
     $regiao_padrao = $_REQUEST[ 'regiao' ];
   }
+  $faixa_padrao = get_query_var( 'faixa-valor' );
+  if ( empty( $faixa_padrao ) && isset( $_REQUEST[ 'faixa-valor' ] ) ) {
+    $faixa_padrao = $_REQUEST[ 'faixa-valor' ];
+  }
   $valor_inicial_padrao = get_query_var( 'valor-inicial' );
   if ( empty( $valor_inicial_padrao ) && isset( $_REQUEST[ 'valor-inicial' ] ) ) {
     $valor_inicial_padrao = $_REQUEST[ 'valor-inicial' ];
@@ -47,7 +51,7 @@
       <h4>Pesquisa</h4>
     </header>
     <main class="pesquisa-content">
-      <form role="search" method="get" id="form-pesquisa" class="barra pesquisa-form" action="<?php echo esc_url( home_url( '/pesquisa' ) ); ?>">
+      <form role="search" data-tipo="barra" method="get" id="form-pesquisa" class="barra pesquisa-form" action="<?php echo esc_url( home_url( '/pesquisa' ) ); ?>">
         <input type="hidden" name="tipo_pesquisa_submit" value="imovel">
         <input type="hidden" name="valor-inicial">
         <input type="hidden" name="valor-final">
@@ -117,7 +121,7 @@
                   <?php foreach ((array) $terms_faixa_valor as $faixa): ?>
                     <option valor-inicial="<?php echo esc_attr(get_term_meta($faixa->term_id, 'valor-inicial', true)); ?>"
                             valor-final="<?php echo esc_attr(get_term_meta($faixa->term_id, 'valor-final', true)); ?>"
-                            value="<?php echo esc_attr($faixa->slug); ?>">
+                            value="<?php echo esc_attr($faixa->slug); ?>" <?php echo ($faixa->slug == $faixa_padrao)? 'selected': 'urgh' ?>>
                       <?php echo esc_html($faixa->name); ?>
                     </option>
                   <?php endforeach; ?>
@@ -125,7 +129,7 @@
               </select>
             </div>
           </li>
-          <li class="submit pesquisa">
+          <li class="submit pesquisa" style="display: none;">
             <div class="submit-container">
               <button type="submit" class="button button-small">Pesquisa Imóveis</button>
             </div>
@@ -166,7 +170,6 @@ jQuery(document).ready(function($) {
   });
   $('form[name="consultaReferencia"]').on('submit', function(event) {
     event.preventDefault();
-    console.log('oi');
     if(validarFormularioConsulta()) {
       $(this).unbind('submit').submit();
     }

@@ -31,6 +31,7 @@ add_action( 'widgets_init', __NAMESPACE__ . '\widgets_init' );
 require get_theme_file_path( 'inc/hooks/scripts-styles.php' );
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_theme_scripts' );
 
+
 // NB! If you use ajax functionality in Gravity Forms, remove this line
 // to prevent Uncaught ReferenceError: jQuery is not defined
 //add_action( 'wp_default_scripts', __NAMESPACE__ . '\move_jquery_into_footer' );
@@ -44,7 +45,7 @@ add_filter( 'use_block_editor_for_post_type', __NAMESPACE__ . '\use_block_editor
 add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\register_block_editor_assets' );
 add_filter( 'block_editor_settings_all', __NAMESPACE__ . '\remove_gutenberg_inline_styles', 10, 2 );
 add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\block_editor_title_input_styles' );
-
+add_action( 'wp_ajax_nopriv_minha_acao_ajax', __NAMESPACE__ . '\ajax_link_nom_priv' );
 /**
  * ACF blocks
  */

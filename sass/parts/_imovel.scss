@@ -1,85 +1,65 @@
 @use 'sass:color';
 @import 'variaveis';
 
-main.site-main.imovel {
-  article.article-content {
-    padding-top: 0;
-  }
+section.block.block-single {
   width: 90%;
   margin: 0 auto;
-  section.block-single {
-    display: grid;
-    grid-template-columns: 1fr 3fr;
-    gap: 0.5em;
-    @media (max-width: 1024px) {
-      grid-template-columns: 1fr 2fr;
-    }
-    @media (max-width: 800px) {
-      grid-template-columns: 1fr 1.5fr;
-    }
-    @media (max-width: 768px) {
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
-    }
-    @media (max-width: 640px) {
-      grid-template-columns: 1fr; // ↳ stack: sidebar e conteúdo um abaixo do outro
-      gap: 0;
-    }
-    @media (max-width: 420px) {
-      grid-template-columns: 1fr; // mantém o empilhamento
-      gap: 0;
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  gap: 0.5rem;
+  aside.sidebar-pesquisa, article.article-content {
+    padding-top: 2em;
+    padding-bottom: 1em;
+    margin-bottom: 1em;
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+  }
+}
+article.article-content {
+  .imovel-content {
+    p {
+      text-align: justify;
     }
   }
-  .referencia .container {
-    display: flex;
-    justify-content: flex-end;
-    padding: 10px;
-    margin-left: auto;
-  }
-  .misc .container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: $gap-spacing;
-    margin-top: $gap-spacing;
-    padding: 0;
-    @media (max-width: 1024px) {
-      grid-template-columns: 1fr 2fr;
-    }
-    @media (max-width: 800px) {
-    }
-    @media (max-width: 768px) {
-    }
-    @media (max-width: 640px) {
-      flex-direction: column;
-    }
-    @media (max-width: 420px) {
-      flex-direction: column;
-    }
-  }
-  .informacoes {
-    flex: 1;
-    padding: $padding-base;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: auto;
-    min-height: 250px;
-    .info-top {
-      // Nada de especial aqui, apenas um agrupador
-    }
-    .info-bottom {
-      margin-top: auto;
-    }
-    .separador-vertical {
-      flex-grow: 1;
-      margin: 10px auto;
-      width: 1px;
-      height: auto;
+  section.referencia {
+    display: block;
+    width: 100%;
+    text-align: right;
+    margin: 0.5em 1em;
+    font-weight: bold;
+    a {
+      &:hover {
+        color: red !important;
+      }
     }
   }
   .detalhes {
-    flex: 1;
+    width: 100%;
+    max-width: calc(25% - 10px);
+    @media (max-width: 1600px) {
+      max-width: calc(20% - 10px);
+    }
+    @media (max-width: 1200px) {
+      max-width: calc(25% - 10px);
+    }
+    @media (max-width: 1024px) {
+      max-width: calc(33% - 10px);
+    }
+    @media (max-width: 800px) {
+      max-width: calc(33% - 10px);
+    }
+    @media (max-width: 768px) {
+      max-width: calc(50% - 10px);
+    }
+    @media (max-width: 640px) {
+      max-width: 100%;
+    }
+    @media (max-width: 420px) {
+      max-width: 100%;
+    }
+
+    margin-bottom: 1em;
     background-color: $bg-light-gray;
     padding: 1em;
     border: 1px solid #ddd;
@@ -137,230 +117,44 @@ main.site-main.imovel {
         color: $secondary-color;
       }
     }
-  }
-}
-section.fotos {
-  padding: 2em 0 4em 0;
-  background-color: #f8f8f8;
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  .glide-wrapper {
-    display: block;
-    width: 100%;
-    height: auto;
-    grid-column: auto;
-    grid-row: auto;
-    align-self: auto;
-    justify-self: auto;
-    overflow: hidden; // Pode ajudar a conter o layout interno do Glide
-    position: relative; // Para o posicionamento das setas dentro do .glide
-  }
-  .glide {
-    position: relative; // Essencial para posicionar as setas e thumbnails
-    width: 100%; // Garante que o Glide preencha o .glide-wrapper
-    max-width: 100%; // Previne que ele transborde
-    &__track {
-      overflow: hidden;
+    @media (max-width: 1024px) {
+      max-width: calc(33% - 10px);
     }
-    &__slides {
-      display: flex;
-      align-items: center; // Centraliza verticalmente as imagens no slide
+    @media (max-width: 800px) {
+      max-width: calc(33% - 10px);
     }
-    &__slide {
-      // Garante que o slide ocupe todo o espaço da sua célula no Flexbox do Glide
-      width: 100%;
-      img.imovel-foto {
-        display: block;
-        width: 100%; // Preenche a largura do slide
-        height: auto; // Mantém a proporção
-        max-height: 400px; // Adicione um limite de altura para as fotos principais
-        object-fit: contain; // Garante que a imagem inteira seja visível, pode adicionar barras brancas
-        // object-fit: cover; // Corta a imagem para preencher o espaço, sem barras brancas
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
+    @media (max-width: 768px) {
+      max-width: calc(50% - 10px);
     }
-    // Estilos para as setas de navegação
-    &__arrows {
-      position: absolute;
-      top: 110%;
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      z-index: 2;
-      padding: 0 10px; // Adiciona um padding para as setas não ficarem coladas nas bordas
-      box-sizing: border-box; // Garante que o padding não aumente a largura total
+    @media (max-width: 640px) {
+      max-width: 100%;
     }
-    &__arrow {
-      background-color: rgba(0, 0, 0, 0.5);
-      border: none;
-      color: white;
-      font-size: 24px;
-      padding: 10px 15px; // Ajuste o padding para o tamanho desejado
-      cursor: pointer;
-      border-radius: 50%;
-      transition: background-color 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-      &:hover {
-        background-color: rgba(0, 0, 0, 0.7);
-      }
-      // As margens negativas que você tinha antes (margin-left: -20px;) são para o caso de
-      // as setas estarem *fora* do track. Se elas estiverem *sobre* o track, não são necessárias.
-      // Com 'width: 100%' e 'justify-content: space-between' no '__arrows', elas se posicionam nas pontas.
-      // Se você quer que elas fiquem um pouco para fora do limite visual das imagens,
-      // considere adicionar padding no .container ou no .glide-wrapper.
-      svg {
-        fill: currentColor;
-        width: 20px;
-        height: 20px;
-      }
+    @media (max-width: 420px) {
+      max-width: 100%;
     }
   }
-}
-section.contato-error, section.contato-success, section.solicita-visita {
-  margin-bottom: 2em;
-  header {
-    h4 {
-      width: 100%;
-      color: $text-color;
-      display: inline-block;
-    }
-  }
-  .container {
-    margin: 0;
+  section.misc {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: $gap-spacing;
+    margin-top: $gap-spacing;
     padding: 0;
-    #botoes-contato {
-      display: flex;
-      flex-wrap: wrap;
-      gap: $gap-spacing;
-      margin-bottom: $gap-spacing * 2;
-      .contato-button {
-        flex: 1 1 100%;
-        max-width: 100%;
-        .contato-whatsapp {
-          margin-top: calc( $gap-spacing * 2 );
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 100%;
-          color: $cor-whatsapp;
-          background-color: unset;
-          padding: $gap-spacing;
-          border-radius: 0.25rem;
-          text-decoration: none;
-          font-size: 1.1rem;
-          &:hover {
-            background-color: color.adjust($cor-whatsapp, $lightness: -10%);
-            color: white;
-          }
-          .fa-whatsapp {
-            width: 50%;
-            height: auto;
-          }
-        }
-      }
+    @media (max-width: 1024px) {
     }
-    div#div-contato {
-      display: none;
+    @media (max-width: 800px) {
     }
-    .contato-form {
-      width: 100%;
-      form {
-        .row {
-          margin-bottom: $gap-spacing;
-          display: flex;
-          flex-direction: column;
-        }
-        label {
-          display: block;
-          margin-bottom: 0.25rem;
-          font-weight: 500;
-          color: $text-color;
-          .required {
-            color: red;
-            margin-left: 0.2rem;
-          }
-        }
-        input[type="text"], input[type="email"], input[type="tel"], input[type="password"], input[type="number"] {
-          width: 100%;
-          padding: 0.75rem;
-          border: 1px solid $border-color;
-          border-radius: 0.25rem;
-          font-size: 1rem;
-          box-sizing: border-box;
-        }
-        input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus {
-          border-color: $primary-color;
-          outline: 0;
-          box-shadow: 0 0 0 0.2rem rgba($primary-color, 0.25);
-        }
-        .captcha-wrapper {
-          display: flex;
-          flex-direction: row;
-          flex-wrap: wrap;
-          justify-content: space-between;
-          align-items: flex-end;
-          gap: 0.5rem;
-          .col:first-child {
-            flex: 0 0 calc(75% - 0.25rem);
-            max-width: calc(75% - 0.25rem);
-            img {
-              max-width: 100%;
-              height: auto;
-              display: block;
-              border: 1px solid #ddd;
-              border-radius: 0.25rem;
-            }
-          }
-          .col:nth-child(2) {
-            flex: 0 0 calc(25% - 0.25rem);
-            max-width: calc(25% - 0.25rem);
-            display: flex;
-            justify-content: flex-end;
-            align-items: flex-end;
-          }
-        }
-      }
+    @media (max-width: 768px) {
     }
-    .button {
-      width: 100%;
-      padding: 10px 15px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      white-space: nowrap;
-      &:hover {
-        background-color: #0056b3;
-      }
-    }
-    button#fechar {
-      margin-top: 2em;
-    }
-  }
-  @media (max-width: 768px) {
-    padding: $gap-spacing;
-    header h4 {
-      font-size: 1.5rem;
-    }
-    #botoes-contato {
+    @media (max-width: 640px) {
       flex-direction: column;
-      gap: $gap-spacing * 0.8;
     }
-    .contato-form {
-      padding: $gap-spacing;
-    }
-  }
-  @media (max-width: 576px) {
-    header h4 {
-      font-size: 1.3rem;
+    @media (max-width: 420px) {
+      flex-direction: column;
     }
   }
+}
+section.content.visinhanca {
+  width: 90%;
+  margin: 0 auto;
 }

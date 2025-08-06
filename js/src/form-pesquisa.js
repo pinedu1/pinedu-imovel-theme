@@ -5,6 +5,7 @@
  * @param {boolean} addEmptyFirst - Adiciona uma opção vazia no início (padrão: false)
  * @param {string} emptyText - Texto da opção vazia (padrão: 'Selecione...')
  */
+document.telaInstalada = false;
 jQuery(document).ready(($) => {
   /* funcoes */
   function reloadSelectOptions(selectName, items, addEmptyFirst = false, emptyText = 'Selecione...', callBackOpt = null) {
@@ -45,6 +46,11 @@ jQuery(document).ready(($) => {
     const selectChildFx = '#form-pesquisa select[name=faixa-valor]';
     $(selectChildTipo).parent().addClass('loading');
     $(selectChildFx).parent().addClass('loading');
+    const frm = $('#form-pesquisa');
+    const tipoFormulario = frm.data('tipo');
+    if ( tipoFormulario == 'barra' ) {
+      $('.cortina-aguarde').removeClass('inactive').addClass('is-active');
+    }
     $.ajax({
       url: ajax_object.ajaxurl,
       method: 'GET',
@@ -53,16 +59,17 @@ jQuery(document).ready(($) => {
         const dados = response.data;
         if (response.success) {
           const tipos = dados.data['tipo-imoveis'];
-          // console.log(tipos);
           reloadSelectOptions(selectChildTipo, tipos, true, 'Selecione ...');
           const fx = dados.data['faixa-valores'];
-          // console.log(fx);
           reloadSelectOptions(selectChildFx, fx, true, 'Selecione ...');
         } else {
           console.error(dados.message);
         }
         $(selectChildTipo).parent().removeClass('loading');
         $(selectChildFx).parent().removeClass('loading');
+        if ( tipoFormulario == 'barra' && document.telaInstalada === true ) {
+          frm.submit();
+        }
       },
       error() {
         console.error('Erro inesperado ao acessar o servidor!');
@@ -77,6 +84,12 @@ jQuery(document).ready(($) => {
     const tipo = selectTipo.val();
     const selectChild = '#form-pesquisa select[name=cidade]';
     $(selectChild).parent().addClass('loading');
+    const frm = $('#form-pesquisa');
+    const tipoFormulario = frm.data('tipo');
+    if ( tipoFormulario == 'barra' ) {
+      $('.cortina-aguarde').removeClass('inactive').addClass('is-active');
+    }
+
     $.ajax({
       url: ajax_object.ajaxurl,
       method: 'GET',
@@ -90,6 +103,9 @@ jQuery(document).ready(($) => {
           console.error(dados.message);
         }
         $(selectChild).parent().removeClass('loading');
+        if ( tipoFormulario == 'barra' && document.telaInstalada === true ) {
+          frm.submit();
+        }
       },
       error() {
         console.error('Erro inesperado ao acessar o servidor!');
@@ -104,7 +120,11 @@ jQuery(document).ready(($) => {
     const cid = selectCid.val();
     const selectChild = '#form-pesquisa select[name=regiao]';
     $(selectChild).parent().addClass('loading');
-    console.log('oi');
+    const frm = $('#form-pesquisa');
+    const tipoFormulario = frm.data('tipo');
+    if ( tipoFormulario == 'barra' ) {
+      $('.cortina-aguarde').removeClass('inactive').addClass('is-active');
+    }
     $.ajax({
       url: ajax_object.ajaxurl,
       method: 'GET',
@@ -118,6 +138,9 @@ jQuery(document).ready(($) => {
           console.error(dados.message);
         }
         $(selectChild).parent().removeClass('loading');
+        if ( tipoFormulario == 'barra' && document.telaInstalada === true ) {
+          frm.submit();
+        }
       },
       error() {
         console.error('Erro inesperado ao acessar o servidor!');
@@ -132,6 +155,11 @@ jQuery(document).ready(($) => {
     const cid = selectReg.val();
     const selectChild = '#form-pesquisa select[name=regiao]';
     $(selectChild).parent().addClass('loading');
+    const frm = $('#form-pesquisa');
+    const tipoFormulario = frm.data('tipo');
+    if ( tipoFormulario == 'barra' ) {
+      $('.cortina-aguarde').removeClass('inactive').addClass('is-active');
+    }
     $.ajax({
       url: ajax_object.ajaxurl,
       method: 'GET',
@@ -145,6 +173,9 @@ jQuery(document).ready(($) => {
           console.error(dados.message);
         }
         $(selectChild).parent().removeClass('loading');
+        if ( tipoFormulario == 'barra' && document.telaInstalada === true ) {
+          frm.submit();
+        }
       },
       error() {
         console.error('Erro inesperado ao acessar o servidor!');
@@ -153,12 +184,16 @@ jQuery(document).ready(($) => {
   });
   const selectFx = $('#form-pesquisa select[name=faixa-valor]');
   selectFx.on('change', (event) => {
-    // console.log( 'ui' );
     const selectedOption = selectFx.find('option:selected');
     const valorInicial = selectedOption.attr('valor-inicial');
     const valorFinal = selectedOption.attr('valor-final');
     $('#form-pesquisa input[name="valor-inicial"]').val(valorInicial);
     $('#form-pesquisa input[name="valor-final"]').val(valorFinal);
+    const frm = $('#form-pesquisa');
+    const tipoFormulario = frm.data('tipo');
+    if ( tipoFormulario == 'barra' && document.telaInstalada === true ) {
+        frm.submit();
+    }
   });
-  /* Fim */
+  document.telaInstalada = true;
 });

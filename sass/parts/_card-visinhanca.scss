@@ -12,8 +12,27 @@ section.content {
     }
   }
 }
+a.cardVisinhanca {
+  text-decoration: none;
+  display: inline;
+  &:hover {
+    all: unset;
+  }
+}
 article.visinhanca {
   width: 100%;
+  @media (min-width: 520px) {
+    width: 100%;
+  }
+  @media (min-width: 768px) {
+    width: 95%;
+  }
+  @media (min-width: 1024px) {
+    width: 90%;
+  }
+  @media (min-width: 1280px) {
+    width: 90%;
+  }
   margin: 0 auto;
   padding: 2rem;
   header {
@@ -26,49 +45,21 @@ article.visinhanca {
   /* Grid de 4 colunas */
   .visinhanca-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 colunas iguais */
     gap: 0.5rem;
     margin-bottom: 2rem;
-  }
-}
-@media (max-width: 1024px) {
-  .visinhanca-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 4 colunas iguais */
-    gap: 0.5rem;
-    margin-bottom: 2rem;
-  }
-}
-@media (max-width: 800px) {
-  .visinhanca-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 4 colunas iguais */
-    gap: 0.5rem;
-    margin-bottom: 2rem;
-  }
-}
-@media (max-width: 768px) {
-  .visinhanca-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 4 colunas iguais */
-    gap: 0.5rem;
-    margin-bottom: 2rem;
-  }
-}
-@media (max-width: 640px) {
-  .visinhanca-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 4 colunas iguais */
-    gap: 0.5rem;
-    margin-bottom: 2rem;
-  }
-}
-@media (max-width: 420px) {
-  .visinhanca-grid {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr); /* 4 colunas iguais */
-    gap: 0.5rem;
-    margin-bottom: 2rem;
+    grid-template-columns: repeat(1, 1fr);
+    @media (min-width: 520px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @media (min-width: 1280px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
   }
 }
 .property-card.visinhanca {
@@ -145,13 +136,6 @@ article.visinhanca {
         color: #444;
       }
     }
-  }
-  // RESPONSIVO
-  @media (max-width: 1200px) {
-    width: 31%;
-  }
-  @media (max-width: 992px) {
-    width: 48%;
   }
   @media (max-width: 600px) {
     width: 100%;

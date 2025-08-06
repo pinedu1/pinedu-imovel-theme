@@ -4,6 +4,10 @@
     <?php echo get_template_part('template-parts/pesquisa/meta-pesquisa', 'imovel'); ?>
   </header>
   <div class="pesquisa-grid">
+    <div class="cortina-aguarde inactive">
+      <div class="loading-spinner"></div>
+      <span>Aguarde...</span>
+    </div>
     <?php if ( $this->query->have_posts() ): ?>
       <?php while ($this->query->have_posts()) : $this->query->the_post();?>
         <?php the_content(); ?>

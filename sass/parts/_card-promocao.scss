@@ -1,6 +1,15 @@
 @use 'sass:color';
 @import 'variaveis';
 /* Container principal */
+a.cardPromocao {
+  text-decoration: none;
+  font-size: 90%;
+  display: inline;
+  &:hover {
+    all: unset;
+    font-size: 90%;
+  }
+}
 section.promocao {
   width: 90%;
   margin: 0 auto;
@@ -22,6 +31,27 @@ section.promocao {
       text-align: right;
     }
   }
+
+  /* Responsividade */
+  @media (max-width: 1200px) {
+    .promocao-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .promocao-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .promocao-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+
 }
 
 .property-cards-container {
@@ -92,23 +122,5 @@ section.promocao {
     padding-bottom: 0;
     padding-top: 0.25em;
     margin: 0;
-  }
-}
-/* Responsividade */
-@media (max-width: 1200px) {
-  .promocao-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .promocao-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 480px) {
-  .promocao-grid {
-    grid-template-columns: 1fr;
   }
 }

@@ -42,6 +42,11 @@ $secondary-text-color: #555;
 $shadow-color: rgba(0, 0, 0, 0.1);
 $success-color: $primary-color;
 $text-color: $color;
+$cor-fundo-cortina: rgba(255, 255, 255, 0.8);
+$cor-fundo-mensagem: #f8f9fa;
+$cor-texto-mensagem: #495057;
+$cor-loader-padrao: #e9ecef;
+$cor-loader-animacao: #007bff;
 
 
 @mixin card-style(

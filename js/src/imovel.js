@@ -1,4 +1,5 @@
 import Glide from '@glidejs/glide';
+
 window.Glide = Glide;
 
 $=jQuery;
@@ -82,3 +83,24 @@ function enviarContato(button) {
 }
 window.exibeFormContato = exibeFormContato;
 window.enviarContato = enviarContato;
+jQuery(document).ready(($) => {
+  if ( $('body').hasClass('single-imovel') && $('#imovel-carousel').length ) {
+    new Glide('#imovel-carousel', {
+      type: 'carousel',
+      perView: 2,
+      focusAt: 'center',
+      gap: 10,
+      keyboard: true,
+      autoplay: 5000,
+      hoverpause: true,
+      breakpoints: {
+        1600: { perView: 3, gap: 10 }
+        , 1200: { perView: 3, gap: 8 }
+        , 1024: { perView: 2, gap: 8 }
+        , 768: { perView: 2, gap: 6 }
+        , 640: { perView: 1, gap: 5 }
+        , 420: { perView: 1, gap: 1 }
+      }
+    }).mount( );
+  }
+});

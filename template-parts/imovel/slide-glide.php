@@ -22,28 +22,3 @@ if ( !empty( $fotografias ) ): ?>
   </div>
 </section>
 <?php endif; ?>
-<script>
-jQuery(document).ready(($) => {
-  new Glide('#imovel-carousel', {
-    type: 'carousel',
-    perView: 2,
-    focusAt: 'center',
-    gap: 10,
-    keyboard: true,
-    autoplay: 5000,
-    hoverpause: true,
-    breakpoints: {
-      768: {
-        perView: 2,
-        gap: 5
-      },
-      480: { // Em telas de até 480px de largura
-        perView: 1, // Mostra 1 foto
-        gap: 1
-      }
-    }
-  }).mount( );
-});
-</script>
-
-

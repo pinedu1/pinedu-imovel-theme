@@ -25,11 +25,13 @@ get_header(); ?>
             <h1 id="content" class="screen-reader-text"><?php single_post_title(); ?></h1>
           <?php endif; ?>
           <div class="pesquisa-grid">
+            <div class="cortina-aguarde inactive">
+              <div class="loading-spinner"></div>
+              <span>Aguarde...</span>
+            </div>
             <?php while ( have_posts() ): the_post(); ?>
               <?php if ( $post->ID != null ): ?>
-                <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-                  <?php echo get_template_part('template-parts/pesquisa/card', 'imovel'); ?>
-                </article>
+                <?php echo get_template_part('template-parts/pesquisa/card', 'imovel'); ?>
               <?php endif; ?>
             <?php endwhile; ?>
           </div>

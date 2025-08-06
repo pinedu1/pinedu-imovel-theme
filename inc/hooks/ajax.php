@@ -117,7 +117,7 @@ class Pinedu_Form_Cadastre {
 class Pinedu_Form_Pesquisa {
   const NOME_COOKIE = 'PND_VISITANTE';
   const DIAS_VALIDADE_COOKIE = 90;
-  const PREFIXO = 'wp_ajax_nopriv_';
+  const PREFIXOS = ['wp_ajax_nopriv_', 'wp_ajax_'];
   const HOOK_CONTRATO = 'CONTRATOCHANGE';
   const HOOK_TIPOIMOVEL = 'TIPOIMOVELCHANGE';
   const HOOK_CIDADE = 'CIDADECHANGE';
@@ -127,13 +127,14 @@ class Pinedu_Form_Pesquisa {
   const HOOK_PAGINAR_PESQUISA = 'PAGINARPESQUISA';
   // Método estático para inicialização
   public static function init() {
-    //add_action('wp_ajax_nopriv_' . self::HOOK_CONTRATO, [__CLASS__, 'contrato_change']);
-    add_action(self::PREFIXO . self::HOOK_CONTRATO, [__CLASS__, 'contrato_change'], 99, 1);
-    add_action(self::PREFIXO . self::HOOK_TIPOIMOVEL, [__CLASS__, 'tipo_imovel_change'], 99, 1);
-    add_action(self::PREFIXO . self::HOOK_CIDADE, [__CLASS__, 'cidade_change'], 99, 1);
-    add_action(self::PREFIXO . self::HOOK_REGIAO, [__CLASS__, 'regiao_change'], 99, 1);
-    add_action(self::PREFIXO . self::HOOK_CRIAR_COOKIE, [__CLASS__, 'criar_cookie']);
-    add_action(self::PREFIXO . self::HOOK_PAGINAR_PROMOCAO, [__CLASS__, 'paginar_promocao']);
+    foreach ( self::PREFIXOS as $prefixo ) {
+      add_action($prefixo . self::HOOK_CONTRATO, [__CLASS__, 'contrato_change'], 99, 1);
+      add_action($prefixo . self::HOOK_TIPOIMOVEL, [__CLASS__, 'tipo_imovel_change'], 99, 1);
+      add_action($prefixo . self::HOOK_CIDADE, [__CLASS__, 'cidade_change'], 99, 1);
+      add_action($prefixo . self::HOOK_REGIAO, [__CLASS__, 'regiao_change'], 99, 1);
+      add_action($prefixo . self::HOOK_CRIAR_COOKIE, [__CLASS__, 'criar_cookie']);
+      add_action($prefixo . self::HOOK_PAGINAR_PROMOCAO, [__CLASS__, 'paginar_promocao']);
+    }
   }
   // Métodos estáticos
   public static function paginar_promocao() {

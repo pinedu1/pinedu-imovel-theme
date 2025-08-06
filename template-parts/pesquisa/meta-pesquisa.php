@@ -38,6 +38,7 @@
       <option value="24" <?php echo ($max == 24)? 'selected': ''; ?>>24</option>
       <option value="36" <?php echo ($max == 36)? 'selected': ''; ?>>36</option>
       <option value="48" <?php echo ($max == 48)? 'selected': ''; ?>>48</option>
+      <option value="96" <?php echo ($max == 96)? 'selected': ''; ?>>96</option>
     </select>
   </form>
 </div>

@@ -24,6 +24,17 @@ div.container {
     }
   }
 }
+article.imovel {
+  > a.cardLink {
+    text-decoration: none;
+    font-size: 95%;
+    line-height: 1.2em;
+    &:hover {
+      all: unset;
+      font-size: 95%;
+    }
+  }
+}
 
 .property-cards-container {
   display: flex;
@@ -38,7 +49,7 @@ div.container {
   height: 475px;
   @include card-style;
   flex-grow: 1;
-  padding: 1rem 1rem;
+  padding: 0.5rem 1rem;
   .property-image {
     display: flex;
     justify-content: center;
