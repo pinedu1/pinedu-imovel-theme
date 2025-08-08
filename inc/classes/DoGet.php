@@ -1,32 +1,38 @@
 <?php
 
 class DoGet	{
-  public function do_get( $token, $server, $end_point, $args) {
+  public function do_get( $token, $server, $end_point, $args = array( ) ) {
     if ( !filter_var( $server, FILTER_VALIDATE_URL ) ) {
-      wp_send_json_error( ['message' => 'URL inválida.'] );
+      return new WP_Error( 'invalid_url', 'URL inválida.' );
     }
+    $options = get_option( 'pinedu_imovel_options', [ ] );
+    $credenciais = [ 'username' => urlencode( $options['token_username'] ), 'password' => urlencode( $options['token_password'] ) ];
     $fullUrl = trailingslashit( $server ) . ltrim( $end_point, '/' );
-    $fullUrl = add_query_arg( $args, $fullUrl );
-    if ( !$args || ( $args == null ) || !is_array( $args ) ) {
-      $args = array();
-    }
-    $headers = [ 'Content-Type' => 'application/json', 'Authorization' => 'Bearer ' . sanitize_text_field( $token ) ];
-    $response = wp_remote_get( $fullUrl, $headers );
 
+    if ( empty( $args ) || !is_array( $args ) ) {
+      $args = [ ];
+    }
+    $args[ ] = $credenciais;
+    $fullUrl = add_query_arg( $args, $fullUrl );
+    $request_args = [
+      'headers' => [
+        'Content-Type' => 'application/json',
+        'Authorization' => 'Bearer ' . sanitize_text_field( $token )
+      ],
+      'timeout' => 30
+    ];
+    $response = wp_remote_get( $fullUrl, $request_args );
     if ( is_wp_error( $response ) ) {
-      $error_message = $response->get_error_message();
-      if ( is_wp_error( $response ) ) {
-        wp_send_json_error( ['message' => $error_message ] );
-      }
-      return false;
+      return $response;
     }
     $status_code = wp_remote_retrieve_response_code( $response );
-    if ( $status_code === 200 ) {
-      $body = wp_remote_retrieve_body( $response );
-      $data = json_decode( $body );
-      return $data;
-    } else {
-      return false;
+    $body = wp_remote_retrieve_body( $response );
+    if ( $status_code !== 200 ) {
+      return new WP_Error( 'api_error', 'Erro na API', [
+        'status' => $status_code,
+        'body' => $body
+      ] );
     }
+    return json_decode( $body );
   }
 }

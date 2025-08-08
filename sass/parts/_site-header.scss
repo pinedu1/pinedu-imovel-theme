@@ -1,14 +1,38 @@
+@use 'sass:color';
+@import 'variaveis';
+
 // The very top of the site, element that usually includes
 // the site navigation and search for example.
 .site-header {
+  background-color: $header-background;
+  color: $header-color;
   align-items: flex-start;
   column-gap: 1em;
   display: flex;
   justify-content: space-between;
   margin: 0 auto;
-  max-width: 90%;
   position: relative;
   z-index: 15;
+  @media (max-width: 1200px) {}
+  @media (max-width: 768px) {}
+  @media (max-width: 640px) {}
+  @media (max-width: 480px) {}
+  @media (max-width: 390px) {
+    /*all: unset;*/
+    display: block;
+    width: 100%;
+    padding: 0 0 1em 0;
+  }
+  nav {
+    text-align: left;
+    .nav-toggle {
+      margin: 0 auto;
+    }
+    .menu-items-wrapper {
+      display: inline-block;
+      text-align: left;
+    }
+  }
 }
 
 .site-title {
@@ -20,11 +44,6 @@
     display: flex;
   }
 }
-
-// And of course this:
-// stylelint-disable-next-line
 .site-footer {
   display: grid;
 }
-
-// --clip--

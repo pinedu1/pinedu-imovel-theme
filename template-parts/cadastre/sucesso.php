@@ -2,11 +2,15 @@
   use function Air_Light\air_edit_link;
   $erro = get_query_var( 'erro', false );
   $data = get_query_var( 'data', '' );
+  //error_log(print_r($data, true));
   $mensagem = 'Houve um erro desconhecido ao cadastrar seu imóvel. Tente novamente mais tarde!';
-  if ( $data && !empty( $data['message'] ) ) {
-    $mensagem = $data['message'];
+  if (isset($data)) {
+    if (is_array($data) && isset($data['message'])) {
+      $mensagem = $data['message'];
+    } elseif (is_object($data) && property_exists($data, 'message')) {
+      $mensagem = $data->message;
+    }
   }
-  /* DICA: Ou altere aqui o conteúdo da mensagem de sucesso/erro! */
 ?>
 <section id="cadastre" class="cadastre">
   <div class="container">

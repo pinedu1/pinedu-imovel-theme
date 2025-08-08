@@ -114,6 +114,10 @@ section.contato {
         width: 100%;
       }
     }
+    .row.mensagem {
+      margin-bottom: 1em;
+      text-align: justify;
+    }
     .row-half {
       flex: 0 0 40%;
       .col-checkbox {
@@ -153,6 +157,32 @@ section.contato {
         }
         button:hover {
           background-color: color.adjust($primary-color, $lightness: -15%);
+        }
+      }
+    }
+    a.cadastre-privacy {
+      color: $primary-color;
+      text-decoration: none;
+      font-weight: bold;
+      &:hover {
+        color: color.adjust($primary-color, $lightness: 10%);
+        text-decoration: underline;
+      }
+    }
+  }
+  @media (max-width: 1200px) {
+  }
+  @media (max-width: 768px) {
+  }
+  @media (max-width: 640px) {
+  }
+  @media (max-width: 480px) {
+  }
+  @media (max-width: 390px) {
+    form {
+      .row {
+        .col-nome, .col-telefone, .col-cpf, .col-estado, .col-logradouro, .col-numero, .col-apt, .col-blc, .col-cep {
+          min-width: 20em;
         }
       }
     }
@@ -357,5 +387,10 @@ section.contato {
   @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+  }
+}
+section.cadastre {
+  div.container {
+    padding: 0 1em;
   }
 }

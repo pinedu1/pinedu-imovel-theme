@@ -25,7 +25,7 @@ if ( isset( $_REQUEST['identificacao_ok'] ) ) {
     <h4>Identificação</h4>
   </header>
   <form name="cadastro-form" id="cadastro-form" action="<?php echo esc_url(get_permalink()); ?>" method="POST" enctype="multipart/form-data">
-    <?php wp_nonce_field('property_submission_nonce', 'property_nonce'); ?>
+    <?php wp_nonce_field('cadastro_imovel', 'property_nonce'); ?>
     <input type="hidden" name="identificacao" id="identificacao" value="<?php echo $identificacao; ?>">
     <div class="row">
       <div class="col col-nome">
@@ -47,7 +47,7 @@ if ( isset( $_REQUEST['identificacao_ok'] ) ) {
     </div>
     <footer class="row" id="passoPosIdentificacao">
       <div class="row mensagem">
-        <p>Sua identificação é essencial para oferecermos o melhor serviço; com as informações fornecidas, um corretor qualificado entrará em contato para ajudar na promoção do seu imóvel; seus dados estarão protegidos e usados exclusivamente conforme nossa <a href="./politicaPrivacidade">Política de Privacidade</a>.</p>
+        <p>Sua identificação é essencial para oferecermos o melhor serviço; com as informações fornecidas, um corretor qualificado entrará em contato para ajudar na promoção do seu imóvel; seus dados estarão protegidos e usados exclusivamente conforme nossa &nbsp;<a href="./politicaPrivacidade" class="cadastre-privacy">Política de Privacidade</a></strong>.</p>
       </div>
       <div class="row buttom">
         <button type="button" id="btnProximo" onClick="passoPosIdentificacao(event);">Próximo</button>

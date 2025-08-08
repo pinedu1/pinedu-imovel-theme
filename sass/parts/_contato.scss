@@ -5,6 +5,17 @@ section.contact {
   width: 90%;
   margin: auto;
   padding-top: 2em;
+  @media (max-width: 1200px) {
+  }
+  @media (max-width: 768px) {
+  }
+  @media (max-width: 640px) {
+  }
+  @media (max-width: 480px) {
+  }
+  @media (max-width: 390px) {
+    width: 100%;
+  }
   a {
     text-decoration: none;
     color: $cor_hashura;
@@ -76,7 +87,6 @@ section.contact {
           margin-bottom: 0;
         }
       }
-
       .contact-text {
         position: relative;
         width: auto;
@@ -94,7 +104,6 @@ section.contact {
         }
       }
     }
-
     .contact-form {
       position: relative;
       display: flex;
@@ -168,6 +177,8 @@ section.contact {
       }
     }
   }
+  @media (max-width: 1200px) {
+  }
   @media (max-width: 768px) {
     div.container {
       grid-template-columns: 1fr;
@@ -199,6 +210,27 @@ section.contact {
         .btn {
           padding: 0.8em 1.5em;
           font-size: 1.2em;
+        }
+      }
+    }
+  }
+  @media (max-width: 640px) {
+  }
+  @media (max-width: 480px) {
+  }
+  @media (max-width: 390px) {
+    div.container {
+      width: 100%;
+      margin: 0 auto;
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+      padding: 0;
+      .contact-form {
+        width: 95%;
+        margin: 0 auto;
+        padding: 0 0.5em;
+        form {
+          width: 100%;
         }
       }
     }

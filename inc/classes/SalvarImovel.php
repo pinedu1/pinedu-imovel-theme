@@ -7,24 +7,22 @@ class SalvarImovel {
     $server = $options['url_servidor'] ?? '';
     $token = $options['token'];
     if ( $_SERVER[ 'REQUEST_METHOD' ] === 'POST' && is_page( 'deixe-seu-imovel' ) ) {
-      // 1. (Opcional) Valide campos aqui
-      // 2. Constrói o POST multipart para o servidor Java
       $boundary = uniqid();
       $delimiter = '-------------' . $boundary;
-      $postData = self::build_multipart_data( $_POST, $_FILES, $delimiter );
-
+      $credenciais = [ 'username' => urlencode( $options['token_username'] ), 'password' => urlencode( $options['token_password'] ) ];
+      $postData = self::build_multipart_data( array_merge($_POST, $credenciais), $_FILES, $delimiter );
       $response = wp_remote_post(
         $server . self::ENDPOINT . 'cadastrarImovel'
-        , [ 'headers' =>
-          [
+        , [ 'headers' => [
             'Content-Type' => "multipart/form-data; boundary=" . $delimiter
             , 'Authorization' => 'Bearer ' . sanitize_text_field( $token )
           ]
-          , 'body' => $postData, 'timeout' => 60
+          , 'body' => $postData
+          , 'timeout' => 600
         ]
       );
-      // 3. Trate a resposta do seu servidor Java
       if ( is_wp_error( $response ) ) {
+        error_log( 'Response: ' . print_r($response, true) );
         wp_die( 'Erro ao enviar: ' . $response->get_error_message() );
       } else {
         $body = wp_remote_retrieve_body( $response );
@@ -78,7 +76,7 @@ class SalvarImovel {
   }
   public static function validate_nonce( $request ) {
     $nonce = $_REQUEST["property_nonce"];
-    $action = 'property_submission_nonce';
+    $action = 'cadastro_imovel';
     $result_nonce = wp_verify_nonce($nonce, $action);
     return ( $result_nonce !== false);
   }

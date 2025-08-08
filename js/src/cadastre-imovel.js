@@ -1,4 +1,19 @@
 const $ = jQuery;
+function calculaPosicaoScrollTo( elemento ) {
+  var scrollPara = $(window).scrollTop();
+  if (elemento.length) {
+    const posicaoTop = elemento.offset().top;
+    const alturaJanela = $(window).height();
+    const alturaElemento = elemento.outerHeight();
+    if ( posicaoTop > 0 ) {
+      scrollPara = posicaoTop - ( (alturaJanela + alturaElemento ) / 2);
+    } else {
+      return -1;
+    }
+    scrollPara = Math.max(0, scrollPara);
+  }
+  return scrollPara;
+}
 function validarFormularioCadastre() {
   const form = $('#cadastro-form');
   return validarFormulario(form);
@@ -19,14 +34,20 @@ function ajaxTipoImovel() {
         console.error('Erro na requisição AJAX: ', response);
       }
     },
-    error() {
+    error( jqXHR, textStatus, errorThrown ) {
+      console.error(jqXHR);
+      console.error(textStatus);
+      console.error(errorThrown);
       console.error('Erro na requisição desconhecido AJAX');
     },
     complete( jqXHR, textStatus ) {
       $('#loading-curtain').fadeOut();
-      $('html, body').animate({
-        scrollTop: $("#btnProximo").offset().top
-      }, 800);
+      const posY = calculaPosicaoScrollTo( $('form#cadastro-form div.row:last-child') );
+      if (posY > 0) {
+        $('html, body').animate({
+          scrollTop: posY
+        }, 500);
+      }
     }
   });
 }
@@ -46,14 +67,17 @@ function ajaxLocalizacao() {
         console.error('Erro na requisição AJAX: ', response);
       }
     },
-    error() {
+    error( jqXHR, textStatus, errorThrown ) {
       console.error('Erro na requisição desconhecido AJAX');
     },
     complete( jqXHR, textStatus ) {
       $('#loading-curtain').fadeOut();
-      $('html, body').animate({
-        scrollTop: $("#btnProximo").offset().top
-      }, 800);
+      const posY = calculaPosicaoScrollTo( $('form#cadastro-form div.row:last-child') );
+      if (posY > 0) {
+        $('html, body').animate({
+          scrollTop: posY
+        }, 500);
+      }
     }
   });
 }
@@ -73,14 +97,17 @@ function ajaxNegociacao() {
         console.error('Erro na requisição AJAX: ', response);
       }
     },
-    error() {
+    error( jqXHR, textStatus, errorThrown ) {
       console.error('Erro na requisição desconhecido AJAX');
     },
     complete( jqXHR, textStatus ) {
       $('#loading-curtain').fadeOut();
-      $('html, body').animate({
-        scrollTop: $("#btnProximo").offset().top
-      }, 800);
+      const posY = calculaPosicaoScrollTo( $('form#cadastro-form div.row:last-child') );
+      if (posY > 0) {
+        $('html, body').animate({
+          scrollTop: posY
+        }, 500);
+      }
     }
   });
 }
@@ -100,14 +127,17 @@ function ajaxCaracteristicas() {
         console.error('Erro na requisição AJAX: ', response);
       }
     },
-    error() {
+    error( jqXHR, textStatus, errorThrown ) {
       console.error('Erro na requisição desconhecido AJAX');
     },
     complete( jqXHR, textStatus ) {
       $('#loading-curtain').fadeOut();
-      $('html, body').animate({
-        scrollTop: $("#btnProximo").offset().top
-      }, 800);
+      const posY = calculaPosicaoScrollTo( $('form#cadastro-form div.row:last-child') );
+      if (posY > 0) {
+        $('html, body').animate({
+          scrollTop: posY
+        }, 500);
+      }
     }
   });
 }
@@ -127,14 +157,17 @@ function ajaxFotos() {
         console.error('Erro na requisição AJAX: ', response);
       }
     },
-    error() {
+    error( jqXHR, textStatus, errorThrown ) {
       console.error('Erro na requisição desconhecido AJAX');
     },
     complete( jqXHR, textStatus ) {
       $('#loading-curtain').fadeOut();
-      $('html, body').animate({
-        scrollTop: $("#btnProximo").offset().top
-      }, 800);
+      const posY = calculaPosicaoScrollTo( $('form#cadastro-form div.row:last-child') );
+      if (posY > 0) {
+        $('html, body').animate({
+          scrollTop: posY
+        }, 500);
+      }
     }
   });
 }
@@ -218,9 +251,12 @@ function passoPosFotos(e) {
     },
     complete( jqXHR, textStatus ) {
       $('#loading-curtain').fadeOut();
-      $('html, body').animate({
-        scrollTop: $("#btnProximo").offset().top
-      }, 800);
+      const posY = calculaPosicaoScrollTo( $('form#cadastro-form div.row:last-child') );
+      if (posY > 0) {
+        $('html, body').animate({
+          scrollTop: posY
+        }, 500);
+      }
     }
   });
 }
@@ -262,7 +298,7 @@ function estadoChange(obj) {
         console.error('Erro na requisição AJAX: ', response);
       }
     },
-    error() {
+    error( jqXHR, textStatus, errorThrown ) {
       console.error('Erro na requisição desconhecido AJAX');
     },
   });
@@ -290,7 +326,7 @@ function cidadeChange(obj) {
         console.error('Erro na requisição AJAX: ', response);
       }
     },
-    error() {
+    error( jqXHR, textStatus, errorThrown ) {
       console.error('Erro na requisição desconhecido AJAX');
     },
   });
@@ -470,9 +506,12 @@ function instalaDropZone() {
         },
         complete( jqXHR, textStatus ) {
           $('#loading-curtain').fadeOut();
-          $('html, body').animate({
-            scrollTop: $("#btnProximo").offset().top
-          }, 800);
+          const posY = calculaPosicaoScrollTo( $('form#cadastro-form div.row:last-child') );
+          if (posY > 0) {
+            $('html, body').animate({
+              scrollTop: posY
+            }, 500);
+          }
         }
       });
     }

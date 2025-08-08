@@ -12,7 +12,6 @@ $description = get_bloginfo( 'description', 'display' );
 
 <section class="site-branding">
   <header class="branding-header">
-    <!-- Linha do Logo + Título -->
     <div class="branding-row">
       <div class="branding-logo">
         <?php the_custom_logo(); ?>
@@ -23,7 +22,6 @@ $description = get_bloginfo( 'description', 'display' );
         </a>
       </h1>
     </div>
-
     <!-- Linha da Descrição -->
     <?php if ( $description || is_customize_preview() ) : ?>
       <p class="branding-description site-description">

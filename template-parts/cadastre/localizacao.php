@@ -78,7 +78,7 @@ $blc = isset($_REQUEST['blc']) ? sanitize_text_field($_REQUEST['blc']) : '';
 </div>
 <footer class="row" id="passoPosLocalizacao">
   <div class="row mensagem">
-    <p>A localização do imóvel é um dos fatores principais para promover seu imóvel; selecione o <strong>Estado</strong> e a <strong>Cidade</strong>, e comece a digitar o nome da Localidade; o sistema preencherá automaticamente os campos <strong>CEP</strong> e <strong>Bairro</strong>.</p>
+    <p>A localização do imóvel é um dos fatores principais para promover o seu imóvel; selecione o &nbsp;<strong>Estado</strong>&nbsp; e a &nbsp;<strong>Cidade</strong>,&nbsp; e comece a digitar o nome da Localidade; o sistema preencherá automaticamente os campos &nbsp;<strong>CEP</strong>&nbsp; e &nbsp;<strong>Bairro</strong>&nbsp;.</p>
   </div>
   <div class="row buttom">
     <button id="btnProximo" type="button" class="btn" onClick="return passoPosLocalizacao(event);">Próximo</button>

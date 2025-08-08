@@ -26,6 +26,48 @@
       font-size: var(--typography-size-h4);
       color: var(--color-paragraph);
     }
+    @media (max-width: 1200px) {}
+    @media (max-width: 768px) {}
+    @media (max-width: 640px) {}
+    @media (max-width: 480px) {}
+    @media (max-width: 390px) {
+      text-align: center;
+      min-height: 10em;
+      display: block;
+      .branding-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .branding-row {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 1rem;
+        .branding-logo {
+          margin-bottom: 0.125rem;
+          .custom-logo {
+            max-height: 10rem;
+            width: auto;
+          }
+          .custom-logo-link {
+            line-height: 1;
+          }
+        }
+        .branding-title {
+          margin: 0;
+          font-size: 1.5rem;
+          line-height: 1.2;
+          a {
+            text-decoration: none;
+            color: white;
+          }
+        }
+      }
+      .branding-description {
+        display: none;
+      }
+    }
   }
   a {
     /*color: var(--color-heading);*/
