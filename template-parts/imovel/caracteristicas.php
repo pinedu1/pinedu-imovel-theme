@@ -1,6 +1,8 @@
 <?php
 global $post;
+
 $dependencias = get_tipo_dependencias_imovel( $post->ID );
+
 unset( $dependencias['LOCALIZACAO'] );
 $titulo = [
   'CARACTERISTICAS' => 'Características'

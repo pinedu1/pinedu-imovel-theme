@@ -1,7 +1,7 @@
 <?php
   require_once get_template_directory() . '/inc/classes/DoGet.php';
 class Gpb extends DoGet {
-  const ENDPOINT = '/pndPortal/wordpress/';
+  const ENDPOINT = '/wordpress/';
   private $url;
   private $token;
   public function __construct() {

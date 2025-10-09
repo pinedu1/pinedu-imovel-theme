@@ -92,25 +92,26 @@ function instala_shortcode_barra_pesquisa( $atts ) {
   \PineduShortCodeSearchBar::do( $atts );
 }
 function enqueue_dropzone_assets() {
+  wp_enqueue_script( 'dropzone-js', get_theme_file_uri('/node_modules/dropzone/dist/dropzone-min.js'), array(), '6.0.0-beta.2', true );
+  wp_enqueue_style( 'dropzone-css', get_theme_file_uri('/node_modules/dropzone/dist/dropzone.css'), array(), '6.0.0-beta.2' );
+}
+/*function enqueue_dropzone_assets() {
   wp_enqueue_script( 'dropzone-js', get_theme_file_uri('/assets/js/vendor/dropzone/dropzone-min.js'), array(), filemtime(get_theme_file_path('/assets/js/vendor/dropzone/dropzone-min.js')), true );
   wp_enqueue_style( 'dropzone-css', get_theme_file_uri('/assets/css/vendor/dropzone/dropzone.css'), array(), filemtime(get_theme_file_path('/assets/css/vendor/dropzone/dropzone.css')) );
-}
+}*/
 function enqueue_jquery_ui() {
   wp_enqueue_script( 'jquery-ui-autocomplete', get_theme_file_uri('/assets/js/vendor/jquery-ui/jquery-ui.js' ), array( 'jquery' ), '1.13.2', true );
   wp_enqueue_style( 'custom-autocomplete-css', get_theme_file_uri('/assets/css/vendor/jquery-ui/jquery-ui.css'), array(), '1.13.2' );
-  //wp_enqueue_script( 'jquery-ui-autocomplete', 'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js', array( 'jquery' ), '1.13.2', true );
-  //wp_enqueue_style( 'custom-autocomplete-css', 'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css', array(), '1.13.2' );
 }
 function enqueue_swiper_js() {
-  wp_enqueue_script( 'swiper-js', get_theme_file_uri('/assets/js/vendor/swiper/swiper-element-bundle.js'), array(), '11.2.8', true );
-  wp_enqueue_style( 'swiper-css', get_theme_file_uri('/assets/css/vendor/swiper/swiper-bundle.css'), array(), '11.2.8' );
+  wp_enqueue_script( 'swiper-js', get_theme_file_uri('/node_modules/swiper/swiper-element-bundle.js'), array(), '11.2.8', true );
+  wp_enqueue_style( 'swiper-css', get_theme_file_uri('/node_modules/swiper/swiper-bundle.css'), array(), '11.2.8' );
 }
 function enqueue_glide_js() {
   wp_enqueue_script( 'swiper-js', get_theme_file_uri('/assets/js/vendor/glide/glide.esm.js'), array(), '11.2.8', true );
   wp_enqueue_style( 'swiper-css', get_theme_file_uri('/assets/css/vendor/glide/glide.core.css'), array(), '11.2.8' );
 }
 function enqueue_font_awesome() {
-  //wp_enqueue_style( 'font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css', array(), '6.4.0' );
-  wp_enqueue_style( 'font-awesome', get_theme_file_uri('/node_modules/@fortawesome/fontawesome-free/css/all.css'), array(), filemtime(get_theme_file_path('/node_modules/@fortawesome/fontawesome-free/css/all.min.css') ) );
-  wp_enqueue_script( 'font-awesome', get_theme_file_uri('/node_modules/@fortawesome/fontawesome-free/js/all.js'), array(), filemtime(get_theme_file_path('/node_modules/@fortawesome/fontawesome-free/js/all.min.js')), true );
+  wp_enqueue_style( 'font-awesome', get_theme_file_uri('/node_modules/@fortawesome/fontawesome-free/css/all.css'), array(), filemtime(get_theme_file_path('/node_modules/@fortawesome/fontawesome-free/css/all.css') ) );
+  wp_enqueue_script( 'font-awesome', get_theme_file_uri('/node_modules/@fortawesome/fontawesome-free/js/all.js'), array(), filemtime(get_theme_file_path('/node_modules/@fortawesome/fontawesome-free/js/all.js')), true );
 }

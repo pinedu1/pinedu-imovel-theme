@@ -1,7 +1,7 @@
 <?php
 class Pinedu_Form_Cadastre {
   const PREFIXO = 'wp_ajax_nopriv_';
-  const ENDPOINT = '/pndPortal/wordpress/';
+  const ENDPOINT = '/wordpress/';
   const HOOK_IDENTIFICACAO = 'CADASTREIDENTIFICACAO';
   const HOOK_LOCALIZACAO = 'CADASTRELOCALIZACAO';
   const HOOK_NEGOCIACAO = 'CADASTRENEGOCIACAO';
