@@ -264,3 +264,32 @@ add_filter( 'template_include', function( $template ) {
   }
   return $template;
 });
+function busca_campos_destaque_card( $post ) {
+  $campos = get_post_meta( $post->ID, '', false );
+  $destaques = [];
+  $getValor = function( $campos, $campo ) {
+    $p = explode('Nome', $campo);
+    $sigla = $p[0];
+    return $campos[ $sigla ][0];
+  };
+  foreach ( $campos as $campo => $cpp ) {
+    if ( !preg_match('/^[A-Z]/', $campo) ) continue;
+    $cp = $cpp[0];
+    if ( str_starts_with(normalizar($cp), 'DORMIT') ) {
+      $destaques[ 'DOR' ] = [ 'nome' => $cp, 'valor' => $getValor( $campos, $campo ) ];
+    } else if ( str_starts_with(normalizar($cp), 'QUARTO') ) {
+      $destaques[ 'QUA' ] = [ 'nome' => $cp, 'valor' => $getValor( $campos, $campo ) ];
+    } else if ( str_starts_with(normalizar($cp), 'SUITE') ) {
+      $destaques[ 'SUI' ] = [ 'nome' => $cp, 'valor' => $getValor( $campos, $campo ) ];
+    } else if ( str_starts_with(normalizar($cp), 'BAN') ) {
+      $destaques[ 'BAN' ] = [ 'nome' => $cp, 'valor' => $getValor( $campos, $campo ) ];
+    } else if ( str_starts_with(normalizar($cp), 'GARAGE') ) {
+      $destaques[ 'GAR' ] = [ 'nome' => $cp, 'valor' => $getValor( $campos, $campo ) ];
+    } else if ( str_starts_with(normalizar($cp), 'AREA U') ) {
+      $destaques[ 'ARU' ] = [ 'nome' => $cp, 'valor' => $getValor( $campos, $campo ) ];
+    } else if ( str_starts_with(normalizar($cp), 'AREA T') ) {
+      $destaques[ 'ART' ] = [ 'nome' => $cp, 'valor' => $getValor( $campos, $campo ) ];
+    }
+  }
+  return $destaques;
+}

@@ -1,7 +1,8 @@
 <?php
   global $post;
-
+  $destaques = Air_Light\busca_campos_destaque_card( $post );
   $icons = [ 'DOR' => 'fa fa-bed', 'SUI' => 'fa fa-shower', 'BAN' => 'fa fa-bath', 'GAR' => 'fa fa-car', 'COZ' => 'fa-solid fa-kitchen-set', 'PIS' => 'fa-solid fa-person-swimming', 'PISPRV' => 'fa-solid fa-person-swimming', 'SAL' => 'fa-solid fa-couch', 'ARS' => 'fa fa-brush', 'INTERFON' => 'fa fa-bell', 'ARCOND' => 'fa fa-snowflake', 'ARUTIL' => 'fa-solid fa-ruler-combined', 'ARCONS' => 'fa-solid fa-draw-polygon', 'ARTOT' => 'fa-solid fa-circle-nodes' ];
+
 ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
   <a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" class="cardLink" >
@@ -17,16 +18,17 @@
         <tbody>
         <tr>
           <?php if ( true ): ?>
-            <?php if( $post->ARUTIL ): ?><td itemprop="floorSize" title="<?php echo  $post->ARUTILNome; ?>"><?php echo formata_valor( $post->ARUTIL, 0); ?> <i class="<?php echo  $icons[ 'ARUTIL' ]; ?>"></i></td><?php endif;?>
-            <?php if( $post->DOR ): ?><td itemprop="numberOfRooms" title="<?php echo  $post->DORNome; ?>"><?php echo $post->DOR; ?> <i class="<?php echo $icons[ 'DOR' ]; ?>"></i></td><?php endif;?>
-            <?php if( $post->SUI ): ?><td itemprop="numberOfRooms" title="<?php echo  $post->SUINome; ?>"><?php echo $post->SUI; ?> <i class="<?php echo $icons[ 'SUI' ]; ?>"></i></td><?php endif;?>
-            <?php if( $post->BAN ): ?><td itemprop="numberOfBathroomsTotal" title="<?php echo  $post->BANNome; ?>"><?php echo $post->BAN; ?> <i class="<?php echo $icons[ 'BAN' ]; ?>"></i></td><?php endif;?>
-            <?php if( $post->GAR ): ?><td itemprop="parkingSpace" title="<?php echo  $post->GARNome; ?>"><?php echo $post->GAR; ?> <i class="<?php echo $icons[ 'GAR' ]; ?>"></i></td><?php endif;?>
+            <?php if( isset( $destaques['ARU'] ) ): $d = $destaques['ARU']; ?><td itemprop="floorSize" title="<?php echo $d[ 'nome' ]; ?>"><?php echo formata_valor( $d[ 'valor' ], 0); ?> <i class="<?php echo  $icons[ 'ARUTIL' ]; ?>"></i></td><?php endif;?>
+            <?php if( isset( $destaques['ART'] ) ): $d = $destaques['ART']; ?><td itemprop="floorSize" title="<?php echo $d[ 'nome' ]; ?>"><?php echo formata_valor( $d[ 'valor' ], 0); ?> <i class="<?php echo  $icons[ 'ARTOT' ]; ?>"></i></td><?php endif;?>
+            <?php if( isset( $destaques['DOR'] ) ): $d = $destaques['DOR']; ?><td itemprop="numberOfRooms" title="<?php echo $d[ 'nome' ]; ?>"><?php echo $d[ 'valor' ]; ?> <i class="<?php echo $icons[ 'DOR' ]; ?>"></i></td><?php endif;?>
+            <?php if( isset( $destaques['SUI'] ) ): $d = $destaques['SUI']; ?><td itemprop="numberOfRooms" title="<?php echo $d[ 'nome' ]; ?>"><?php echo $d[ 'valor' ]; ?> <i class="<?php echo $icons[ 'SUI' ]; ?>"></i></td><?php endif;?>
+            <?php if( isset( $destaques['BAN'] ) ): $d = $destaques['BAN']; ?><td itemprop="numberOfBathroomsTotal" title="<?php echo $d[ 'nome' ]; ?>"><?php echo $d[ 'valor' ]; ?> <i class="<?php echo $icons[ 'BAN' ]; ?>"></i></td><?php endif;?>
+            <?php if( isset( $destaques['GAR'] ) ): $d = $destaques['GAR']; ?><td itemprop="parkingSpace" title="<?php echo $d[ 'nome' ]; ?>"><?php echo $d[ 'valor' ]; ?> <i class="<?php echo $icons[ 'GAR' ]; ?>"></i></td><?php endif;?>
           <?php else: ?>
-            <?php if( $post->ARUTIL ): $txt = $post->ARUTIL. " " . corta_texto( $post->ARUTILNome, 5); ?><td itemprop="floorSize"><?php echo $txt; ?></td><?php endif;?>
-            <?php if( $post->DOR ): $txt = $post->DORcorta_texto( $post->DORNome, 5 ); ?><td itemprop="numberOfRooms"><?php echo $txt ?></td><?php endif;?>
-            <?php if( $post->BAN ): $txt = $post->BANcorta_texto( $post->BANNome, 5); ?><td itemprop="numberOfBathroomsTotal"><?php echo $txt; ?></td><?php endif;?>
-            <?php if( $post->GAR ): $txt = $post->GARcorta_texto( $post->GARNome, 5 ); ?><td itemprop="parkingSpace"><?php echo $txt; ?></td><?php endif;?>
+            <?php if( isset( $destaques['ARU'] ) ): $d = $destaques['ARU']; $txt = $d[ 'valor' ] . " " . corta_texto( $d[ 'nome' ], 5); ?><td itemprop="floorSize"><?php echo $txt; ?></td><?php endif;?>
+            <?php if( isset( $destaques['DOR'] ) ): $d = $destaques['DOR']; $txt = $d[ 'valor' ] . " " . corta_texto( $d[ 'nome' ], 5); ?><td itemprop="numberOfRooms"><?php echo $txt ?></td><?php endif;?>
+            <?php if( isset( $destaques['BAN'] ) ): $d = $destaques['BAN']; $txt = $d[ 'valor' ] . " " . corta_texto( $d[ 'nome' ], 5); ?><td itemprop="numberOfBathroomsTotal"><?php echo $txt; ?></td><?php endif;?>
+            <?php if( isset( $destaques['GAR'] ) ): $d = $destaques['GAR']; $txt = $d[ 'valor' ] . " " . corta_texto( $d[ 'nome' ], 5); ?><td itemprop="parkingSpace"><?php echo $txt; ?></td><?php endif;?>
           <?php endif; ?>
         </tr>
         </tbody>

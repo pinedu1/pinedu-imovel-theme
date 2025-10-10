@@ -1,6 +1,12 @@
 @use 'sass:color';
 @import 'variaveis';
 
+// Variáveis
+$breakpoint-mobile: 767px;
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1200px;
+
+
 section.block.block-single {
   width: 90%;
   margin: 0 auto;
@@ -10,18 +16,12 @@ section.block.block-single {
   aside.sidebar-pesquisa, article.article-content {
     padding-top: 2em;
     padding-bottom: 1em;
-    margin-bottom: 1em;
     display: block;
     margin: 0 auto;
     width: 100%;
   }
 }
 article.article-content {
-  .imovel-content {
-    p {
-      text-align: justify;
-    }
-  }
   section.referencia {
     display: block;
     width: 100%;
@@ -34,127 +34,153 @@ article.article-content {
       }
     }
   }
-  .detalhes {
-    width: 100%;
-    max-width: calc(25% - 10px);
-    @media (max-width: 1600px) {
-      max-width: calc(20% - 10px);
-    }
-    @media (max-width: 1200px) {
-      max-width: calc(25% - 10px);
-    }
-    @media (max-width: 1024px) {
-      max-width: calc(33% - 10px);
-    }
-    @media (max-width: 800px) {
-      max-width: calc(33% - 10px);
-    }
-    @media (max-width: 768px) {
-      max-width: calc(50% - 10px);
-    }
-    @media (max-width: 640px) {
-      max-width: 100%;
-    }
-    @media (max-width: 420px) {
-      max-width: 100%;
-    }
+}
 
-    margin-bottom: 1em;
-    background-color: $bg-light-gray;
-    padding: 1em;
-    border: 1px solid #ddd;
-    border-top-left-radius: 0;
-    border-top-right-radius: 3%;
-    border-bottom-right-radius: 3%;
-    border-bottom-left-radius: 3%;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    &:hover {
-      box-shadow: $card-hover-effect, inset -3px -3px 6px rgba(255, 255, 255, 0.8);
-      transform: translateY(-2px);
-    }
-    h4 {
-      border-bottom: 1px solid $border-color;
-      padding-bottom: 10px;
-      margin-bottom: 15px;
-      color: $text-color;
-    }
-    .info-row {
-      display: flex;
-      align-items: center;
-      i {
-        margin-right: 10px;
-        color: $primary-color;
-      }
-      .label {
-        margin-right: 5px;
-        &::after{
-          content: ":";
-          display: inline-block;
-          width: 0.5em;
-          margin-right: 0.25em;
-          vertical-align: middle;
-        }
-        &::before{
-          content: '';
-          display: inline-block;
-          width: 0.5em;
-          vertical-align: middle;
-        }
-      }
-      .value {
-        font-weight: bold;
-        color: $secondary-text-color;
-        white-space: nowrap;      /* Impede a quebra de linha */
-        overflow: hidden;         /* Esconde o conteúdo que ultrapassar */
-        text-overflow: ellipsis;  /* Adiciona "..." se o texto for cortado */
-        display: inline-block;    /* Necessário para overflow funcionar em elementos inline */
-        max-width: 140px;         /* Ajuste conforme necessário */
-      }
-    }
-    .info-row.valor {
-      i {
-        margin-right: 10px;
-        color: $secondary-color;
-      }
-    }
-    @media (max-width: 1024px) {
-      max-width: calc(33% - 10px);
-    }
-    @media (max-width: 800px) {
-      max-width: calc(33% - 10px);
-    }
-    @media (max-width: 768px) {
-      max-width: calc(50% - 10px);
-    }
-    @media (max-width: 640px) {
-      max-width: 100%;
-    }
-    @media (max-width: 420px) {
-      max-width: 100%;
-    }
-  }
-  section.misc {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: $gap-spacing;
-    margin-top: $gap-spacing;
-    padding: 0;
-    @media (max-width: 1024px) {
-    }
-    @media (max-width: 800px) {
-    }
-    @media (max-width: 768px) {
-    }
-    @media (max-width: 640px) {
-      flex-direction: column;
-    }
-    @media (max-width: 420px) {
-      flex-direction: column;
-    }
+section.content.visinhanca {
+  width: 100%;
+  margin: 0 auto;
+  article.visinhanca {
+    width: 100%;
   }
 }
-section.content.visinhanca {
-  width: 90%;
+// Mixins
+@mixin mobile {
+  @media (max-width: #{$breakpoint-mobile}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: #{$breakpoint-tablet}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: #{$breakpoint-desktop}) {
+    @content;
+  }
+}
+
+// Container principal
+.article-content {
+  width: 100%;
+  max-width: $breakpoint-desktop;
   margin: 0 auto;
+  padding: 0 15px;
+  box-sizing: border-box;
+
+  // Seção misc - layout responsivo
+  .misc {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+    width: 100%;
+
+    @include tablet {
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+    .detalhes {
+      width: 100%;
+      margin-bottom: 1em;
+      background-color: $bg-light-gray;
+      padding: 1em;
+      border: 1px solid #ddd;
+      border-radius: 0 3% 3% 3%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+      &:hover {
+        box-shadow: $card-hover-effect, inset -3px -3px 6px rgba(255, 255, 255, 0.8);
+        transform: translateY(-2px);
+      }
+      h4 {
+        border-bottom: 1px solid $border-color;
+        color: $text-color;
+        width: 100%;
+        margin: 0 0 15px 0;
+        font-size: 1.2rem;
+        border-bottom: 2px solid $primary-color;
+        padding-bottom: 8px;
+      }
+
+      .info-row {
+        display: flex;
+        justify-content: left;
+        i {
+          margin-right: 10px;
+          color: $primary-color;
+        }
+        .label {
+          margin-right: 5px;
+          font-weight: 600;
+          font-size: 0.9rem;
+          &::after{
+            content: ":";
+            display: inline-block;
+            width: 0.5em;
+            margin-right: 0.25em;
+            vertical-align: middle;
+          }
+          &::before{
+            content: '';
+            display: inline-block;
+            width: 0.5em;
+            vertical-align: middle;
+          }
+        }
+        .value {
+          font-weight: 500;
+          text-align: right;
+          color: $secondary-text-color;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: inline-block;
+          max-width: 140px;
+        }
+        &:last-child {
+          border-bottom: none;
+        }
+        &.valor {
+          color: $secondary-color;
+          font-size: 1.1rem;
+          font-weight: 700;
+          svg {
+            margin-right: 10px;
+            padding-top: 5px;
+          }
+        }
+        &.valor .value {
+          color: $secondary-color;
+        }
+        @include mobile {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 5px;
+
+          .value {
+            text-align: left;
+          }
+        }
+      }
+    }
+    .informacoes {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 10em;
+      .info-top {
+        flex-shrink: 0;
+      }
+      .separador-vertical {
+        flex: 1;
+        min-height: 20px;
+      }
+      .info-bottom {
+        flex-shrink: 0; // Não encolhe
+        margin-top: auto; // ← Empurra para o final
+      }
+    }
+  }
 }

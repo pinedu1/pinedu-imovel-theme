@@ -1,6 +1,7 @@
 <?php
   require_once get_template_directory() . '/inc/classes/Visitados.php';
   global $post;
+  $destaques = Air_Light\busca_campos_destaque_card( $post );
 ?>
 <a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" class="cardVisitado">
   <section class="property-card <?php echo $this->getClass(); ?>" itemscope itemtype="http://schema.org/RealEstateListing">
@@ -28,28 +29,34 @@
               <span class="value" itemprop="addressRegion"><?php echo $post->regiao; ?></span>
             </div>
           <?php endif;?>
-          <?php if( $post->DOR ): ?>
+          <?php if( isset( $destaques['DOR'] ) ): $d = $destaques['DOR']; ?>
             <div class="info-row" itemprop="numberOfRooms">
-              <span class="label"><?php echo $post->DORNome; ?></span>
-              <span class="value"><?php echo $post->DOR; ?></span>
+              <span class="label"><?php echo $d[ 'nome' ] ?></span>
+              <span class="value"><?php echo $d[ 'valor' ]; ?></span>
             </div>
           <?php endif;?>
-          <?php if( $post->BAN ): ?>
+          <?php if( isset( $destaques['BAN'] ) ): $d = $destaques['BAN']; ?>
             <div class="info-row" itemprop="numberOfBathroomsTotal">
-              <span class="label"><?php echo $post->BANNome; ?></span>
-              <span class="value"><?php echo $post->BAN; ?></span>
+              <span class="label"><?php echo $d[ 'nome' ] ?></span>
+              <span class="value"><?php echo $d[ 'valor' ]; ?></span>
             </div>
           <?php endif;?>
-          <?php if( $post->GAR ): ?>
+          <?php if( isset( $destaques['GAR'] ) ): $d = $destaques['GAR']; ?>
             <div class="info-row" itemprop="parkingSpace">
-              <span class="label"><?php echo $post->GARNome; ?></span>
-              <span class="value"><?php echo $post->GAR; ?></span>
+              <span class="label"><?php echo $d[ 'nome' ] ?></span>
+              <span class="value"><?php echo $d[ 'valor' ]; ?></span>
             </div>
           <?php endif;?>
-          <?php if( $post->ARUTIL ): ?>
+          <?php if( isset( $destaques['ARU'] ) ): $d = $destaques['ARU']; ?>
             <div class="info-row" itemprop="floorSize">
-              <span class="label"><?php echo $post->ARUTILNome; ?></span>
-              <span class="value"><?php echo $post->ARUTIL; ?></span>
+              <span class="label"><?php echo $d[ 'nome' ] ?></span>
+              <span class="value"><?php echo $d[ 'valor' ]; ?></span>
+            </div>
+          <?php endif;?>
+          <?php if( isset( $destaques['ART'] ) ): $d = $destaques['ART']; ?>
+            <div class="info-row" itemprop="floorSize">
+              <span class="label"><?php echo $d[ 'nome' ] ?></span>
+              <span class="value"><?php echo $d[ 'valor' ]; ?></span>
             </div>
           <?php endif;?>
         </div>
