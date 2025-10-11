@@ -256,7 +256,7 @@ function formata_endereco_loja( $tipo, $logradouro, $numero, $complemento, $bair
   if ( ! empty( $cep ) ) {
     $end .= '<br>Cep: ' . formata_cep( $cep ) ;
   }
-  return $end;
+  return formatar_title_case( $end );
 }
 add_filter( 'template_include', function( $template ) {
   if ( false && wp_get_environment_type() === 'development' ) {
@@ -293,3 +293,51 @@ function busca_campos_destaque_card( $post ) {
   }
   return $destaques;
 }
+// Adicionar campo de telefone no Customizer
+/*
+function pinedu_customize_register($wp_customize) {
+
+  // Adicionar seção (se necessário)
+  $wp_customize->add_section('pinedu_contact_info', array(
+    'title' => __('Informações de Contato', 'air-light'),
+    'priority' => 30,
+  ));
+
+  // Campo de Telefone
+  $wp_customize->add_setting('pinedu_phone', array(
+    'default' => '',
+    'sanitize_callback' => 'sanitize_text_field',
+  ));
+
+  $wp_customize->add_control('pinedu_phone', array(
+    'label' => __('Telefone', 'air-light'),
+    'section' => 'pinedu_contact_info',
+    'type' => 'text',
+  ));
+
+  // Campo de Email
+  $wp_customize->add_setting('pinedu_email', array(
+    'default' => '',
+    'sanitize_callback' => 'sanitize_email',
+  ));
+
+  $wp_customize->add_control('pinedu_email', array(
+    'label' => __('Email', 'air-light'),
+    'section' => 'pinedu_contact_info',
+    'type' => 'email',
+  ));
+
+  // Campo de Endereço
+  $wp_customize->add_setting('pinedu_address', array(
+    'default' => '',
+    'sanitize_callback' => 'sanitize_textarea_field',
+  ));
+
+  $wp_customize->add_control('pinedu_address', array(
+    'label' => __('Endereço', 'air-light'),
+    'section' => 'pinedu_contact_info',
+    'type' => 'textarea',
+  ));
+}
+add_action('customize_register', 'Air_Light\pinedu_customize_register');
+*/

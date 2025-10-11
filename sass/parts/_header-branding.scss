@@ -1,6 +1,7 @@
 @use 'sass:color';
 @import 'variaveis';
 /* Pinedu Header -	*/
+$width-max-mobile: 1029px;
 .site-branding {
   width: 100%;
   .branding-header {
@@ -12,11 +13,33 @@
       gap: 1em;
       box-sizing: content-box;
     }
-    .branding-logo img {
-      max-height: 120px;
+    .branding-logo {
       width: auto;
+      margin-top: 80px;
+      margin-left: 80px;
+      @media screen and (max-width: $width-max-mobile - 1px) {
+        display: none;
+      }
+      img {
+        max-height: 120px;
+        width: auto;
+      }
+    }
+    .branding-logo-mobile {
+      display: none;
+      width: auto;
+      height: 80px;
+      margin: 20px 10px;
+      @media screen and (max-width: $width-max-mobile - 1px) {
+        display: block;
+      }
+      img {
+        max-height: 80px;
+        width: auto;
+      }
     }
     .branding-title {
+      display: none;
       margin: 0;
       font-size: var(--typography-size-hero);
       color: var(--color-heading);
@@ -25,8 +48,26 @@
       margin: 0;
       font-size: var(--typography-size-h4);
       color: var(--color-paragraph);
+      @media screen and (max-width: $width-max-mobile - 1px) {
+        display: none;
+      }
     }
     @media (max-width: 1200px) {}
+    @media (max-width: 1080px) {
+      .site-branding {
+        .branding-header {
+          .branding-logo {
+            img {
+              max-height: 100px;
+              width: auto;
+            }
+          }
+          .branding-description {
+            font-size: var(--typography-size-h5);
+          }
+        }
+      }
+    }
     @media (max-width: 768px) {}
     @media (max-width: 640px) {}
     @media (max-width: 480px) {}

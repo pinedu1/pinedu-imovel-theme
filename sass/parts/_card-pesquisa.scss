@@ -66,10 +66,12 @@ article.imovel {
     }
   }
   table.caracteristicas {
-    background-color: var( --color-cinza-f );
+    background-color: $color-background-caracteristicas;
     font-size: 90%;
     td {
-      border-right: 1px solid var( --color-cinza-9 );
+      border-right: 1px solid $color-border-caracteristicas;
+      border-bottom: 1px solid $color-border-caracteristicas;
+      font-size: $caracteristicas-font-size;
       padding: 0.25rem;
       text-align: center;
       &:last-child {

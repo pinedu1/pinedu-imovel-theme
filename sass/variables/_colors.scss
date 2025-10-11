@@ -5,6 +5,8 @@
 // ------------------------------------------------------
 :root {
   // Brand color pool
+  --pantone-485: #DA291C;
+  --pantone-2955: #003865;
   --color-black: #000;
   --color-white: #fff;
   --color-cinza-1: #111;
@@ -23,7 +25,9 @@
   --color-cinza-e: #eee;
   --color-cinza-f: #fff;
   --color-cinza-f8: #f8f8f8;
-
+  --color-menu: #fff680;
+  --color-hover-menu: #fff680;
+  --color-active-menu: #ffeeaa;
   --color-blue-chalk: #ece6f2;
   --color-east-bay: #545773;
   --color-pattens-blue: #eaf1f8;
@@ -33,7 +37,19 @@
   --color-compliance-link-hover: #006799;
   --color-scorpion: #5f5f5f;
   --color-valhalla: #2a2d3e;
-
+  --rich-black: #011628ff;
+  --oxford-blue: #021F38ff;
+  --prussian-blue: #022848ff;
+  --yale-blue: #003865ff;
+  --antiflash-white: #ebf0f3ff;
+  --white: #ffffffff;
+  --antiflash-white-2: #eff3f5ff;
+  --alice-blue: #dee6ebff;
+  --columbia-blue: #bdccd7ff;
+  --powder-blue: #9cb2c3ff;
+  --cadet-gray: #8ca5b9ff;
+  --air-superiority-blue: #7b98afff;
+  --lapis-lazuli: #26567cff;
 
   // Main element colors
   --color-main: var(--color-valhalla);

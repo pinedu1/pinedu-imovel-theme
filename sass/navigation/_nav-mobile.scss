@@ -50,7 +50,10 @@
 @media screen and (max-width: $width-max-mobile - 1px) {
   // Let's ensure site-header loads properly and doesn't leave empty spaces
   .site-header {
-    background-color: var(--color-background-nav-mobile-header);
+    background-color: var(--pantone-2955);
+    .central-atendimento {
+      display: none;
+    }
   }
 
   // Fix burger navigation sometimes not being centered vertically

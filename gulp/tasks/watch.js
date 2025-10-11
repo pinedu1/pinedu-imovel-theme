@@ -39,6 +39,18 @@ function watchFiles(done) {
   // Lint styles
   watch(config.styles.watch.development, series('lintstyles'));
 
+  // CSS direto (arquivos puros em /assets/css)
+  const css = watch('assets/css/**/*.css', series('devstyles'));
+  css.on('change', function(path) { consoleInfo(path); });
+
+  // Imagens
+  const images = watch('assets/images/**/*', series('images'));
+  images.on('change', function(path) { consoleInfo(path); });
+
+  // JS direto
+  const jsAssets = watch('assets/js/**/*.js', series('js'));
+  jsAssets.on('change', function(path) { consoleInfo(path); });
+
   // Finish task
   done();
 };

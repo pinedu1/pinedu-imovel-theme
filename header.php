@@ -7,6 +7,13 @@
  * @package air-light
  */
 namespace Air_Light;
+$empresa = null;
+$empresas = new \WP_Query( array( 'post_type' => 'empresa', 'post_status' => 'publish', 'posts_per_page' => 1, 'meta_query' => [ [ [ 'id'     => '1', 'value'   => '1', 'compare' => '=' ] ] ] ) );
+if ($empresas->have_posts()) {
+  $empresa = $empresas->posts[0];
+}
+$telefonePadrao = $empresa->telefonePadrao;
+
 ?>
 <!doctype html>
 <html <?php language_attributes(); ?>>
@@ -21,7 +28,19 @@ namespace Air_Light;
   <?php wp_body_open(); ?>
   <div id="page" class="site">
     <header class="site-header">
-      <?php get_template_part( 'template-parts/header/branding' ); ?>
-      <?php get_template_part( 'template-parts/header/navigation' ); ?>
+      <div class="site-header">
+        <?php get_template_part( 'template-parts/header/branding' ); ?>
+        <?php get_template_part( 'template-parts/header/navigation' ); ?>
+      </div>
+      <div class="central-atendimento">
+        <a href="tel:<?php echo $telefonePadrao; ?> title="Acesse nossa Central de atendimento <?php echo  formata_telefone( $telefonePadrao ); ?>">
+        <img
+          src="<?php echo get_template_directory_uri(); ?>/assets/images/central_atendimento_vermelho.png"
+          alt="Acesse nossa Central de atendimento <?php echo formata_telefone( $telefonePadrao ); ?>"
+          class="central-atendimento"
+          style="max-width: 100%; height: auto;"
+        />
+        </a>
+      </div>
     </header>
     <div class="site-content">

@@ -16,7 +16,7 @@ if ($lojas->have_posts()): ?>
       <?php
         $emails = get_post_meta( $post->ID, 'telefone', false );
         if ( ! empty( $emails ) ): foreach ( $emails as $telefone ): ?>
-          <div class="store-contact"><a href="telto:<?php echo esc_attr($telefone); ?>"><?php echo esc_html(formata_telefone($telefone)); ?></a></div>
+          <div class="store-contact"><a href="tel:<?php echo esc_attr(formata_link_telefone( $telefone ) ); ?>"><?php echo esc_html(formata_telefone($telefone)); ?></a></div>
         <?php endforeach; ?>
         <?php endif; ?>
     </div>

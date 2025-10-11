@@ -5,16 +5,17 @@
 
   // Affecting to both main and sub-levels
   --color-dropdown-toggle: var(--color-valhalla);
-  --color-current: var(--color-link-text);
+  --color-current: var(--pantone-485);
   --dropdown-toggle-size: 0.75rem;
 
   // Main level items on desktop
-  --typography-size-main-level: var(--typography-size-16);
-  --typography-weight-main-level: var(--typography-weight-bold);
+
+  --typography-size-main-level: var(--typography-size-18);
+  --typography-weight-main-level: var(--typography-weight-bolder);
   --padding-main-level-horizontal: 0;
   --padding-main-level-vertical: 0.375rem;
-  --color-main-level: var(--color-black);
-  --color-hover-main-level: var(--color-link-text);
+  --color-main-level: var(--color-cinza-c);
+  --color-hover-main-level: var(--color-hover-menu);
   --gap-between-dropdown-toggle: 0.9375rem;
   --gap-main-level-horizontal: 1.5625rem;
 
@@ -25,9 +26,9 @@
   --padding-sub-menu-link-vertical: 0.3125rem;
   --padding-sub-menu-link-horizontal: 0.9375rem;
   --width-sub-menu: 12.5rem;
-  --color-sub-menu: var(--color-valhalla);
-  --color-hover-sub-menu: var(--color-valhalla);
-  --color-background-sub-menu: var(--color-white);
+  --color-sub-menu: var(--color-cinza-c);
+  --color-hover-sub-menu: var(--color-hover-menu);
+  --color-background-sub-menu: var(--pantone-2955);
   --gap-dropdown: 0.625rem;
 }
 
@@ -44,6 +45,7 @@
 
   // Navigation wrapper
   .nav-primary {
+    font-family: var(--typography-family-narrow);
     line-height: 0;
     padding-bottom: 0;
     padding-top: 1em;
@@ -337,3 +339,40 @@
     }
   }
 }
+@media (max-width: 1200px) {
+  .nav-primary {
+    ul.menu-items {
+      .menu-item {
+        > a {
+          font-size: var(--typography-size-16);
+        }
+        .sub-menu {
+          a {
+            font-size: var(--typography-size-14);
+          }
+        }
+      }
+    }
+  }
+}
+@media (max-width: 1080px) {
+  .nav-primary {
+    ul.menu-items {
+      .menu-item {
+        > a {
+          font-size: var(--typography-size-14);
+        }
+        .sub-menu {
+          a {
+            font-size: var(--typography-size-12);
+          }
+        }
+      }
+    }
+  }
+}
+@media (max-width: 768px) {
+}
+@media (max-width: 640px) {}
+@media (max-width: 480px) {}
+@media (max-width: 390px) {}

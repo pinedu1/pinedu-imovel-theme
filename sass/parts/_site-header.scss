@@ -1,40 +1,71 @@
 @use 'sass:color';
 @import 'variaveis';
-
+$width-max-mobile: 1030px;
 // The very top of the site, element that usually includes
 // the site navigation and search for example.
-.site-header {
-  background-color: $header-background;
+header.site-header {
+  background-image: url("./../../assets/images/fundo_header.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 250px;
   color: $header-color;
-  align-items: flex-start;
-  column-gap: 1em;
-  display: flex;
-  justify-content: space-between;
-  margin: 0 auto;
-  position: relative;
-  z-index: 15;
-  @media (max-width: 1200px) {}
-  @media (max-width: 768px) {}
-  @media (max-width: 640px) {}
-  @media (max-width: 480px) {}
-  @media (max-width: 390px) {
-    /*all: unset;*/
-    display: block;
-    width: 100%;
-    padding: 0 0 1em 0;
-  }
-  nav {
-    text-align: left;
-    .nav-toggle {
-      margin: 0 auto;
+  @media screen and (max-width: $width-max-mobile - 1px) {
+    height: unset;
+    .site-header {
+      background-color: var(--pantone-2955);
+      .central-atendimento {
+        display: none;
+      }
     }
-    .menu-items-wrapper {
-      display: inline-block;
-      text-align: left;
+  }
+  div.site-header {
+    align-items: flex-start;
+    column-gap: 1em;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+    position: relative;
+    z-index: 15;
+    @media (max-width: 1200px) {
+      nav {
+        margin-right: 5%;
+      }
+    }
+    @media (max-width: 768px) {
+
+    }
+    @media (max-width: 640px) {}
+    @media (max-width: 480px) {}
+    @media (max-width: 390px) {
+      /*all: unset;*/
+      display: block;
+      width: 100%;
+      padding: 0 0 1em 0;
+    }
+    nav {
+      text-align: right;
+      margin-right: 10%;
+      .nav-toggle {
+        margin: 0 auto;
+      }
+
+      .menu-items-wrapper {
+        display: inline-block;
+        text-align: left;
+      }
     }
   }
 }
-
+.central-atendimento {
+  text-align: right;
+  width: 80%;
+  margin: -42px auto 0 auto;
+  img.central-atendimento {
+    max-height: 72px;
+    width: auto;
+  }
+}
 .site-title {
   line-height: 1em;
   margin: 0;
