@@ -6,11 +6,55 @@
  * @param {string} emptyText - Texto da opção vazia (padrão: 'Selecione...')
  */
 document.telaInstalada = false;
+function instalaSlider( valorMinimo, valorMaximo, passoValor, defaultIni, defaultFim ) {
+  const slider = document.getElementById('price-slider');
+  if (slider.noUiSlider) {
+    slider.noUiSlider.destroy();
+  }
+  noUiSlider.create(slider, {
+    start: [defaultIni, defaultFim], // valores iniciais (dois handles)
+    connect: true,
+    range: { min: valorMinimo, max: valorMaximo },
+    step: passoValor,
+    tooltips: [false, false], // mostra tooltip nos handles
+    format: {
+      to: value => Number(value).toLocaleString('pt-BR', {style:'currency', currency:'BRL'}),
+      from: value => Number(value.replace(/[^0-9.-]+/g, ""))
+    }
+  });
+  slider.noUiSlider.on('update', (values) => {
+    const inputInicial = document.querySelector('[name="valor-inicial"]');
+    const inputFinal = document.querySelector('[name="valor-final"]');
+    const minLabel = document.getElementById('min-val');
+    const maxLabel = document.getElementById('max-val');
+    const toNumber = v => {
+      const s = String(v)
+        .replace(/[^\d,.-]/g, '')
+        .replace(/\./g, '')
+        .replace(',', '.');
+      return parseFloat(s) || 0;
+    };
+
+    const valMin = parseFloat( toNumber( values[0] ) );
+    const valMax = parseFloat( toNumber( values[1] ) );
+    inputInicial.value = valMin;
+    inputFinal.value = valMax;
+    minLabel.textContent = Number( valMin ).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    maxLabel.textContent = Number( valMax ).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  });
+  $( 'li.faixa-valor-slider' ).css( 'display', 'list-item' );
+}
+
 jQuery(document).ready(($) => {
   /* funcoes */
   function reloadSelectOptions(selectName, items, addEmptyFirst = false, emptyText = 'Selecione...', callBackOpt = null) {
     const select = $(selectName);
+    if (select.attr('data-carregando') === '1') {
+      return;
+    }
+    select.attr('data-carregando', '1');
     select.empty();
+    const itemSelecionado = items.find(item => item.selected === true);
     if (addEmptyFirst) {
       const opt = $('<option>', {
         value: '',
@@ -26,14 +70,15 @@ jQuery(document).ready(($) => {
         value: item.id,
         text: item.nome,
       });
-      if (item.selected === true) {
-        opt.prop('selected', true);
-      }
       if (typeof callBackOpt === 'function') {
         callBackOpt(opt, item);
       }
       select.append(opt);
     });
+    if (itemSelecionado) {
+      select.val(itemSelecionado.id);
+    }
+    select.attr('data-carregando', '0');
   }
 
   /* Select Pesquisa
@@ -43,14 +88,10 @@ jQuery(document).ready(($) => {
   selectCtr.on('change', (event) => {
     const ctr = selectCtr.val();
     const selectChildTipo = '#form-pesquisa select[name=tipo-imovel]';
-    const selectChildFx = '#form-pesquisa select[name=faixa-valor]';
+    $( 'li.faixa-valor-slider' ).css( 'display', 'none' );
     $(selectChildTipo).parent().addClass('loading');
-    $(selectChildFx).parent().addClass('loading');
     const frm = $('#form-pesquisa');
     const tipoFormulario = frm.data('tipo');
-    if ( tipoFormulario == 'barra' ) {
-      $('.cortina-aguarde').removeClass('inactive').addClass('is-active');
-    }
     $.ajax({
       url: ajax_object.ajaxurl,
       method: 'GET',
@@ -61,15 +102,19 @@ jQuery(document).ready(($) => {
           const tipos = dados.data['tipo-imoveis'];
           reloadSelectOptions(selectChildTipo, tipos, true, 'Selecione ...');
           const fx = dados.data['faixa-valores'];
-          reloadSelectOptions(selectChildFx, fx, true, 'Selecione ...');
+          if ( fx.length > 0 ) {
+            const range = (fx[fx.length - 1] - fx[0]) / fx.length;
+            const mid = parseInt( fx.length / 2 );
+            const medianLow = fx[mid - 1];
+            const medianHigh = fx[mid];
+            const minimo = fx[0];
+            const maximo = fx[fx.length - 1];
+            instalaSlider( minimo, maximo, range, medianLow, medianHigh );
+          }
         } else {
           console.error(dados.message);
         }
         $(selectChildTipo).parent().removeClass('loading');
-        $(selectChildFx).parent().removeClass('loading');
-        if ( tipoFormulario == 'barra' && document.telaInstalada === true ) {
-          frm.submit();
-        }
       },
       error() {
         console.error('Erro inesperado ao acessar o servidor!');
@@ -86,10 +131,6 @@ jQuery(document).ready(($) => {
     $(selectChild).parent().addClass('loading');
     const frm = $('#form-pesquisa');
     const tipoFormulario = frm.data('tipo');
-    if ( tipoFormulario == 'barra' ) {
-      $('.cortina-aguarde').removeClass('inactive').addClass('is-active');
-    }
-
     $.ajax({
       url: ajax_object.ajaxurl,
       method: 'GET',
@@ -103,9 +144,6 @@ jQuery(document).ready(($) => {
           console.error(dados.message);
         }
         $(selectChild).parent().removeClass('loading');
-        if ( tipoFormulario == 'barra' && document.telaInstalada === true ) {
-          frm.submit();
-        }
       },
       error() {
         console.error('Erro inesperado ao acessar o servidor!');
@@ -122,9 +160,6 @@ jQuery(document).ready(($) => {
     $(selectChild).parent().addClass('loading');
     const frm = $('#form-pesquisa');
     const tipoFormulario = frm.data('tipo');
-    if ( tipoFormulario == 'barra' ) {
-      $('.cortina-aguarde').removeClass('inactive').addClass('is-active');
-    }
     $.ajax({
       url: ajax_object.ajaxurl,
       method: 'GET',
@@ -138,9 +173,6 @@ jQuery(document).ready(($) => {
           console.error(dados.message);
         }
         $(selectChild).parent().removeClass('loading');
-        if ( tipoFormulario == 'barra' && document.telaInstalada === true ) {
-          frm.submit();
-        }
       },
       error() {
         console.error('Erro inesperado ao acessar o servidor!');
@@ -157,9 +189,6 @@ jQuery(document).ready(($) => {
     $(selectChild).parent().addClass('loading');
     const frm = $('#form-pesquisa');
     const tipoFormulario = frm.data('tipo');
-    if ( tipoFormulario == 'barra' ) {
-      $('.cortina-aguarde').removeClass('inactive').addClass('is-active');
-    }
     $.ajax({
       url: ajax_object.ajaxurl,
       method: 'GET',
@@ -173,9 +202,6 @@ jQuery(document).ready(($) => {
           console.error(dados.message);
         }
         $(selectChild).parent().removeClass('loading');
-        if ( tipoFormulario == 'barra' && document.telaInstalada === true ) {
-          frm.submit();
-        }
       },
       error() {
         console.error('Erro inesperado ao acessar o servidor!');
@@ -191,9 +217,6 @@ jQuery(document).ready(($) => {
     $('#form-pesquisa input[name="valor-final"]').val(valorFinal);
     const frm = $('#form-pesquisa');
     const tipoFormulario = frm.data('tipo');
-    if ( tipoFormulario == 'barra' && document.telaInstalada === true ) {
-        frm.submit();
-    }
   });
   document.telaInstalada = true;
 });

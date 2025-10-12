@@ -36,7 +36,7 @@
   if ( $cidade_padrao == '' ) {
     $terms_regiao = lista_regiao($cidade_padrao);
   }
-  $terms_faixa_valor = lista_faixa_valor($contrato_padrao);
+  $terms_faixa_valor = lista_faixa_valor_valores( $contrato_padrao );
 ?>
 <section class="barra-pesquisa pesquisa">
   <main class="pesquisa-content">
@@ -69,10 +69,11 @@
           <div><label for="tipo-imovel">Tipo de Imóvel</label></div>
           <div class="select-container">
             <select id="tipo-imovel" name="tipo-imovel">
-              <option value="" <?php echo ('' == $tipo_imovel_padrao)? 'selected': '' ?>>Selecione...</option>
+              <?php $placeholder_selected = empty( $tipo_imovel_padrao ) ? 'selected' : ''; ?>
+              <option value="" <?php echo ( empty( $tipo_imovel_padrao ) ? 'selected="true"': '') ?>>Selecione...</option>
               <?php if ( isset($terms_tipo_imovel) && !empty( $terms_tipo_imovel ) ): ?>
                 <?php foreach ((array) $terms_tipo_imovel as $tipo_imovel): ?>
-                  <option value="<?php echo esc_attr($tipo_imovel->slug); ?>" <?php echo ($tipo_imovel->slug == $tipo_imovel_padrao)? 'selected': '' ?>><?php echo esc_html($tipo_imovel->name); ?></option>
+                  <option value="<?php echo esc_attr($tipo_imovel->slug); ?>" <?php echo ($tipo_imovel->slug === $tipo_imovel_padrao)? 'selected': '' ?>><?php echo esc_html($tipo_imovel->name); ?></option>
                 <?php endforeach; ?>
               <?php endif; ?>
             </select>
@@ -104,26 +105,16 @@
             </select>
           </div>
         </li>
-        <li class="faixa-valor">
+        <li class="faixa-valor-slider">
           <div><label for="faixa-valor">Faixa de Valor</label></div>
-          <div class="select-container">
-            <select id="faixa-valor" name="faixa-valor">
-              <option value="">Selecione...</option>
-              <?php if ( isset($terms_faixa_valor) && !empty( $terms_faixa_valor ) ): ?>
-                <?php foreach ((array) $terms_faixa_valor as $faixa): ?>
-                  <option valor-inicial="<?php echo esc_attr(get_term_meta($faixa->term_id, 'valor-inicial', true)); ?>"
-                          valor-final="<?php echo esc_attr(get_term_meta($faixa->term_id, 'valor-final', true)); ?>"
-                          value="<?php echo esc_attr($faixa->slug); ?>">
-                    <?php echo esc_html($faixa->name); ?>
-                  </option>
-                <?php endforeach; ?>
-              <?php endif; ?>
-            </select>
+          <div class="faixa-container">
+            <div id="price-slider" class="price-slider"></div>
+            <div class="slider-rotulo">De: <span id="min-val" class="min-val"></span> — Até: <span id="max-val" class="max-val"></span></div>
           </div>
         </li>
         <li class="submit pesquisa">
           <div class="submit-container">
-            <button type="submit" class="button button-small">Pesquisa Imóveis</button>
+            <button type="submit" class="button button-small">Pesquisar</button>
           </div>
         </li>
       </ul>
@@ -138,7 +129,7 @@
     <ul>
       <li class="referencia">
         <div><label for="referencia">Referencia</label></div>
-        <div><input type="text" name="referencia" id="referencia" placeholder="Referência" required aria-required="true"></div>
+        <div class="input-container"><input type="text" name="referencia" id="referencia" placeholder="Referência" required aria-required="true"></div>
       </li>
       <li class="submit consulta">
         <div class="submit-container">
@@ -158,10 +149,34 @@ jQuery(document).ready(function($) {
   });
   $('form[name="consultaReferencia"]').on('submit', function(e) {
     e.preventDefault();
-    console.log('oi');
     if(validarFormularioConsulta()) {
       $(this).unbind('submit').submit();
     }
   });
+  <?php echo 'var rangeSlider = ' . json_encode($terms_faixa_valor) . ';' ?>
+  <?php
+    $vIni = 0;
+    $vFim = 0;
+    if (isset( $_REQUEST )) {
+      if (isset( $_REQUEST['valor-inicial'] )) {
+        $vIni = floatval( $_REQUEST['valor-inicial'] );
+      }
+      if (isset( $_REQUEST['valor-final'] )) {
+        $vFim = floatval( $_REQUEST['valor-final'] );
+      }
+    }
+  ?>
+  var mid = 0, medianLow = <?php echo $vIni; ?>, medianHigh = <?php echo $vFim; ?>, minimo = 0, maximo = 0, range = 0;
+  if ( rangeSlider.length > 0 ) {
+    range = (rangeSlider[rangeSlider.length - 1] - rangeSlider[0]) / rangeSlider.length;
+    mid = parseInt( rangeSlider.length / 2 );
+    medianLow  = ( medianLow > 0 ) ? medianLow :  rangeSlider[mid - 1];
+    medianHigh =  ( medianHigh > 0 ) ? medianHigh : rangeSlider[mid];
+    minimo = rangeSlider[0];
+    maximo = rangeSlider[rangeSlider.length - 1];
+    instalaSlider( minimo, maximo, range, medianLow, medianHigh );
+  } else {
+    $( 'li.faixa-valor-slider' ).css( 'display', 'none' );
+  }
 });
 </script>

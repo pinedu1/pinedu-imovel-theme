@@ -38,8 +38,9 @@
   if ( $cidade_padrao != '' ) {
     $terms_regiao = lista_regiao( $cidade_padrao );
   }
+  $terms_faixa_valor = [];
   if ( $contrato_padrao ) {
-    $terms_faixa_valor = lista_faixa_valor( $contrato_padrao );
+    $terms_faixa_valor = lista_faixa_valor_valores( $contrato_padrao );
   }
 ?>
 <aside class="sidebar-pesquisa">
@@ -47,10 +48,10 @@
     get_template_part( 'template-parts/imovel/solicita-visita', 'imovel' );
   endif; ?>
   <section class="sidebar pesquisa">
-    <header class="pesquisa-header">
-      <h4>Pesquisa</h4>
-    </header>
-    <main class="pesquisa-content">
+    <main class="pesquisa-content sidebar">
+      <header class="pesquisa-header">
+        <h4>Pesquisa</h4>
+      </header>
       <form role="search" data-tipo="barra" method="get" id="form-pesquisa" class="barra pesquisa-form" action="<?php echo esc_url( home_url( '/pesquisa' ) ); ?>">
         <input type="hidden" name="tipo_pesquisa_submit" value="imovel">
         <input type="hidden" name="valor-inicial">
@@ -112,41 +113,27 @@
               </select>
             </div>
           </li>
-          <li class="faixa-valor">
+          <li class="faixa-valor-slider sidebar">
             <div><label for="faixa-valor">Faixa de Valor</label></div>
-            <div class="select-container">
-              <select id="faixa-valor" name="faixa-valor">
-                <option value="">Selecione...</option>
-                <?php if ( isset($terms_faixa_valor) && !empty( $terms_faixa_valor ) ): ?>
-                  <?php foreach ((array) $terms_faixa_valor as $faixa): ?>
-                    <option valor-inicial="<?php echo esc_attr(get_term_meta($faixa->term_id, 'valor-inicial', true)); ?>"
-                            valor-final="<?php echo esc_attr(get_term_meta($faixa->term_id, 'valor-final', true)); ?>"
-                            value="<?php echo esc_attr($faixa->slug); ?>" <?php echo ($faixa->slug == $faixa_padrao)? 'selected': 'urgh' ?>>
-                      <?php echo esc_html($faixa->name); ?>
-                    </option>
-                  <?php endforeach; ?>
-                <?php endif; ?>
-              </select>
+            <div class="faixa-container">
+              <div id="price-slider" class="price-slider"></div>
+              <div class="slider-rotulo">De: <span id="min-val" class="min-val"></span> — Até: <span id="max-val" class="max-val"></span></div>
             </div>
           </li>
-          <li class="submit pesquisa" style="display: none;">
+          <li class="submit pesquisa">
             <div class="submit-container">
-              <button type="submit" class="button button-small">Pesquisa Imóveis</button>
+              <button type="submit" class="button button-small">Pesquisar</button>
             </div>
           </li>
         </ul>
       </form>
-    </main>
-  </section>
-  <section class="sidebar consulta">
-    <header class="pesquisa-header">
-      <h4>Consulta</h4>
-    </header>
-    <main class="pesquisa-content">
+      <header class="pesquisa-header">
+        <h4>Consulta</h4>
+      </header>
       <form name="consultaReferencia" role="consulta" method="get" class="consulta-form" action="<?php echo esc_url(home_url('/pesquisa')); ?>">
         <input type="hidden" name="tipo_pesquisa_submit" value="consulta">
         <ul>
-          <li class="referencia">
+          <li class="referencia sidebar">
             <div><label for="referencia">Referência</label></div>
             <div><input type="text" name="referencia" id="referencia" placeholder="Referência" required aria-required="true"></div>
           </li>
@@ -162,6 +149,45 @@
 </aside>
 <script>
 jQuery(document).ready(function($) {
+  function instalaSlider( valorMinimo, valorMaximo, passoValor, defaultIni, defaultFim ) {
+    const slider = document.getElementById('price-slider');
+    if (slider.noUiSlider) {
+      slider.noUiSlider.destroy();
+    }
+    noUiSlider.create(slider, {
+      start: [defaultIni, defaultFim], // valores iniciais (dois handles)
+      connect: true,
+      range: { min: valorMinimo, max: valorMaximo },
+      step: passoValor,
+      tooltips: [false, false], // mostra tooltip nos handles
+      format: {
+        to: value => Number(value).toLocaleString('pt-BR', {style:'currency', currency:'BRL'}),
+        from: value => Number(value.replace(/[^0-9.-]+/g, ""))
+      }
+    });
+    slider.noUiSlider.on('update', (values) => {
+      const inputInicial = document.querySelector('[name="valor-inicial"]');
+      const inputFinal = document.querySelector('[name="valor-final"]');
+      const minLabel = document.getElementById('min-val');
+      const maxLabel = document.getElementById('max-val');
+      const toNumber = v => {
+        const s = String(v)
+          .replace(/[^\d,.-]/g, '')
+          .replace(/\./g, '')
+          .replace(',', '.');
+        return parseFloat(s) || 0;
+      };
+
+      const valMin = parseFloat( toNumber( values[0] ) );
+      const valMax = parseFloat( toNumber( values[1] ) );
+      inputInicial.value = valMin;
+      inputFinal.value = valMax;
+      minLabel.textContent = Number( valMin ).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      maxLabel.textContent = Number( valMax ).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    });
+    $( 'li.faixa-valor-slider' ).css( 'display', 'list-item' );
+  }
+
   $('#referencia').on('keydown', function(e) {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -174,5 +200,31 @@ jQuery(document).ready(function($) {
       $(this).unbind('submit').submit();
     }
   });
+  <?php echo 'var rangeSlider = ' . json_encode($terms_faixa_valor) . ';' ?>
+  <?php
+  $vIni = 0;
+  $vFim = 0;
+  if (isset( $_REQUEST )) {
+    if (isset($_REQUEST['valor-inicial'])) {
+      $vIni = floatval($_REQUEST['valor-inicial']);
+    }
+    if (isset($_REQUEST['valor-final'])) {
+      $vFim = floatval($_REQUEST['valor-final']);
+    }
+  }
+  ?>
+  var mid = 0, medianLow = <?php echo $vIni; ?>, medianHigh = <?php echo $vFim; ?>, minimo = 0, maximo = 0, range = 0;
+  if ( rangeSlider.length > 0 ) {
+    range = (rangeSlider[rangeSlider.length - 1] - rangeSlider[0]) / rangeSlider.length;
+    mid = parseInt( rangeSlider.length / 2 );
+    medianLow  = ( medianLow > 0 ) ? medianLow:  rangeSlider[mid - 1];
+    medianHigh =  ( medianHigh > 0 ) ? medianHigh: rangeSlider[mid];
+    console.log( medianLow, medianHigh );
+    minimo = rangeSlider[0];
+    maximo = rangeSlider[rangeSlider.length - 1];
+    instalaSlider( minimo, maximo, range, medianLow, medianHigh );
+  } else {
+    $( 'li.faixa-valor-slider' ).css( 'display', 'none' );
+  }
 });
 </script>

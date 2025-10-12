@@ -23,7 +23,7 @@ $card-border: #ddd;
 $card-hover-effect: 3px 3px 8px rgba(0, 0, 0, 0.2);
 $card-hover-effect-inset: $card-hover-effect, inset -3px -3px 6px $columbia-blue;
 $card-light: inset 2px 2px 4px rgba(255, 255, 255, 0.7);
-$card-radius: 10px;
+$card-radius: 1rem;
 $card-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
 $card-transiction: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 $color: #333;
@@ -65,7 +65,7 @@ $verde-escuro: #024008;
 
 
 @mixin card-style(
-  $border: $card-border,
+  $border: var( --powder-blue ),
   $radius: $card-radius,
   $bg: $card-bg,
   $shadow: 0 2px 8px rgba(0, 0, 0, 0.05),

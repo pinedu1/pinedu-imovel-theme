@@ -7,7 +7,6 @@
     "@babel/core": "^7.23.7",
     "@babel/eslint-parser": "^7.25.9",
     "@babel/preset-env": "^7.26.0",
-    "@hint/hint-axe": "^4.4.11",
     "@hint/hint-button-type": "^3.0.13",
     "@hint/hint-compat-api": "^4.4.10",
     "@ronilaukkarinen/gulp-stylelint": "^14.1.1",
@@ -36,7 +35,7 @@
     "gulp-sass": "^5.1.0",
     "gulp-size": "^4.0.1",
     "gulp-sourcemaps": "^2.6.5",
-    "hint": "^6.1.9",
+    "hint": "^7.1.13",
     "npm-check-updates": "^16.7.4",
     "postcss": "^8.4.31",
     "postcss-calc": "^8.2.4",
@@ -67,9 +66,11 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@glidejs/glide": "^3.7.1",
+    "ajv": "^8.17.1",
     "core-js": "^3.40.0",
     "dropzone": "^6.0.0-beta.2",
     "moveto": "^1.8.2",
+    "nouislider": "^15.8.1",
     "reframe.js": "^4.0.0",
     "swiper": "^11.2.8",
     "vnu-jar": "^24.10.17"

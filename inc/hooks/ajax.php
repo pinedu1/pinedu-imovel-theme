@@ -175,10 +175,8 @@ class Pinedu_Form_Pesquisa {
       , 'order'   => 'ASC'
     ];
     $terms_faixa_valor = get_terms($args);
-
-
     $result = array(
-      'tipo-imoveis' => array()
+      'tipo-imoveis' => array( )
       ,'faixa-valores' => array()
     );
 
@@ -190,9 +188,10 @@ class Pinedu_Form_Pesquisa {
       }
     }
     if (!empty($terms_faixa_valor) && !is_wp_error($terms_faixa_valor)) {
-      foreach ( $terms_faixa_valor as $fx ) {
-        $opt = [ 'id' => $fx->slug, 'nome' => $fx->name, 'valorInicial' => get_term_meta( $fx->term_id, 'valor-inicial', true ), 'valorFinal' => get_term_meta( $fx->term_id, 'valor-final', true ) ];
-        $result[ 'faixa-valores' ][] = $opt;
+      $result[ 'faixa-valores' ][] = 0;
+      foreach ($terms_faixa_valor as $key) {
+        $m = get_term_meta( $key->term_id, 'valor-final', true );
+        $result[ 'faixa-valores' ][] = floatval( $m );
       }
     }
     if ( ( isset( $result[ 'tipo-imoveis' ] ) && !empty( $result[ 'tipo-imoveis' ] ) ) || ( isset( $result[ 'faixa_valores' ] ) && !empty( $result[ 'faixa_valores' ] ) ) ) {

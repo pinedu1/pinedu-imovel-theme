@@ -18,8 +18,7 @@
     @content;
   }
 }
-
-.barra-pesquisa.pesquisa, .barra-pesquisa.consulta {
+.pesquisa {
   padding: 2rem 0;
   @include mobile {
     padding: 20px 0;
@@ -28,9 +27,12 @@
     background-color: $card-bg;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 1rem 2rem;
     @include card-style;
     overflow: hidden;
+    .pesquisa-footer {
+      display: none;
+    }
     @include tablet {
       max-width: 95%;
     }
@@ -41,6 +43,7 @@
       color: var(--color-science-blue);
       text-align: center;
       border-bottom: 1px solid $color-border-caracteristicas;
+      margin-top: 0.5rem;
       margin-bottom: 1rem;
     }
     .pesquisa-form, .consulta-form {
@@ -54,10 +57,13 @@
         li {
           margin: 8px;
           flex-grow: 1;
+
           min-width: 150px;
+          min-height: 64px;
 
           label {
             font-size: 90%;
+            color: $yale-blue;
           }
           &:nth-child(-n+4) {
             @include desktop {
@@ -90,6 +96,62 @@
               color: $input-text-color;
             }
           }
+          .input-container {
+            position: relative;
+            width: 100%;
+            input {
+              max-width: 12em;
+              height: 40px;
+              padding: 0 10px;
+              border: 1px solid $input-border-color;
+              border-radius: 4px;
+              background-color: white;
+              cursor: pointer;
+              font-size: 1em;
+              box-sizing: border-box;
+              color: $input-text-color;
+            }
+          }
+        }
+        li.referencia {
+          max-width: 12rem;
+          margin-right: 0;
+        }
+        li.submit {
+          padding-top: 1.4em;
+        }
+        li.submit.pesquisa {
+          .submit-container {
+            text-align: center;
+          }
+        }
+        li.faixa-valor-slider {
+          display: none;
+          width: 100%;
+          margin: 1em 5em;
+          .faixa-container {
+            margin-top: 1em;
+          }
+          .slider-rotulo {
+            margin-top: 10px;
+          }
+          .noUi-connect {
+            background: $primary-color;
+          }
+          .noUi-handle {
+            border: 2px solid var( --air-superiority-blue );
+          }
+          .noUi-target {
+            border: 1px solid var( --air-superiority-blue );
+          }
+        }
+        li.faixa-valor-slider.sidebar {
+          margin: 1em 0;
+          .slider-rotulo {
+            font-size: 75%;
+          }
+          .noUi-horizontal .noUi-handle {
+          }
         }
         button.button {
           padding: 10px 15px;
@@ -110,6 +172,22 @@
           width:  100%;
           margin-top: 0;
           padding-bottom: 1px;
+          text-align: left;
+        }
+      }
+    }
+  }
+}
+section.sidebar.pesquisa {
+  padding-top: 1em;
+}
+.pesquisa {
+  .pesquisa-content.sidebar {
+    padding: 1em 1em;
+    .pesquisa-form {
+      ul {
+        li.submit {
+          padding-top: 0;
         }
       }
     }
