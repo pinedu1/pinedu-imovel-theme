@@ -21,6 +21,8 @@ a.cardVisinhanca {
 }
 article.visinhanca {
   width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
   @media (min-width: 520px) {
     width: 100%;
   }
@@ -33,8 +35,6 @@ article.visinhanca {
   @media (min-width: 1280px) {
     width: 90%;
   }
-  margin: 0 auto;
-  padding: 2rem;
   header {
     text-align: center;
     margin-bottom: 2rem;

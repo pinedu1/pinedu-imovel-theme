@@ -5,6 +5,20 @@ main.site-main {
     display: grid;
     grid-template-columns: 1fr 4fr;
     gap: 0.5rem;
+    @media (max-width: 1200px) {
+    }
+    @media (max-width: 1080px) {
+    }
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 480px) {}
+    @media (max-width: 390px) {}
   }
 }
 .exibir-resultado {
@@ -45,6 +59,15 @@ main.site-main {
     }
     select[name=max] {
       min-width: 7em;
+    }
+  }
+  @media (max-width: 640px) {
+    form {
+      display: block;
+      width: 100%;
+      select {
+        width: 100%;
+      }
     }
   }
 }

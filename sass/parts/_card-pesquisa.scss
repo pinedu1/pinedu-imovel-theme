@@ -5,12 +5,30 @@ div.container {
   width: 100%;
   margin: 0 auto 2rem auto;
   padding: 0 2rem;
+  @media (max-width: 924px) {
+    padding: 0 1rem;
+  }
+  @media (max-width: 640px) {
+    padding: 0;
+  }
   /* Grid de 4 colunas */
   .pesquisa-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 0.5rem;
+    gap: 1rem;
     margin-bottom: 2rem;
+    @media (max-width: 1280px) {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    @media (max-width: 924px) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
   }
   footer {
     margin-top: 3rem;

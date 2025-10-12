@@ -26,7 +26,7 @@ Termina aqui  */
 get_header(); ?>
 <main class="site-main">
   <?php echo get_template_part('template-parts/slider-home-topo'); ?>
-  <div class="content">
+  <div class="content pesquisa-container">
     <?php
       get_template_part( 'template-parts/pesquisa/sidebar-pesquisa' , 'imovel' );
     ?>

@@ -39,10 +39,10 @@
   $terms_faixa_valor = lista_faixa_valor($contrato_padrao);
 ?>
 <section class="barra-pesquisa pesquisa">
-  <header class="pesquisa-header">
-    <h4>Pesquisa</h4>
-  </header>
   <main class="pesquisa-content">
+    <header class="pesquisa-header">
+      <h4>Pesquisa</h4>
+    </header>
     <form role="search" method="get" id="form-pesquisa" class="barra pesquisa-form" action="<?php echo esc_url( home_url( '/pesquisa' ) ); ?>">
       <input type="hidden" name="tipo_pesquisa_submit" value="imovel">
       <input type="hidden" name="valor-inicial">
@@ -130,14 +130,10 @@
     </form>
     <footer class="pesquisa-footer">
     </footer>
-  </main>
-</section>
-<section class="barra-pesquisa consulta">
-  <header class="pesquisa-header">
-    <h4>Consulta</h4>
-  </header>
-  <main class="pesquisa-content">
-  <form name="consultaReferencia" role="consulta" method="get" class="consulta-form" action="<?php echo esc_url(home_url('/pesquisa')); ?>">
+    <header class="pesquisa-header">
+      <h4>Consulta</h4>
+    </header>
+    <form name="consultaReferencia" role="consulta" method="get" class="consulta-form" action="<?php echo esc_url(home_url('/pesquisa')); ?>">
     <input type="hidden" name="tipo_pesquisa_submit" value="consulta">
     <ul>
       <li class="referencia">
