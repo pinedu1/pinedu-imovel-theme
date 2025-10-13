@@ -20,7 +20,10 @@ get_header(); ?>
         <?php registra_visita_imovel( ); ?>
         <h2><?php the_title(); ?></h2>
         <!-- Slides -->
-        <?php get_template_part('template-parts/imovel/slide-glide', 'imovel'); ?>
+        <?php
+        //get_template_part('template-parts/imovel/slide-glide', 'imovel');
+        get_template_part('template-parts/imovel/slide-swiper', 'imovel');
+        ?>
         <section class="imovel-content">
           <?php the_content(); ?>
         </section>

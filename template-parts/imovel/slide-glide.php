@@ -3,7 +3,7 @@ $fotografias = get_post_meta( get_the_ID(), 'fotografias', false );
 if ( !empty( $fotografias ) ): ?>
 <section class="fotos">
   <div class="container">
-    <div id="imovel-carousel" class="glide">
+    <div id="imovel-carousel" class="glide" focusAt="center" type="carousel">
       <div class="glide__track" data-glide-el="track">
         <ul class="glide__slides">
           <?php foreach ( $fotografias as $fotografia ): $media_id = $fotografia['id']; ?>

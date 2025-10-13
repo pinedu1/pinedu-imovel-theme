@@ -3,10 +3,28 @@ global $post;
 $google_maps_key = get_google_maps_key();
 ?>
 <?php if ( (!empty($google_maps_key)) && ( !empty( $post->latitude ) ) && ($post->latitude != 0 ) && ( !empty( $post->longitude ) ) && ( $post->longitude != 0 ) ): ?>
-<section id="detalhes" class="imovel-mapa">
+  <?php
+  $ponto = [ 'latitude' => $post->latitude, 'longitude' => $post->longitude ];
+  $circulo = formatCoordinatesToCircle(drawCircle($ponto, 250));
+  $args = [
+    'center' => $post->latitude . ',' . $post->longitude,
+    'zoom' => 16,
+    'size' => '800x500',
+    'key' => $google_maps_key,
+    'maptype' => 'roadmap',
+    'language' => 'pt-BR',
+    'path' => 'color:0x0000ff|weight:1|fillcolor:0xaaaaaa|' . $circulo,
+  ];
+  $base_url = 'https://maps.googleapis.com/maps/api/staticmap';
+  $static_map_url = $base_url . '?' . http_build_query($args);
+  ?>
+<section class="imovel-mapa">
   <h4>Proximidades</h4>
   <div class="container">
-    <img src="https://maps.googleapis.com/maps/api/staticmap?center=<?php echo $post->latitude; ?>,<?php echo $post->longitude; ?>&amp;zoom=15&amp;size=750x450&amp;key=<?php echo $google_maps_key; ?>" alt="Proximidades do Imóvel" style="width: 750px; height: 450px;">
+    <figure id="mapa" class="mapa">
+      <img src="<?php echo $static_map_url; ?>" alt="Proximidades do Imóvel">
+      <figcaption>250m ao redor da localidade</figcaption>
+    </figure>
   </div>
 </section>
 <?php endif; ?>

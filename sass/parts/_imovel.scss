@@ -12,10 +12,25 @@ section.block.block-single {
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 4fr;
-  gap: 0.5rem;
+  gap: 2rem;
+  @media (max-width: 1280px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  @media (max-width: 924px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  @media (max-width: 800px) {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1rem;
+  }
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
   aside.sidebar-pesquisa, article.article-content {
-    padding-top: 2em;
-    padding-bottom: 1em;
+    padding: 2em 1em 1em 1em;
     display: block;
     margin: 0 auto;
     width: 100%;
@@ -35,7 +50,39 @@ article.article-content {
     }
   }
 }
-
+.imovel-mapa {
+  padding: 1rem;
+  h4 {
+    margin: 2rem 1rem;
+  }
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 500px;
+    object-fit: contain;
+    /* Responsividade */
+    @media (max-width: 1200px) {
+    }
+    @media (max-width: 768px) {
+      max-height: 300px;
+    }
+    @media (max-width: 450px) {
+      max-width: 450px;
+      max-height: 220px;
+    }
+    @media (max-width: 330px) {
+      max-width: 330px;
+      max-height: 200px;
+    }
+  }
+  figure {
+    figcaption {
+      margin: 1rem;
+      text-align: center;
+    }
+  }
+}
 section.content.visinhanca {
   width: 100%;
   margin: 0 auto;
@@ -105,6 +152,7 @@ section.content.visinhanca {
       }
 
       .info-row {
+        width: 100%;
         display: flex;
         justify-content: left;
         i {
@@ -155,7 +203,6 @@ section.content.visinhanca {
           color: $secondary-color;
         }
         @include mobile {
-          flex-direction: column;
           align-items: flex-start;
           gap: 5px;
 
