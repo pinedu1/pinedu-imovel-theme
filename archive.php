@@ -1,11 +1,5 @@
 <?php
 namespace Air_Light;
-/* Começa aqui
-global $wp_query;
-echo '<pre>';
-print_r( $wp_query->query_vars );
-echo '</pre>';
-Termina aqui */
 
 get_header(); ?>
 <main class="site-main">

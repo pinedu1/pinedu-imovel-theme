@@ -7,13 +7,8 @@
  * @package air-light
  */
 namespace Air_Light;
-$empresa = null;
-$empresas = new \WP_Query( array( 'post_type' => 'empresa', 'post_status' => 'publish', 'posts_per_page' => 1, 'meta_query' => [ [ [ 'id'     => '1', 'value'   => '1', 'compare' => '=' ] ] ] ) );
-if ($empresas->have_posts()) {
-  $empresa = $empresas->posts[0];
-}
+$empresa = getEmpresa(1);
 $telefonePadrao = $empresa->telefonePadrao;
-
 ?>
 <!doctype html>
 <html <?php language_attributes(); ?>>

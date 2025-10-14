@@ -145,6 +145,11 @@
         </ul>
       </form>
     </main>
+    <?php if ( is_singular('imovel') ): ?>
+      <section class="corretor card sidebar">
+        <?php get_template_part( 'template-parts/corretor/cartao', 'imovel' ); ?>
+      </section>
+    <?php endif; ?>
   </section>
 </aside>
 <script>

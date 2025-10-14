@@ -99,6 +99,7 @@ jQuery(document).ready(($) => {
       success(response) {
         const dados = response.data;
         if (response.success) {
+          console.log(dados);
           const tipos = dados.data['tipo-imoveis'];
           reloadSelectOptions(selectChildTipo, tipos, true, 'Selecione ...');
           const fx = dados.data['faixa-valores'];

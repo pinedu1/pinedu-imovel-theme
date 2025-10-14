@@ -11,6 +11,19 @@ $titulo = [
   , 'INFRAEXTRUTURA' =>'Infraextrutura'
 ]
 ?>
+<section class="share-imovel  ">
+  <div class="social-share">
+    <?php
+    $facebook_share_url = 'https://www.facebook.com/sharer/sharer.php?u=' . urlencode(get_permalink());
+    ?>
+    <a href="<?php echo esc_url($facebook_share_url); ?>"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="btn-share-facebook">
+      <i class="fab fa-facebook-f"></i> Compartilhar no Facebook
+    </a>
+  </div>
+</section>
 <section class="referencia">
   <a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>">Referência: <span itemprop="sku"><?php echo $post->referencia; ?></a>
 </section>

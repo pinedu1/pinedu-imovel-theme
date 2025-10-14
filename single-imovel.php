@@ -29,6 +29,7 @@ get_header(); ?>
         </section>
         <?php
           get_template_part( 'template-parts/imovel/caracteristicas', 'imovel' );
+          /*get_template_part( 'template-parts/corretor/cartao', 'imovel' );*/
           get_template_part( 'template-parts/imovel/mapa', 'imovel' );
           get_template_part( 'template-parts/visinhanca', 'imovel' );
           entry_footer();

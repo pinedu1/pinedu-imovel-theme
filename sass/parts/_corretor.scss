@@ -1,0 +1,123 @@
+/* Variáveis para cores e fontes (As variáveis SCSS usam $) */
+@use 'sass:color';
+@import 'variaveis';
+
+$font-size-base: 100%;
+$font-size-mini: 95%;
+$font-size-tini: 85%;
+section.corretor.card {
+  display: flex;
+  width: 100%;
+  margin: 1rem auto;
+  .card-corretor {
+    @include card-style;
+    width: 100%;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    // 1. Header (Logo Lopes)
+    .card-header {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 10px;
+      .logo-lopes {
+        color: $primary-color;
+        a {
+          img.branding-logo-mobile {
+            max-width: 150px;
+            height: auto;
+            object-fit: contain;
+            display: block;
+          }
+        }
+      }
+    }
+    // 2. Conteúdo Principal (Avatar e Infos)
+    .card-content {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      margin-top: -2em;
+      margin-bottom: 20px;
+      .avatar {
+        width: 75px;
+        height: 90px;
+        background-color: $alice-blue;
+        border-radius: 5%;
+        img {
+          width: 100%;
+          height: auto;
+          object-fit: cover;
+        }
+      }
+      .info-container {
+        // Este contêiner foi mantido, mas o aninhamento segue para os textos
+      }
+      .info-textos {
+        display: flex;
+        flex-direction: column;
+        margin-top: 10px;
+        .nome-usuario {
+          font-size: $font-size-base;
+          font-weight: bold;
+          color: $primary-color;
+          margin: 0 0 4px 0;
+          text-transform: uppercase;
+        }
+        .nome-completo {
+          font-size: $font-size-mini;
+          color: $secondary-color;
+          margin: 0 0 10px 0;
+        }
+        .cargo {
+          font-size: $font-size-mini;
+          font-weight: bold;
+          color: $primary-color;
+          margin: 0;
+        }
+
+        .creci {
+          font-size: $font-size-tini;
+          color: $secondary-color;
+          margin: 2px 0 0 0;
+        }
+      }
+    }
+    // 3. Footer (Botão de Contato)
+    .card-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+      .btn-contato {
+        color: $primary-color;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: $font-size-mini;
+        padding: 5px 0;
+        border-bottom: 1px solid $primary-color;
+        transition: color 0.2s;
+
+        // Pseudo-classe :hover aninhada usando &
+        &:hover {
+          color: color.adjust($primary-color, $lightness: -10%);
+        }
+      }
+    }
+  }
+}
+section.corretor.card.sidebar {
+  /*font-size: 95%;*/
+  .card-corretor {
+    .card-header {
+      margin-bottom: 2em;
+    }
+    .card-content {
+      margin-bottom: 0;
+    }
+    .card-footer {
+      .btn-contato {
+        border-bottom: unset;
+      }
+    }
+  }
+}
