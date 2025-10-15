@@ -4,8 +4,6 @@ move_in.sh
 theme_tests.sh
 bower_components/
 dandelion.yml
-sass/navigation/luxbar
-sass/navigation/_luxbar.scss
 .DS_Store
 html
 w3cErrors/
