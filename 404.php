@@ -13,7 +13,8 @@
 namespace Air_Light;
 /* Começa aqui  */
 global $wp_query;
-/*echo '<pre>';
+/*
+echo '<pre>';
 print_r( $wp_query->query_vars );
 print_r( $_REQUEST );
 echo '</pre>'; */
