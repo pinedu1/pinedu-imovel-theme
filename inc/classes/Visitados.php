@@ -12,6 +12,7 @@ class Visitados extends Pinedu_Base implements PineduPostType {
     $this->titulo = $titulo;
     $this->max = $max;
     $this->query = $this->query( );
+    baixar_fotos_destaque( $this->query );
   }
   public function query( ) {
     $paged = get_query_var('paged') ? get_query_var('paged') : 1;

@@ -78,7 +78,7 @@ $breakpoint-desktop: 1200px;
   $hover-transform: translateY(-2px) // Efeito de levantar no hover
 ) {
   border: 1px solid $border;
-  border-radius: 0 $radius $radius $radius;
+  border-radius: 0 $radius $radius 0;
   overflow: hidden;
   background-color: $bg;
   box-shadow: $shadow;

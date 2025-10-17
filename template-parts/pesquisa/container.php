@@ -9,6 +9,7 @@
       <span>Aguarde...</span>
     </div>
     <?php if ( $this->query->have_posts() ): ?>
+      <?php /*baixar_fotos_destaque( $this->query ); */?>
       <?php while ($this->query->have_posts()) : $this->query->the_post();?>
         <?php the_content(); ?>
       <?php endwhile; ?>

@@ -13,31 +13,32 @@ class Promocoes extends Pinedu_Base implements PineduPostType {
     $this->contrato = $contrato;
     $this->max = $max;
     $this->query = $this->query();
+    baixar_fotos_destaque( $this->query );
   }
   public function query( ) {
     $contrato = isset($this->contrato) ? $this->contrato: 1;
     $paged = get_query_var('paged') ? get_query_var('paged') : 1;
     $metaQuery = array(
-      [ 'key'     => 'statusImovel', 'value'   => 'D', 'compare' => '=']
+      [ 'key' => 'statusImovel', 'value' => 'D', 'compare' => '=']
     );
     switch ( $contrato ) {
       case 1:
-        $metaQuery[] = [ 'key'     => 'vendaPromocao', 'value'   => '1', 'compare' => '='];
+        $metaQuery[] = [ 'key' => 'vendaPromocao', 'value' => '1', 'compare' => '='];
         $this->titulo = 'Venda';
         $this->class = 'venda';
         break;
       case 2:
-        $metaQuery[] = [ 'key'     => 'locacaoPromocao', 'value'   => '1', 'compare' => '='];
+        $metaQuery[] = [ 'key' => 'locacaoPromocao', 'value' => '1', 'compare' => '='];
         $this->titulo = 'Locação';
         $this->class = 'locacao';
         break;
       case 3:
-        $metaQuery[] = [ 'key'     => 'lancamentoPromocao', 'value'   => '1', 'compare' => '='];
+        $metaQuery[] = [ 'key' => 'lancamentoPromocao', 'value' => '1', 'compare' => '='];
         $this->titulo = 'Lançamento';
         $this->class = 'lançamento';
         break;
       default:
-        $metaQuery[] = [ 'key'     => 'vendaPromocao', 'value'   => '1', 'compare' => '='];
+        $metaQuery[] = [ 'key' => 'vendaPromocao', 'value' => '1', 'compare' => '='];
         $this->titulo = 'Venda';
         $this->class = 'venda';
         break;

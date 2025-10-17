@@ -8,7 +8,9 @@
  */
 namespace Air_Light;
 $empresa = getEmpresa(1);
-$telefonePadrao = $empresa->telefonePadrao;
+if ( isset( $empresa ) && isset( $empresa->telefonePadrao) ) {
+  $telefonePadrao = $empresa->telefonePadrao;
+}
 ?>
 <!doctype html>
 <html <?php language_attributes(); ?>>
@@ -27,6 +29,7 @@ $telefonePadrao = $empresa->telefonePadrao;
         <?php get_template_part( 'template-parts/header/branding' ); ?>
         <?php get_template_part( 'template-parts/header/navigation' ); ?>
       </div>
+      <?php if ( !empty( $telefonePadrao ) ): ?>
       <div class="central-atendimento">
         <a href="tel:<?php echo $telefonePadrao; ?> title="Acesse nossa Central de atendimento <?php echo  formata_telefone( $telefonePadrao ); ?>">
         <img
@@ -37,5 +40,6 @@ $telefonePadrao = $empresa->telefonePadrao;
         />
         </a>
       </div>
+      <?php endif; ?>
     </header>
     <div class="site-content">

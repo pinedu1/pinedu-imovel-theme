@@ -14,6 +14,7 @@ class Visinhanca extends Pinedu_Base implements PineduPostType {
     $this->max = $max;
     $this->post = $post;
     $this->query = $this->query( );
+    baixar_fotos_destaque( $this->query );
   }
   public function query( ) {
     $paged = get_query_var('paged') ? get_query_var('paged') : 1;
