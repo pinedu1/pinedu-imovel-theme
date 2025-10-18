@@ -1,7 +1,7 @@
 // This file is meant for general styles and containers
 // that apply everywhere throughout the website. Add more
 // always repeating elements right below.
-
+@use 'sass:color';
 // Body
 .is-root-container,
 .acf-block-preview .block,
@@ -22,6 +22,7 @@ body:not(.wp-admin) {
   background-color: var(--color-white);
   margin: 0 auto;
   max-width: $width-max-layout;
+  width: 100%;
   position: relative;
 }
 
