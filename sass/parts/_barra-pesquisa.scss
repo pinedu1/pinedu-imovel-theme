@@ -24,6 +24,8 @@
     padding: 20px 0;
   }
   .pesquisa-content {
+    position: relative;
+    @include pesquisa-spinner;
     background-color: $card-bg;
     max-width: 1200px;
     margin: 0 auto;

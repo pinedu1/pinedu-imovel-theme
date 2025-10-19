@@ -40,6 +40,11 @@
 ?>
 <section class="barra-pesquisa pesquisa">
   <main class="pesquisa-content">
+    <div id="loading-overlay" class="overlay-form" style="display: none;">
+      <div class="spinner-container">
+        <div class="spinner"></div> <p>Carregando dados, aguarde!</p>
+      </div>
+    </div>
     <header class="pesquisa-header">
       <h4>Pesquisa</h4>
     </header>
@@ -141,18 +146,6 @@
 </section>
 <script>
 jQuery(document).ready(function($) {
-  $('#referencia').on('keydown', function(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      buscaReferencia( e );
-    }
-  });
-  $('form[name="consultaReferencia"]').on('submit', function(e) {
-    e.preventDefault();
-    if(validarFormularioConsulta()) {
-      $(this).unbind('submit').submit();
-    }
-  });
   <?php echo 'var rangeSlider = ' . json_encode($terms_faixa_valor) . ';' ?>
   <?php
     $vIni = 0;

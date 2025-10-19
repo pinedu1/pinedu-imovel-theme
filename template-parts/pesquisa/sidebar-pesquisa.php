@@ -49,6 +49,11 @@
   endif; ?>
   <section class="sidebar pesquisa">
     <main class="pesquisa-content sidebar">
+      <div id="loading-overlay" class="overlay-form" style="display: none;">
+        <div class="spinner-container">
+          <div class="spinner"></div> <p>Carregando dados, aguarde!</p>
+        </div>
+      </div>
       <header class="pesquisa-header">
         <h4>Pesquisa</h4>
       </header>
@@ -193,18 +198,6 @@ jQuery(document).ready(function($) {
     $( 'li.faixa-valor-slider' ).css( 'display', 'list-item' );
   }
 
-  $('#referencia').on('keydown', function(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      buscaReferencia( e );
-    }
-  });
-  $('form[name="consultaReferencia"]').on('submit', function(event) {
-    event.preventDefault();
-    if(validarFormularioConsulta()) {
-      $(this).unbind('submit').submit();
-    }
-  });
   <?php echo 'var rangeSlider = ' . json_encode($terms_faixa_valor) . ';' ?>
   <?php
   $vIni = 0;

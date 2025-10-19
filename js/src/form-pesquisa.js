@@ -6,7 +6,7 @@
  * @param {string} emptyText - Texto da opção vazia (padrão: 'Selecione...')
  */
 document.telaInstalada = false;
-function instalaSlider( valorMinimo, valorMaximo, passoValor, defaultIni, defaultFim ) {
+function instalaSlider( valorMinimo, valorMaximo, passoValor, defaultIni, defaultFim, callbackPost ) {
   const slider = document.getElementById('price-slider');
   if (slider.noUiSlider) {
     slider.noUiSlider.destroy();
@@ -43,6 +43,9 @@ function instalaSlider( valorMinimo, valorMaximo, passoValor, defaultIni, defaul
     maxLabel.textContent = Number( valMax ).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   });
   $( 'li.faixa-valor-slider' ).css( 'display', 'list-item' );
+  if ( typeof callbackPost === 'function' ) {
+    callbackPost();
+  }
 }
 
 jQuery(document).ready(($) => {
@@ -86,6 +89,7 @@ jQuery(document).ready(($) => {
   * */
   const selectCtr = $('#form-pesquisa select[name=contrato]');
   selectCtr.on('change', (event) => {
+    $('#loading-overlay').fadeIn(300);
     const ctr = selectCtr.val();
     const selectChildTipo = '#form-pesquisa select[name=tipo-imovel]';
     $( 'li.faixa-valor-slider' ).css( 'display', 'none' );
@@ -111,6 +115,7 @@ jQuery(document).ready(($) => {
             const minimo = fx[0];
             const maximo = fx[fx.length - 1];
             instalaSlider( minimo, maximo, range, medianLow, medianHigh );
+            $('#loading-overlay').fadeOut(300);
           }
         } else {
           console.error(dados.message);
@@ -127,6 +132,7 @@ jQuery(document).ready(($) => {
   * */
   const selectTipo = $('#form-pesquisa select[name=tipo-imovel]');
   selectTipo.on('change', (event) => {
+    $('#loading-overlay').fadeIn(300);
     const tipo = selectTipo.val();
     const selectChild = '#form-pesquisa select[name=cidade]';
     $(selectChild).parent().addClass('loading');
@@ -145,6 +151,7 @@ jQuery(document).ready(($) => {
           console.error(dados.message);
         }
         $(selectChild).parent().removeClass('loading');
+        $('#loading-overlay').fadeOut(300);
       },
       error() {
         console.error('Erro inesperado ao acessar o servidor!');
@@ -156,6 +163,7 @@ jQuery(document).ready(($) => {
   * */
   const selectCid = $('#form-pesquisa select[name=cidade]');
   selectCid.on('change', (event) => {
+    $('#loading-overlay').fadeIn(300);
     const cid = selectCid.val();
     const selectChild = '#form-pesquisa select[name=regiao]';
     $(selectChild).parent().addClass('loading');
@@ -174,6 +182,7 @@ jQuery(document).ready(($) => {
           console.error(dados.message);
         }
         $(selectChild).parent().removeClass('loading');
+        $('#loading-overlay').fadeOut(300);
       },
       error() {
         console.error('Erro inesperado ao acessar o servidor!');
@@ -209,15 +218,19 @@ jQuery(document).ready(($) => {
       },
     });
   });
-  const selectFx = $('#form-pesquisa select[name=faixa-valor]');
-  selectFx.on('change', (event) => {
-    const selectedOption = selectFx.find('option:selected');
-    const valorInicial = selectedOption.attr('valor-inicial');
-    const valorFinal = selectedOption.attr('valor-final');
-    $('#form-pesquisa input[name="valor-inicial"]').val(valorInicial);
-    $('#form-pesquisa input[name="valor-final"]').val(valorFinal);
-    const frm = $('#form-pesquisa');
-    const tipoFormulario = frm.data('tipo');
+  $('#referencia').on('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      $('#loading-overlay').fadeIn(300);
+      buscaReferencia( e );
+      $('#loading-overlay').fadeOut(300);
+    }
+  });
+  $('form[name="consultaReferencia"]').on('submit', function(e) {
+    e.preventDefault();
+    if(validarFormularioConsulta()) {
+      $(this).unbind('submit').submit();
+    }
   });
   document.telaInstalada = true;
 });

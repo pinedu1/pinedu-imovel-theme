@@ -27,7 +27,7 @@ $card-radius: 1rem;
 $card-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
 $card-transiction: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 $color: #333;
-$cor-fundo-cortina: rgba(255, 255, 255, 0.8);
+$cor-fundo-cortina: rgba(255, 255, 255, 0.75);
 $cor_fundo: #f9f9f9;
 $cor-fundo-mensagem: #f8f9fa;
 $cor_hashura: #007bff;
@@ -86,5 +86,42 @@ $breakpoint-desktop: 1200px;
   &:hover {
     box-shadow: $card-hover-effect-inset;
     transform: translateY(-2px);
+  }
+}
+@mixin pesquisa-spinner {
+  .overlay-form {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: $cor-fundo-cortina;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    .spinner-container {
+      text-align: center;
+      p {
+        margin-top: 15px;
+        font-weight: bold;
+        color: #333;
+      }
+    }
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   }
 }
