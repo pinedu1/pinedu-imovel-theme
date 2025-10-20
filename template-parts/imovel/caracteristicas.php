@@ -1,4 +1,6 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+
 global $post;
 
 $dependencias = get_tipo_dependencias_imovel( $post->ID );
@@ -8,15 +10,15 @@ $titulo = [
   'CARACTERISTICAS' => 'Características'
   , 'CONDOMINIO' => 'Condomínio'
   , 'EDIFICIO' => 'Edifício'
-  , 'INFRAEXTRUTURA' =>'Infraextrutura'
+  , 'INFRAEXTRUTURA' => 'Infraextrutura'
 ]
 ?>
 <section class="share-imovel  ">
   <div class="social-share">
     <?php
-    $facebook_share_url = 'https://www.facebook.com/sharer/sharer.php?u=' . urlencode(get_permalink());
+    $facebook_share_url = 'https://www.facebook.com/sharer/sharer.php?u=' . urlencode( get_permalink( ) );
     ?>
-    <a href="<?php echo esc_url($facebook_share_url); ?>"
+    <a href="<?php echo esc_url( $facebook_share_url ); ?>"
        target="_blank"
        rel="noopener noreferrer"
        class="btn-share-facebook">
@@ -33,7 +35,7 @@ $titulo = [
     <div class="info-top">
       <div class="info-row" title="Tipo do Imóvel / Bem" itemprop="additionalProperty" itemscope itemtype="https://schema.org/PropertyValue">
         <i class="fa-solid fa-house-chimney"></i> <span class="label">Tipo</span>
-        <span class="value"><?php echo esc_html($post->tipoImovelNome); ?></span>
+        <span class="value"><?php echo esc_html( $post->tipoImovelNome ); ?></span>
       </div>
       <div class="info-row" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress" title="Cidade">
         <i class="fa-solid fa-city"></i> <span itemprop="addressLocality" class="label">Cidade</span>
@@ -49,16 +51,16 @@ $titulo = [
       <?php if ( isset( $post->valorCondominio ) && ( $post->valorCondominio > 0 ) ): ?>
         <div class="info-row valor" itemprop="additionalProperty" itemscope itemtype="https://schema.org/PropertyValue" title="Valor do Condomínio">
           <i class="fa-solid fa-money-bills"></i> <meta itemprop="name" content="Condomínio" /><span class="label">Condomínio</span>&nbsp;
-          <span class="value" itemprop="value"><?php echo formata_valor( $post->valorCondominio, 0, 'R$ '); ?></span>
+          <span class="value" itemprop="value"><?php echo formata_valor( $post->valorCondominio, 0, 'R$ ' ); ?></span>
         </div>
       <?php endif; ?>
       <?php if ( isset( $post->valorCondominio ) && ( $post->valorCondominio > 0 ) ): ?>
         <div class="info-row valor" itemprop="additionalProperty" itemscope itemtype="https://schema.org/PropertyValue" title="Valor do IPTU">
           <i class="fa-solid fa-money-bills"></i> <meta itemprop="name" content="IPTU" /><span class="label">IPTU</span>&nbsp;
-          <span class="value" itemprop="value"><?php echo formata_valor( $post->valorIptu, 0, 'R$ '); ?></span>
+          <span class="value" itemprop="value"><?php echo formata_valor( $post->valorIptu, 0, 'R$ ' ); ?></span>
         </div>
       <?php endif; ?>
-      <?php if ( $post->ativarVenda == '1' ): ?>
+      <?php if ( '1' == $post->ativarVenda ): ?>
         <div class="info-row valor" itemprop="additionalProperty" itemscope itemtype="https://schema.org/PropertyValue" title="Valor para Venda">
           <i class="fa-solid fa-tag"></i>
           <meta itemprop="name" content="Venda" />
@@ -67,10 +69,10 @@ $titulo = [
           <link itemprop="availability" href="https://schema.org/InStock" />
           <meta itemprop="itemCondition" content="https://schema.org/NewCondition" />
           <meta itemprop="price" content="<?php echo $post->vendaValor; ?>" />
-          <span class="value" itemprop="priceCurrency" content="BRL">R$ <?php echo formata_valor($post->vendaValor, 0); ?></span>
+          <span class="value" itemprop="priceCurrency" content="BRL">R$ <?php echo formata_valor( $post->vendaValor, 0 ); ?></span>
         </div>
       <?php endif; ?>
-      <?php if ( $post->ativarLancamento == '1' ): ?>
+      <?php if ( '1' == $post->ativarLancamento ): ?>
         <div class="info-row valor" itemprop="additionalProperty" itemscope itemtype="https://schema.org/PropertyValue" title="Valor para Venda">
           <i class="fa-solid fa-tag"></i>
           <meta itemprop="name" content="Venda" />
@@ -79,10 +81,10 @@ $titulo = [
           <link itemprop="availability" href="https://schema.org/InStock" />
           <meta itemprop="itemCondition" content="https://schema.org/NewCondition" />
           <meta itemprop="price" content="<?php echo $post->lancamentoValor; ?>" />
-          <span class="value" itemprop="priceCurrency" content="BRL">R$ <?php echo formata_valor( $post->lancamentoValor, 0); ?></span>
+          <span class="value" itemprop="priceCurrency" content="BRL">R$ <?php echo formata_valor( $post->lancamentoValor, 0 ); ?></span>
         </div>
       <?php endif; ?>
-      <?php if ( $post->ativarLocacao == '1' ): ?>
+      <?php if ( '1' == $post->ativarLocacao ): ?>
         <div class="info-row valor" itemprop="additionalProperty" itemscope itemtype="https://schema.org/PropertyValue" title="Valor para Aluguel">
           <i class="fa-solid fa-handshake"></i>
           <meta itemprop="name" content="Locação" />
@@ -91,7 +93,7 @@ $titulo = [
           <link itemprop="availability" href="https://schema.org/InStock" />
           <meta itemprop="itemCondition" content="https://schema.org/NewCondition" />
           <meta itemprop="price" content="<?php echo $post->locacaoValor; ?>" />
-          <span class="value" itemprop="priceCurrency" content="BRL">R$ <?php echo formata_valor($post->locacaoValor, 0); ?></span>
+          <span class="value" itemprop="priceCurrency" content="BRL">R$ <?php echo formata_valor( $post->locacaoValor, 0 ); ?></span>
         </div>
       <?php endif; ?>
     </div>
@@ -101,10 +103,11 @@ $titulo = [
         <h4><?php echo $titulo[ $relativo ]; ?></h4>
         <?php foreach ( $deps as $caracteristica ): ?>
           <div class="info-row" title="<?php echo $caracteristica['descricao']; ?>">
-            <i class="<?php echo $caracteristica[ 'icone' ]; ?>"></i> <span class="label"><?php echo $caracteristica['nome']; ?></span>
+            <i class="<?php echo $caracteristica['icone']; ?>"></i> <span class="label"><?php echo $caracteristica['nome']; ?></span>
             <span class="value">
               <?php
-                switch ($caracteristica['tipo']) {
+                switch ( $caracteristica['tipo'] ) {
+                  // phpcs:disable PSR2.ControlStructures.SwitchDeclaration.BreakIndent
                   case 'TEXTO':
                   case 'INTEIRO':
                   case 'INTEIRO_TEXTO':
@@ -116,10 +119,11 @@ $titulo = [
                     break;
                   case 'BOOLEAN':
                   case 'BOOLEAN_TEXTO':
-                    echo (((boolean) $caracteristica['valor'])? '': '');
+                    echo ( (bool) $caracteristica['valor'] ) ? '' : '';
                     break;
                 }
-              ?></span>
+              ?>
+            </span>
           </div>
         <?php endforeach; ?>
       </section>

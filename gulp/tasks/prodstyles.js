@@ -3,6 +3,7 @@ const {
   dest,
   src
 } = require('gulp');
+const rename = require('gulp-rename');
 const sass = require('gulp-sass')( require('sass') );
 const postcss = require('gulp-postcss');
 const autoprefixer = require('autoprefixer');
@@ -21,7 +22,7 @@ const zIndex = require('postcss-zindex');
 const size = require('gulp-size');
 const config = require('../config.js');
 
-function prodstyles() {
+/*function prodstyles() {
   return src(config.styles.src)
 
     // Compile first time to CSS to be able to parse CSS files
@@ -51,6 +52,40 @@ function prodstyles() {
 
     // Save the final version for production
     .pipe(dest(config.styles.production));
+}*/
+function prodstyles() {
+  return src(config.styles.src)
+
+    // Compile first time to CSS to be able to parse CSS files
+    .pipe(sass(config.styles.opts.development))
+
+    // Compile SCSS synchronously
+    .pipe(sass.sync(config.styles.opts.production))
+
+    // Run PostCSS plugins
+    .pipe(postcss([
+      autoprefixer(),
+      colormin(),
+      calcFunction(),
+      discardEmpty(),
+      mergeLonghand(),
+      mergeAdjacentRules(),
+      minifyGradients(),
+      normalizePositions(),
+      normalizeUrl(),
+      uniqueSelectors(),
+      zIndex(),
+      cssnano(config.cssnano)
+    ]))
+
+    // Output production CSS size
+    .pipe(size(config.size))
+
+    // NOVO PASSO: Renomeia o arquivo (de global.css para style.css)
+    .pipe(rename('style.css'))
+
+    // NOVO PASSO: Salva a versão final na RAIZ do tema (./)
+    .pipe(dest('./'));
 }
 
 exports.prodstyles = prodstyles;

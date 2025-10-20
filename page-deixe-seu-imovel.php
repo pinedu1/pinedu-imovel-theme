@@ -1,9 +1,11 @@
 <?php
+
 namespace Air_Light;
+
 require_once get_template_directory() . '/inc/classes/SalvarImovel.php';
 require_once get_template_directory() . '/inc/hooks/ajax.php';
 
-if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
+if ( isset( $_SERVER['REQUEST_METHOD'] ) && ( 'POST' === $_SERVER['REQUEST_METHOD'] ) ) {
   if ( \SalvarImovel::validate_nonce( $_REQUEST ) ) {
     $resultado_cadastro = \SalvarImovel::salvar();
     if ( $resultado_cadastro ) {

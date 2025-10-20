@@ -1,5 +1,16 @@
+@use 'sass:map';
 // Self-hosted fonts
 // Remember to add these also to gutenberg/variables/_typography.scss with correct paths
+// Helper mixin for variable fonts
+@mixin variablefont($family, $src, $weight: normal, $style: normal) {
+  @font-face {
+    font-display: auto;
+    font-family: $family;
+    font-style: $style;
+    font-weight: $weight;
+    src: url('#{$src}.woff2') format('woff2'), url('#{$src}.woff') format('woff');
+  }
+}
 
 // Variable fonts
 @include variablefont('Mona Sans', '../../fonts/monasansvf', 1 999);

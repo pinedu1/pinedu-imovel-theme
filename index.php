@@ -14,7 +14,9 @@
  * @package air-light
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  */
+
 namespace Air_Light;
+
 /* Começa aqui
 global $wp_query;
 echo '<pre>';
@@ -45,18 +47,18 @@ get_header(); ?>
               <div class="loading-spinner"></div>
               <span>Aguarde...</span>
             </div>
-            <?php while ( have_posts() ): the_post(); ?>
-            <?php if ( ($post->ID != null) && get_post_type( $post->ID ) === 'imovel' ): ?>
+            <?php while ( have_posts( ) ): the_post( ); ?>
+            <?php if ( ( null != $post->ID ) && ( 'imovel' === get_post_type( $post->ID ) ) ): ?>
                 <?php echo get_template_part('template-parts/pesquisa/card', 'imovel'); ?>
             <?php endif; ?>
             <?php endwhile; ?>
           </div>
           <?php
-          $my_args = array( );
+          $my_args = [];
           $my_par = [ 'contrato', 'cidade', 'regiao', 'tipo-imovel', 'faixa-valor', 'tipo_pesquisa_submit', 'valor-final', 'valor-inicial', 'max', 'ordem', 'post_type', 'sort' ];
           foreach ( $my_par as $par ) {
-            if ( !empty( $_REQUEST[ $par ] ) ) {
-              $my_args[ $par ] = $_REQUEST[ $par ];
+            if ( ! empty( $_REQUEST[ $par ] ) ) {
+              $my_args[ $par ] = sanitize_text_field( $_REQUEST[ $par ] );
             }
           }
           the_posts_pagination( array( 'add_args'  => $my_args ) );
@@ -77,7 +79,7 @@ get_header(); ?>
         'show_count' => 1,
         'echo' => true,
         'taxonomy' => 'post_tag',
-        'aria_label' => __('Nuvem de tags') // Acessibilidade
+        'aria_label' => 'Nuvem de tags' // Acessibilidade
       ));
 
     ?>

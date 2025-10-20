@@ -1,6 +1,6 @@
 <?php
-$fotografias = get_post_meta( get_the_ID(), 'fotografias', false );
-if ( !empty( $fotografias ) ): ?>
+$fotografias = get_post_meta( get_the_ID( ), 'fotografias', false );
+if ( ! empty( $fotografias ) ): ?>
 <section class="fotos">
   <div class="container">
     <div id="imovel-carousel" class="glide" focusAt="center" type="carousel">
@@ -8,7 +8,7 @@ if ( !empty( $fotografias ) ): ?>
         <ul class="glide__slides">
           <?php foreach ( $fotografias as $fotografia ): $media_id = $fotografia['id']; ?>
             <?php if ( ! empty( $media_id ) ): ?>
-              <li class="glide__slide"><?php echo wp_get_attachment_image($media_id, 'full', false, ['class' => 'imovel-foto']); ?></li>
+              <li class="glide__slide"><?php echo wp_get_attachment_image( $media_id, 'full', false, [ 'class' => 'imovel-foto' ] ); ?></li>
             <?php endif; ?>
           <?php endforeach; ?>
         </ul>

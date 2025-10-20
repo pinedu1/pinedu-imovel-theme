@@ -111,7 +111,7 @@ module.exports = {
   phpcs: {
     src: [themeDir + '**/*.php', '!' + themeDir + 'node_modules/**/*', '!' + themeDir + 'vendor/**/*'],
     opts: {
-      bin: '/usr/local/bin/phpcs',
+      bin: './vendor/bin/phpcs',
       standard: themeDir + 'phpcs.xml',
       warningSeverity: 0
     }

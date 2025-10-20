@@ -1,4 +1,6 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+// phpcs:disable WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 /**
  * Site branding & logo
  *
@@ -36,12 +38,12 @@ $description = get_bloginfo( 'description', 'display' );
       <p class="branding-description site-description">
         <?php echo esc_html( $description ); ?>
       </p>
-    <?php else: ?>
+    <?php else : ?>
       <p class="branding-description site-description">
         <?php echo esc_html( 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."' ); ?>
       </p>
     <?php endif; ?>
-    <?php if ( !empty( $telefonePadrao ) ) : ?>
+    <?php if ( ! empty( $telefonePadrao ) ) : ?>
     <?php endif; ?>
   </header>
 </section>

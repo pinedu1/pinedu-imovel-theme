@@ -1,12 +1,31 @@
 <?php
-require_once get_template_directory() . '/inc/classes/PineduPostType.php';
-require_once get_template_directory() . '/inc/classes/Pinedu_Base.php';
+/**
+ * Visitados
+ */
+require_once get_template_directory( ) . '/inc/classes/PineduPostType.php';
+require_once get_template_directory( ) . '/inc/classes/Pinedu_Base.php';
+
+/**
+ * Visitados
+ */
 class Visitados extends Pinedu_Base implements PineduPostType {
   private const TEMPLATE = 'template-parts/visitados/container.php';
   private const CARD = 'template-parts/visitados/card.php';
+  /**
+   * @var string $class Classe usada para o container
+   */
   private $class = 'visitados';
+  /**
+   * @var int|mixed $max Maximo de result na query
+   */
   private $max = 6;
+  /**
+   * @var string $titulo Titulo do container
+   */
   private $titulo = 'Imóveis mais Visitados';
+  /**
+   * @var WP_Query $query Armazena a query na instancia
+   */
   private $query;
   public function __construct( $titulo = 'Imóveis mais visitados', $max = 6 ) {
     $this->titulo = $titulo;
@@ -15,28 +34,28 @@ class Visitados extends Pinedu_Base implements PineduPostType {
     baixar_fotos_destaque( $this->query );
   }
   public function query( ) {
-    $paged = get_query_var('paged') ? get_query_var('paged') : 1;
-    $metaQuery = array(
-      [ 'key'     => 'statusImovel', 'value'   => 'D', 'compare' => '=']
-      , [ 'key'     => 'clicks', 'value'   => 0, 'compare' => '>']
+    $paged = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
+    $meta_query = array(
+        [ 'key'     => 'statusImovel', 'value'   => 'D', 'compare' => '=' ]
+      ,   [ 'key'     => 'clicks', 'value'   => 0, 'compare' => '>' ]
     );
     $args = array(
       'post_type' => 'imovel'
     , 'post_status' => 'publish'
     , 'posts_per_page' => $this->max
     , 'paged' => $paged
-    , 'meta_query' => $metaQuery
+    , 'meta_query' => $meta_query
     );
     return new \WP_Query( $args );
   }
-  public function render() {
-    if ($this->query->have_posts()):
-      add_filter('the_title', [$this, 'pinedu_visitados_titulo']);
-      add_filter('the_content', [$this, 'pinedu_visitados_conteudo']);
-      include locate_template(self::TEMPLATE);
-      wp_reset_postdata();
-      remove_filter('the_title', [$this, 'pinedu_visitados_titulo']);
-      remove_filter('the_content', [$this, 'pinedu_visitados_conteudo']);
+  public function render( ) {
+    if ( $this->query->have_posts( ) ):
+      add_filter( 'the_title', [ $this, 'pinedu_visitados_titulo' ] );
+      add_filter( 'the_content', [ $this, 'pinedu_visitados_conteudo' ] );
+      include locate_template( self::TEMPLATE );
+      wp_reset_postdata( );
+      remove_filter( 'the_title', [ $this, 'pinedu_visitados_titulo' ] );
+      remove_filter( 'the_content', [ $this, 'pinedu_visitados_conteudo' ] );
     endif;
   }
   public function pinedu_visitados_titulo( $title ) {
@@ -49,17 +68,17 @@ class Visitados extends Pinedu_Base implements PineduPostType {
   /**
    * @return mixed
    */
-  public function getClass() {
+  public function getClass( ) {
     return $this->class;
   }
   /**
-   * @param mixed $class
+   * @param mixed $class Nome da classe do container
    */
   public function setClass( $class ): void {
     $this->class = $class;
   }
 
-  public function getMax(): mixed {
+  public function getMax( ): mixed {
     return $this->max;
   }
 
@@ -67,7 +86,7 @@ class Visitados extends Pinedu_Base implements PineduPostType {
     $this->max = $max;
   }
 
-  public function getTitulo(): mixed {
+  public function getTitulo( ): mixed {
     return $this->titulo;
   }
 

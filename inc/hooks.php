@@ -64,5 +64,3 @@ add_action( 'gform_enqueue_scripts', __NAMESPACE__ . '\dequeue_gf_stylesheets', 
  * Eventos gerados no front-end
  */
 require get_theme_file_path( 'inc/hooks/ajax.php' );
-
-

@@ -9,7 +9,9 @@
  * @package air-light
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/#single-post
  */
+
 namespace Air_Light;
+
 get_the_post();
 get_header(); ?>
 <main class="site-main imovel">

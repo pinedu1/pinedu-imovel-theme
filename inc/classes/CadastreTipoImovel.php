@@ -1,4 +1,11 @@
 <?php
+/**
+ * CadastreTipoImovel
+ */
+// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+/**
+ * CadastreTipoImovel
+ */
 class CadastreTipoImovel {
   public static function campos_caracteristicas( $dep ) {
     if ( ! is_object( $dep ) || ! isset( $dep->tipoCampo, $dep->sigla, $dep->nome ) ) {
@@ -9,7 +16,9 @@ class CadastreTipoImovel {
     $nome = esc_attr( $dep->nome );
     $tipo_campo = esc_attr( $dep->tipoCampo );
     switch ( $tipo_campo ) {
-      case 'TEXTO': ?>
+      // phpcs:disable PSR2.ControlStructures.SwitchDeclaration.BreakIndent
+      case 'TEXTO':
+        ?>
         <div class="row">
           <div class="col">
             <input type="text" class="form-control" id="<?php echo $sigla; ?>" name="<?php echo $sigla; ?>" placeholder="<?php echo $nome; ?>">
@@ -17,7 +26,8 @@ class CadastreTipoImovel {
         </div>
         <?php
         break;
-      case 'INTEIRO': ?>
+      case 'INTEIRO':
+        ?>
         <div class="row">
           <div class="col col-inteiro">
             <input type="number" step="1" class="form-control" id="<?php echo $sigla; ?>" name="<?php echo $sigla; ?>" placeholder="<?php echo $nome; ?>">
@@ -25,7 +35,8 @@ class CadastreTipoImovel {
         </div>
         <?php
         break;
-      case 'INTEIRO_TEXTO': ?>
+      case 'INTEIRO_TEXTO':
+        ?>
         <div class="row">
           <div class="col col-inteiro">
             <input type="number" step="1" class="form-control" id="<?php echo $sigla; ?>" name="<?php echo $sigla; ?>" placeholder="<?php echo $nome; ?>">
@@ -36,7 +47,8 @@ class CadastreTipoImovel {
         </div>
         <?php
         break;
-      case 'FLOAT': ?>
+      case 'FLOAT':
+        ?>
         <div class="row">
           <div class="col col-float">
             <input type="number" step="0.5" class="form-control" id="<?php echo $sigla; ?>" name="<?php echo $sigla; ?>" placeholder="<?php echo $nome; ?>">
@@ -44,7 +56,8 @@ class CadastreTipoImovel {
         </div>
         <?php
         break;
-      case 'FLOAT_TEXTO': ?>
+      case 'FLOAT_TEXTO':
+        ?>
         <div class="row">
           <div class="col col-float">
             <input type="number" step="0.5" class="form-control" id="<?php echo $sigla; ?>" name="<?php echo $sigla; ?>" placeholder="<?php echo $nome; ?>">
@@ -55,7 +68,8 @@ class CadastreTipoImovel {
         </div>
         <?php
         break;
-      case 'BOOLEAN': ?>
+      case 'BOOLEAN':
+        ?>
         <div class="row">
           <div class="col col-checkbox">
             <input type="checkbox" class="form-check-input" id="<?php echo $sigla; ?>" name="<?php echo $sigla; ?>" placeholder="<?php echo $nome; ?>">
@@ -66,7 +80,8 @@ class CadastreTipoImovel {
         </div>
         <?php
         break;
-      case 'BOOLEAN_TEXTO': ?>
+      case 'BOOLEAN_TEXTO':
+        ?>
         <div class="row">
           <div class="col col-checkbox">
             <input type="checkbox" class="form-check-input" id="<?php echo $sigla; ?>" name="<?php echo $sigla; ?>" placeholder="<?php echo $nome; ?>">

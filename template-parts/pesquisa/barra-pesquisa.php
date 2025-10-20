@@ -1,40 +1,40 @@
 <?php
-  $options = get_option('pinedu_imovel_options');
+  $options = get_option( 'pinedu_imovel_options' );
 
   if ( isset( $_REQUEST[ 'tipo_pesquisa_submit' ] ) ) {
-    $tipo_pesquisa_submit = $_REQUEST[ 'tipo_pesquisa_submit' ];
+    $tipo_pesquisa_submit = sanitize_text_field( $_REQUEST[ 'tipo_pesquisa_submit' ] );
   }
   $contrato_padrao = get_query_var( 'contrato' );
   if ( empty( $contrato_padrao ) && isset( $_REQUEST[ 'contrato' ] ) ) {
-    $contrato_padrao = $_REQUEST[ 'contrato' ];
+    $contrato_padrao = sanitize_text_field( $_REQUEST[ 'contrato' ] );
   }
   $tipo_imovel_padrao = get_query_var( 'tipo-imovel' );
   if ( empty( $tipo_imovel_padrao ) && isset( $_REQUEST[ 'tipo-imovel' ] ) ) {
-    $tipo_imovel_padrao = $_REQUEST[ 'tipo-imovel' ];
+    $tipo_imovel_padrao = sanitize_text_field( $_REQUEST[ 'tipo-imovel' ] );
   }
   $cidade_padrao = get_query_var( 'cidade' );
   if ( empty( $cidade_padrao ) && isset( $_REQUEST[ 'cidade' ] ) ) {
-    $cidade_padrao = $_REQUEST[ 'cidade' ];
+    $cidade_padrao = sanitize_text_field( $_REQUEST[ 'cidade' ] );
   }
   $regiao_padrao = get_query_var( 'regiao' );
   if ( empty( $regiao_padrao ) && isset( $_REQUEST[ 'regiao' ] ) ) {
-    $regiao_padrao = $_REQUEST[ 'regiao' ];
+    $regiao_padrao = sanitize_text_field( $_REQUEST[ 'regiao' ] );
   }
   $valor_inicial_padrao = get_query_var( 'valor-inicial' );
   if ( empty( $valor_inicial_padrao ) && isset( $_REQUEST[ 'valor-inicial' ] ) ) {
-    $valor_inicial_padrao = $_REQUEST[ 'valor-inicial' ];
+    $valor_inicial_padrao = sanitize_text_field( $_REQUEST[ 'valor-inicial' ] );
   }
   $valor_final_padrao = get_query_var( 'valor-final' );
   if ( empty( $valor_final_padrao ) && isset( $_REQUEST[ 'valor-final' ] ) ) {
-    $valor_final_padrao = $_REQUEST[ 'valor-final' ];
+    $valor_final_padrao = sanitize_text_field( $_REQUEST[ 'valor-final' ] );
   }
 
-  $terms_contrato = lista_contratos();
-  $terms_tipo_imovel = lista_tipo_imovel();
-  $terms_cidade = lista_cidade();
+  $terms_contrato = lista_contratos( );
+  $terms_tipo_imovel = lista_tipo_imovel( );
+  $terms_cidade = lista_cidade( );
   $terms_regiao = [];
-  if ( $cidade_padrao == '' ) {
-    $terms_regiao = lista_regiao($cidade_padrao);
+  if ( '' == $cidade_padrao ) {
+    $terms_regiao = lista_regiao( $cidade_padrao );
   }
   $terms_faixa_valor = lista_faixa_valor_valores( $contrato_padrao );
 ?>
@@ -61,10 +61,10 @@
           <div><label for="contrato">Tipo de Contrato</label></div>
           <div class="select-container">
             <select id="contrato" name="contrato">
-              <option value="" <?php echo ('' == $contrato_padrao)? 'selected': '' ?>>Selecione...</option>
-              <?php if ( isset($terms_contrato) && !empty( $terms_contrato ) ): ?>
-                <?php foreach ((array) $terms_contrato as $contrato): ?>
-                  <option value="<?php echo esc_attr($contrato->slug); ?>" <?php echo ($contrato->slug == $contrato_padrao)? 'selected': '' ?>><?php echo esc_html($contrato->name); ?></option>
+              <option value="" <?php echo ( '' == $contrato_padrao ) ?? 'selected' ?>>Selecione...</option>
+              <?php if ( isset( $terms_contrato ) && ! empty( $terms_contrato ) ) : ?>
+                <?php foreach ( (array) $terms_contrato as $contrato ) : ?>
+                  <option value="<?php echo esc_attr( $contrato->slug ); ?>" <?php echo ( $contrato->slug == $contrato_padrao ) ?? 'selected' ?>><?php echo esc_html( $contrato->name ); ?></option>
                 <?php endforeach; ?>
               <?php endif; ?>
             </select>
@@ -74,11 +74,11 @@
           <div><label for="tipo-imovel">Tipo de Imóvel</label></div>
           <div class="select-container">
             <select id="tipo-imovel" name="tipo-imovel">
-              <?php $placeholder_selected = empty( $tipo_imovel_padrao ) ? 'selected' : ''; ?>
-              <option value="" <?php echo ( empty( $tipo_imovel_padrao ) ? 'selected="true"': '') ?>>Selecione...</option>
-              <?php if ( isset($terms_tipo_imovel) && !empty( $terms_tipo_imovel ) ): ?>
-                <?php foreach ((array) $terms_tipo_imovel as $tipo_imovel): ?>
-                  <option value="<?php echo esc_attr($tipo_imovel->slug); ?>" <?php echo ($tipo_imovel->slug === $tipo_imovel_padrao)? 'selected': '' ?>><?php echo esc_html($tipo_imovel->name); ?></option>
+              <?php $placeholder_selected = empty( $tipo_imovel_padrao ) ?? 'selected'; ?>
+              <option value="" <?php echo ( empty( $tipo_imovel_padrao ) ?? 'selected="true"' ) ?>>Selecione...</option>
+              <?php if ( isset( $terms_tipo_imovel ) && ! empty( $terms_tipo_imovel ) ): ?>
+                <?php foreach ( (array) $terms_tipo_imovel as $tipo_imovel ): ?>
+                  <option value="<?php echo esc_attr( $tipo_imovel->slug ); ?>" <?php echo ( $tipo_imovel->slug === $tipo_imovel_padrao ) ?? 'selected' ?>><?php echo esc_html( $tipo_imovel->name ); ?></option>
                 <?php endforeach; ?>
               <?php endif; ?>
             </select>
@@ -88,10 +88,10 @@
           <div><label for="cidade">Cidade</label></div>
           <div class="select-container">
             <select id="cidade" name="cidade">
-              <option value="" <?php echo ('' == $cidade_padrao)? 'selected': '' ?>>Selecione...</option>
-              <?php if ( isset($terms_cidade) && !empty( $terms_cidade ) ): ?>
-                <?php foreach ((array) $terms_cidade as $cidade): ?>
-                  <option value="<?php echo esc_attr($cidade->slug); ?>" <?php echo ($cidade->slug == $cidade_padrao)? 'selected': '' ?>><?php echo esc_html($cidade->name); ?></option>
+              <option value="" <?php echo ( '' == $cidade_padrao ) ?? 'selected' ?>>Selecione...</option>
+              <?php if ( isset( $terms_cidade ) && ! empty( $terms_cidade ) ) : ?>
+                <?php foreach ( (array) $terms_cidade as $cidade ) : ?>
+                  <option value="<?php echo esc_attr( $cidade->slug ); ?>" <?php echo ( $cidade->slug == $cidade_padrao ) ?? 'selected' ?>><?php echo esc_html( $cidade->name ); ?></option>
                 <?php endforeach; ?>
               <?php endif; ?>
             </select>
@@ -101,10 +101,10 @@
           <div><label for="regiao">Região</label></div>
           <div class="select-container">
             <select id="regiao" name="regiao">
-              <option value="" <?php echo ('' == $regiao_padrao)? 'selected': '' ?>>Selecione...</option>
-              <?php if ( isset($terms_regiao) && !empty( $terms_regiao ) ): ?>
-                <?php foreach ((array) $terms_regiao as $regiao): ?>
-                  <option value="<?php echo esc_attr($regiao->slug); ?>" <?php echo ($regiao->slug == $regiao_padrao)? 'selected': '' ?>><?php echo esc_html($regiao->name); ?></option>
+              <option value="" <?php echo ( '' == $regiao_padrao ) ?? 'selected' ?>>Selecione...</option>
+              <?php if ( isset( $terms_regiao ) && ! empty( $terms_regiao ) ) : ?>
+                <?php foreach ( (array) $terms_regiao as $regiao ) : ?>
+                  <option value="<?php echo esc_attr( $regiao->slug ); ?>" <?php echo ( $regiao->slug == $regiao_padrao ) ?? 'selected' ?>><?php echo esc_html( $regiao->name ); ?></option>
                 <?php endforeach; ?>
               <?php endif; ?>
             </select>
@@ -129,7 +129,7 @@
     <header class="pesquisa-header">
       <h4>Consulta</h4>
     </header>
-    <form name="consultaReferencia" role="consulta" method="get" class="consulta-form" action="<?php echo esc_url(home_url('/pesquisa')); ?>">
+    <form name="consultaReferencia" role="consulta" method="get" class="consulta-form" action="<?php echo esc_url( home_url( '/pesquisa' ) ); ?>">
     <input type="hidden" name="tipo_pesquisa_submit" value="consulta">
     <ul>
       <li class="referencia">
@@ -145,23 +145,23 @@
   </form>
 </section>
 <script>
-jQuery(document).ready(function($) {
-  <?php echo 'var rangeSlider = ' . json_encode($terms_faixa_valor) . ';' ?>
+jQuery( document ).ready( function( $ ) {
+  <?php echo 'var rangeSlider = ' . json_encode( $terms_faixa_valor ) . ';' ?>
   <?php
-    $vIni = 0;
-    $vFim = 0;
-    if (isset( $_REQUEST )) {
-      if (isset( $_REQUEST['valor-inicial'] )) {
-        $vIni = floatval( $_REQUEST['valor-inicial'] );
+    $v_ini = 0;
+    $v_fim = 0;
+    if ( isset( $_REQUEST ) ) {
+      if ( isset( $_REQUEST['valor-inicial'] ) ) {
+        $v_ini = floatval( $_REQUEST['valor-inicial'] );
       }
-      if (isset( $_REQUEST['valor-final'] )) {
-        $vFim = floatval( $_REQUEST['valor-final'] );
+      if ( isset( $_REQUEST['valor-final'] ) ) {
+        $v_fim = floatval( $_REQUEST['valor-final'] );
       }
     }
   ?>
-  var mid = 0, medianLow = <?php echo $vIni; ?>, medianHigh = <?php echo $vFim; ?>, minimo = 0, maximo = 0, range = 0;
+  var mid = 0, medianLow = <?php echo $v_ini; ?>, medianHigh = <?php echo $v_fim; ?>, minimo = 0, maximo = 0, range = 0;
   if ( rangeSlider.length > 0 ) {
-    range = (rangeSlider[rangeSlider.length - 1] - rangeSlider[0]) / rangeSlider.length;
+    range = ( rangeSlider[rangeSlider.length - 1] - rangeSlider[0] ) / rangeSlider.length;
     mid = parseInt( rangeSlider.length / 2 );
     medianLow  = ( medianLow > 0 ) ? medianLow :  rangeSlider[mid - 1];
     medianHigh =  ( medianHigh > 0 ) ? medianHigh : rangeSlider[mid];
@@ -171,5 +171,5 @@ jQuery(document).ready(function($) {
   } else {
     $( 'li.faixa-valor-slider' ).css( 'display', 'none' );
   }
-});
+} );
 </script>

@@ -1,5 +1,5 @@
 <?php
-$fotografias = get_post_meta( get_the_ID(), 'fotografias', false );
+$fotografias = get_post_meta( get_the_ID( ), 'fotografias', false );
 $swiper_breakpoints = [
   '640' => [
     'slidesPerView' => 1,
@@ -19,9 +19,9 @@ $swiper_breakpoints = [
   ]
 ];
 
-$breakpoints_json = json_encode($swiper_breakpoints, JSON_HEX_QUOT);
+$breakpoints_json = json_encode( $swiper_breakpoints, JSON_HEX_QUOT );
 
-if ( !empty( $fotografias ) ): ?>
+if ( ! empty( $fotografias ) ): ?>
   <swiper-container
     class="caroussel"
     slides-per-view="auto"
@@ -38,11 +38,8 @@ if ( !empty( $fotografias ) ): ?>
     <div class="container-end" slot="container-end"></div>
     <?php foreach ( $fotografias as $fotografia ): $media_id = $fotografia['id']; ?>
       <?php if ( ! empty( $media_id ) ): ?>
-      <swiper-slide ><?php echo wp_get_attachment_image($media_id, 'full', false, ['class' => 'imovel-foto']); ?></swiper-slide>
+      <swiper-slide ><?php echo wp_get_attachment_image( $media_id, 'full', false, [ 'class' => 'imovel-foto' ] ); ?></swiper-slide>
       <?php endif; ?>
     <?php endforeach; ?>
   </swiper-container>
 <?php endif; ?>
-<style>
-
-</style>

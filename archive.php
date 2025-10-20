@@ -1,9 +1,9 @@
 <?php
 namespace Air_Light;
 
-get_header(); ?>
+get_header( ); ?>
 <main class="site-main">
-  <?php echo get_template_part('template-parts/slider-home-topo'); ?>
+  <?php echo get_template_part( 'template-parts/slider-home-topo' ); ?>
   <div class="content">
     <?php
       get_template_part( 'template-parts/pesquisa/sidebar-pesquisa' , 'imovel' );
@@ -11,21 +11,21 @@ get_header(); ?>
     <section class="block block-blog">
       <header>
         <h3>Resultado da Pesquisa</h3>
-        <?php echo get_template_part('template-parts/pesquisa/meta-pesquisa', 'imovel'); ?>
+        <?php echo get_template_part( 'template-parts/pesquisa/meta-pesquisa', 'imovel' ); ?>
       </header>
       <div class="container">
-        <?php if ( have_posts() ) : ?>
-          <?php if ( false && is_home() && ! is_front_page() ) : ?>
-            <h1 id="content" class="screen-reader-text"><?php single_post_title(); ?></h1>
+        <?php if ( have_posts( ) ) : ?>
+          <?php if ( false && is_home( ) && ! is_front_page( ) ) : ?>
+            <h1 id="content" class="screen-reader-text"><?php single_post_title( ); ?></h1>
           <?php endif; ?>
           <div class="pesquisa-grid">
             <div class="cortina-aguarde inactive">
               <div class="loading-spinner"></div>
               <span>Aguarde...</span>
             </div>
-            <?php while ( have_posts() ): the_post(); ?>
-              <?php if ( $post->ID != null ): ?>
-                <?php echo get_template_part('template-parts/pesquisa/card', 'imovel'); ?>
+            <?php while ( have_posts( ) ): the_post( ); ?>
+              <?php if ( null != $post->ID ): ?>
+                <?php echo get_template_part( 'template-parts/pesquisa/card', 'imovel' ); ?>
               <?php endif; ?>
             <?php endwhile; ?>
           </div>
@@ -33,7 +33,7 @@ get_header(); ?>
           $my_args = [];
           $aux = [ 'cidade', 'contrato', 'faixa-valor', 'max', 'ordem', 'post_type', 'regiao', 'sort', 'tipo-imovel', 'valor-final', 'valor-inicial' ];
           foreach ( $aux as $k ) {
-            if ( !empty( $wp_query->query_vars[ $k ] ) ) {
+            if ( ! empty( $wp_query->query_vars[ $k ] ) ) {
               $my_args[ $k ] = $wp_query->query_vars[ $k ];
             }
           }
@@ -45,4 +45,4 @@ get_header(); ?>
     </section>
   </div>
 </main>
-<?php get_footer();
+<?php get_footer( );

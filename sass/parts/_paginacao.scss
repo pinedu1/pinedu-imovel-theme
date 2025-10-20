@@ -5,6 +5,7 @@
   display: flex;
   width: 100%;
   padding: 2px;
+  justify-content: center;
 
   span.page-numbers, a.page-numbers {
     background-color: $bg-light-gray;
@@ -69,7 +70,6 @@
 
   // Responsividade
   @media (max-width: 768px) {
-    justify-content: flex-start;
     padding-bottom: 0.5rem;
     .page-numbers {
       padding: 0.25rem;

@@ -5,27 +5,27 @@ $telefone = '';
 $cpf = '';
 $identificacao = '';
 if ( isset( $_REQUEST['nome'] ) ) {
-	$nome = $_REQUEST['nome'];
+	$nome = sanitize_text_field( $_REQUEST['nome'] );
 }
 if ( isset( $_REQUEST['email'] ) ) {
-  $email = $_REQUEST['email'];
+  $email = sanitize_email( $_REQUEST['email'] );
 }
 if ( isset( $_REQUEST['telefone'] ) ) {
-  $telefone = $_REQUEST['telefone'];
+  $telefone = sanitize_text_field( $_REQUEST['telefone'] );
 }
-if (  isset( $_REQUEST['cpf'] ) ) {
-  $cpf = $_REQUEST['cpf'];
+if ( isset( $_REQUEST['cpf'] ) ) {
+  $cpf = sanitize_text_field( $_REQUEST['cpf'] );
 }
 if ( isset( $_REQUEST['identificacao_ok'] ) ) {
-  $identificacao = $_REQUEST['identificacao_ok'];
+  $identificacao = sanitize_text_field( $_REQUEST['identificacao_ok'] );
 }
 ?>
 <section class="contato" name="contato">
   <header class="row">
     <h4>Identificação</h4>
   </header>
-  <form name="cadastro-form" id="cadastro-form" action="<?php echo esc_url(get_permalink()); ?>" method="POST" enctype="multipart/form-data">
-    <?php wp_nonce_field('cadastro_imovel', 'property_nonce'); ?>
+  <form name="cadastro-form" id="cadastro-form" action="<?php echo esc_url( get_permalink( ) ); ?>" method="POST" enctype="multipart/form-data">
+    <?php wp_nonce_field( 'cadastro_imovel', 'property_nonce' ); ?>
     <input type="hidden" name="identificacao" id="identificacao" value="<?php echo $identificacao; ?>">
     <div class="row">
       <div class="col col-nome">
@@ -50,7 +50,7 @@ if ( isset( $_REQUEST['identificacao_ok'] ) ) {
         <p>Sua identificação é essencial para oferecermos o melhor serviço; com as informações fornecidas, um corretor qualificado entrará em contato para ajudar na promoção do seu imóvel; seus dados estarão protegidos e usados exclusivamente conforme nossa &nbsp;<a href="./politicaPrivacidade" class="cadastre-privacy">Política de Privacidade</a></strong>.</p>
       </div>
       <div class="row buttom">
-        <button type="button" id="btnProximo" onClick="passoPosIdentificacao(event);">Próximo</button>
+        <button type="button" id="btnProximo" onClick="passoPosIdentificacao( event );">Próximo</button>
       </div>
     </footer>
   </form>

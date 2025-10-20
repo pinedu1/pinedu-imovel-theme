@@ -1,15 +1,16 @@
 <?php
-  require_once get_template_directory() . '/inc/classes/Visitados.php';
+// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+  require_once get_template_directory( ) . '/inc/classes/Visitados.php';
   global $post;
   $destaques = Air_Light\busca_campos_destaque_card( $post );
 ?>
 <a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" class="cardVisinhanca">
-  <section class="property-card <?php echo $this->getClass(); ?>" itemscope itemtype="http://schema.org/RealEstateListing">
+  <section class="property-card <?php echo $this->getClass( ); ?>" itemscope itemtype="http://schema.org/RealEstateListing">
     <!-- Topo: Container -->
     <div class="property-container">
       <!-- Esquerda: Imagem -->
       <figure class="property-image" itemprop="image" itemscope itemtype="http://schema.org/ImageObject">
-        <?php $thumbnail_attrs = array( 'class' => 'property-thumbnail', 'alt' => get_the_title(), 'itemprop' => 'url' ); the_post_thumbnail('medium', $thumbnail_attrs); ?>
+        <?php $thumbnail_attrs = array( 'class' => 'property-thumbnail', 'alt' => get_the_title( ), 'itemprop' => 'url' ); the_post_thumbnail( 'medium', $thumbnail_attrs ); ?>
       </figure>
       <!-- Direita: Conteúdo -->
       <div class="property-details">
@@ -23,49 +24,49 @@
             <span class="label">Cidade</span>
             <span class="value" itemprop="addressLocality"><?php echo $post->cidade; ?></span>
           </div>
-          <?php if( $post->regiao ): ?>
+          <?php if ( $post->regiao ) : ?>
           <div class="info-row" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
             <span class="label">Bairro</span>
             <span class="value" itemprop="addressRegion"><?php echo $post->regiao; ?></span>
           </div>
-          <?php endif;?>
-          <?php if( isset( $destaques['DOR'] ) ): $d = $destaques['DOR']; ?>
+          <?php endif; ?>
+          <?php if ( isset( $destaques['DOR'] ) ) : $d = $destaques['DOR']; ?>
           <div class="info-row" itemprop="numberOfRooms">
-            <span class="label"><?php echo $d[ 'nome' ] ?></span>
-            <span class="value"><?php echo $d[ 'valor' ]; ?></span>
+            <span class="label"><?php echo $d['nome'] ?></span>
+            <span class="value"><?php echo $d['valor']; ?></span>
           </div>
-          <?php endif;?>
-          <?php if( isset( $destaques['BAN'] ) ): $d = $destaques['BAN']; ?>
+          <?php endif; ?>
+          <?php if ( isset( $destaques['BAN'] ) ) : $d = $destaques['BAN']; ?>
           <div class="info-row" itemprop="numberOfBathroomsTotal">
-            <span class="label"><?php echo $d[ 'nome' ] ?></span>
-            <span class="value"><?php echo $d[ 'valor' ]; ?></span>
+            <span class="label"><?php echo $d['nome'] ?></span>
+            <span class="value"><?php echo $d['valor']; ?></span>
           </div>
-          <?php endif;?>
-          <?php if( isset( $destaques['GAR'] ) ): $d = $destaques['GAR']; ?>
+          <?php endif; ?>
+          <?php if ( isset( $destaques['GAR'] ) ) : $d = $destaques['GAR']; ?>
           <div class="info-row" itemprop="parkingSpace">
-            <span class="label"><?php echo $d[ 'nome' ] ?></span>
-            <span class="value"><?php echo $d[ 'valor' ]; ?></span>
+            <span class="label"><?php echo $d['nome'] ?></span>
+            <span class="value"><?php echo $d['valor']; ?></span>
           </div>
-          <?php endif;?>
-          <?php if( isset( $destaques['ARU'] ) ): $d = $destaques['ARU']; ?>
+          <?php endif; ?>
+          <?php if ( isset( $destaques['ARU'] ) ) : $d = $destaques['ARU']; ?>
           <div class="info-row" itemprop="floorSize">
-            <span class="label"><?php echo $d[ 'nome' ] ?></span>
-            <span class="value"><?php echo $d[ 'valor' ]; ?></span>
+            <span class="label"><?php echo $d['nome'] ?></span>
+            <span class="value"><?php echo $d['valor']; ?></span>
           </div>
-          <?php endif;?>
-          <?php if( isset( $destaques['ART'] ) ): $d = $destaques['ART']; ?>
+          <?php endif; ?>
+          <?php if ( isset( $destaques['ART'] ) ) : $d = $destaques['ART']; ?>
             <div class="info-row" itemprop="floorSize">
-              <span class="label"><?php echo $d[ 'nome' ] ?></span>
-              <span class="value"><?php echo $d[ 'valor' ]; ?></span>
+              <span class="label"><?php echo $d['nome'] ?></span>
+              <span class="value"><?php echo $d['valor']; ?></span>
             </div>
-          <?php endif;?>
+          <?php endif; ?>
         </div>
       </div>
     </div>
     <!-- Bottom: footer -->
     <div class="property-footer">
       <div class="price-box" itemprop="offers" itemscope itemtype="http://schema.org/Offer" title="Venda">
-        <?php if ( $post->ativarVenda == '1' ): ?>
+        <?php if ( '1' == $post->ativarVenda ) : ?>
           <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
             <meta itemprop="businessFunction" content="http://purl.org/goodrelations/v1#Sell"/>
             <link itemprop="availability" href="https://schema.org/InStock" />
@@ -73,10 +74,10 @@
             <meta itemprop="businessFunction" content="http://purl.org/goodrelations/v1#Sell"/>
             <meta itemprop="price" content="<?php echo $post->vendaValor; ?>" />
             <span itemprop="priceCurrency" content="BRL">R$</span>
-            <span itemprop="price"><?php echo formata_valor( $post->vendaValor, 0); ?></span>
+            <span itemprop="price"><?php echo formata_valor( $post->vendaValor, 0 ); ?></span>
           </div>
         <?php endif; ?>
-        <?php if ( $post->ativarLancamento == '1' ): ?>
+        <?php if ( '1' == $post->ativarLancamento ) : ?>
           <div itemprop="offers" itemscope itemtype="http://schema.org/Offer" title="Venda">
             <meta itemprop="businessFunction" content="http://purl.org/goodrelations/v1#Sell"/>
             <link itemprop="availability" href="https://schema.org/InStock" />
@@ -84,10 +85,10 @@
             <meta itemprop="businessFunction" content="http://purl.org/goodrelations/v1#Sell"/>
             <meta itemprop="price" content="<?php echo $post->lancamentoValor; ?>" />
             <span itemprop="priceCurrency" content="BRL">R$</span>
-            <span itemprop="price"><?php echo formata_valor( $post->lancamentoValor, 0); ?></span>
+            <span itemprop="price"><?php echo formata_valor( $post->lancamentoValor, 0 ); ?></span>
           </div>
         <?php endif; ?>
-        <?php if ( $post->ativarLocacao == '1' ): ?>
+        <?php if ( '1' == $post->ativarLocacao ) : ?>
           <div itemprop="offers" itemscope itemtype="http://schema.org/Offer" title="Locação">
             <meta itemprop="businessFunction" content="http://purl.org/goodrelations/v1#LeaseOut"/>
             <link itemprop="availability" href="https://schema.org/InStock" />
@@ -95,7 +96,7 @@
             <meta itemprop="businessFunction" content="http://purl.org/goodrelations/v1#Sell"/>
             <meta itemprop="price" content="<?php echo $post->locacaoValor; ?>" />
             <span itemprop="priceCurrency" content="BRL">R$</span>
-            <span itemprop="price"><?php echo formata_valor( $post->locacaoValor, 0); ?></span>
+            <span itemprop="price"><?php echo formata_valor( $post->locacaoValor, 0 ); ?></span>
           </div>
         <?php endif; ?>
       </div>

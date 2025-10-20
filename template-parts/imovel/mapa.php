@@ -1,11 +1,11 @@
 <?php
 global $post;
-$google_maps_key = get_google_maps_key();
+$google_maps_key = get_google_maps_key( );
 ?>
-<?php if ( (!empty($google_maps_key)) && ( !empty( $post->latitude ) ) && ($post->latitude != 0 ) && ( !empty( $post->longitude ) ) && ( $post->longitude != 0 ) ): ?>
+<?php if ( ( ! empty( $google_maps_key ) ) && ( ! empty( $post->latitude ) ) && ( 0 != $post->latitude ) && ( ! empty( $post->longitude ) ) && ( 0 != $post->longitude ) ) : ?>
   <?php
   $ponto = [ 'latitude' => $post->latitude, 'longitude' => $post->longitude ];
-  $circulo = formatCoordinatesToCircle(drawCircle($ponto, 250));
+  $circulo = formatCoordinatesToCircle( drawCircle( $ponto, 250 ) );
   $args = [
     'center' => $post->latitude . ',' . $post->longitude,
     'zoom' => 16,
@@ -16,7 +16,7 @@ $google_maps_key = get_google_maps_key();
     'path' => 'color:0x0000ff|weight:1|fillcolor:0xaaaaaa|' . $circulo,
   ];
   $base_url = 'https://maps.googleapis.com/maps/api/staticmap';
-  $static_map_url = $base_url . '?' . http_build_query($args);
+  $static_map_url = $base_url . '?' . http_build_query( $args );
   ?>
 <section class="imovel-mapa">
   <h4>Proximidades</h4>

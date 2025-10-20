@@ -6,7 +6,11 @@
  *
  * @package air-light
  */
+// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+// phpcs:disable WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
+
 namespace Air_Light;
+
 $empresa = getEmpresa(1);
 if ( isset( $empresa ) && isset( $empresa->telefonePadrao) ) {
   $telefonePadrao = $empresa->telefonePadrao;
@@ -29,9 +33,9 @@ if ( isset( $empresa ) && isset( $empresa->telefonePadrao) ) {
         <?php get_template_part( 'template-parts/header/branding' ); ?>
         <?php get_template_part( 'template-parts/header/navigation' ); ?>
       </div>
-      <?php if ( !empty( $telefonePadrao ) ): ?>
+      <?php if ( ! empty( $telefonePadrao ) ): ?>
       <div class="central-atendimento">
-        <a href="tel:<?php echo $telefonePadrao; ?> title="Acesse nossa Central de atendimento <?php echo  formata_telefone( $telefonePadrao ); ?>">
+        <a href="tel:<?php echo $telefonePadrao; ?> title="Acesse nossa Central de atendimento <?php echo formata_telefone( $telefonePadrao ); ?>">
         <img
           src="<?php echo get_template_directory_uri(); ?>/assets/images/central_atendimento_vermelho.png"
           alt="Acesse nossa Central de atendimento <?php echo formata_telefone( $telefonePadrao ); ?>"

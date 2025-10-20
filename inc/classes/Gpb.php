@@ -1,8 +1,21 @@
 <?php
-  require_once get_template_directory() . '/inc/classes/DoGet.php';
+// phpcs:disable WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
+/**
+ * Gpb
+ */
+require_once get_template_directory() . '/inc/classes/DoGet.php';
+/**
+ * Gpb
+ */
 class Gpb extends DoGet {
   const ENDPOINT = '/wordpress/';
+  /**
+   * @var mixed|string $url
+   */
   private $url;
+  /**
+   * @var mixed $token
+   */
   private $token;
   public function __construct() {
     $options = get_option('pinedu_imovel_options', []);

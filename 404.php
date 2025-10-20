@@ -1,6 +1,6 @@
 <?php
 /**
- * The template for displaying 404 pages (not found)
+ * The template for displaying 404 pages ( not found )
  *
  * @Date:   2019-10-15 12:30:02
  * @Last Modified by:   Timi Wahalahti
@@ -11,16 +11,27 @@
  */
 
 namespace Air_Light;
-/* Começa aqui  */
-global $wp_query;
+
 /*
+Começa aqui
+*/
+
+global $wp_query;
+
+/*
+
+Inicio
+
 echo '<pre>';
 print_r( $wp_query->query_vars );
 print_r( $_REQUEST );
-echo '</pre>'; */
-/* Termina aqui  */
+echo '</pre>';
 
-get_header(); ?>
+Termina aqui
+
+*/
+
+get_header( ); ?>
 
 <main class="site-main">
 
@@ -41,7 +52,7 @@ get_header(); ?>
 <?php
 
 // Enable visible footer if fits project:
-// get_footer();
+// get_footer( );
 
 // WordPress scripts and hooks
-wp_footer();
+wp_footer( );
