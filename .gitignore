@@ -9,3 +9,4 @@ dandelion.yml
 html
 w3cErrors/
 .vscode
+vendor/wp-coding-standards
