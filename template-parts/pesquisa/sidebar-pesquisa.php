@@ -9,6 +9,9 @@ if ( isset( $_REQUEST[ 'contrato' ] ) ) {
   $contrato_padrao = sanitize_text_field( $_REQUEST[ 'contrato' ] );
 }
 $tipo_imovel_padrao = get_query_var( 'tipo-imovel' );
+if ( empty( $tipo_imovel_padrao ) && ! empty( $options['tipo_imovel'] ) ) {
+  $tipo_imovel_padrao = strtolower( $options['tipo_imovel'] );
+}
 if ( isset( $_REQUEST[ 'tipo-imovel' ] ) ) {
   $tipo_imovel_padrao = sanitize_text_field( $_REQUEST[ 'tipo-imovel' ] );
 }

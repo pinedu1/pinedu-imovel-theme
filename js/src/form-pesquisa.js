@@ -145,7 +145,6 @@ jQuery(document).ready(($) => {
       success(response) {
         const dados = response.data;
         if (response.success) {
-          // console.log(dados);
           reloadSelectOptions(selectChild, dados.data, true, 'Selecione ...');
         } else {
           console.error(dados.message);

@@ -261,11 +261,12 @@ class Pinedu_Form_Pesquisa {
     $result = array(
       'tipo-imoveis' => array( )
       ,'faixa-valores' => array( )
+      , 'x' => []
     );
     if ( ! empty( $terms_tipo_imovel ) && ! is_wp_error( $terms_tipo_imovel ) ) {
       foreach ( $terms_tipo_imovel as $tipo_imovel ) {
         $opt = [ 'id' => $tipo_imovel->slug, 'nome' => $tipo_imovel->name ];
-        if ( $tipo_imovel_padrao && ( $tipo_imovel->slug == $tipo_imovel_padrao ) ) $opt[ 'selected' ] = true;
+        if ( $tipo_imovel_padrao && ( strtolower( $tipo_imovel->slug ) == strtolower( $tipo_imovel_padrao ) ) ) $opt[ 'selected' ] = true;
         $result[ 'tipo-imoveis' ][] = $opt;
       }
     }
