@@ -26,7 +26,7 @@ function ajax_link_nom_priv( ) {
  * Enqueue scripts and styles.
  */
 function enqueue_theme_scripts( ) {
-  if ( 'development' === wp_get_environment_type( ) ) {
+  if ( true || 'development' === wp_get_environment_type( ) ) {
     // Enqueue global.css
     wp_enqueue_style( 'styles', get_theme_file_uri( get_asset_file( 'global.css' ) ) , array( 'dashicons' ) , filemtime( get_theme_file_path( get_asset_file( 'global.css' ) ) ) );
   } else {
