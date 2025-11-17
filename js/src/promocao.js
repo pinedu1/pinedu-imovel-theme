@@ -1,5 +1,4 @@
 jQuery(document).ready(($) => {
-
   $('section.content.promocao').on('click', 'nav.paginacao a.page-numbers', function(e) {
     e.preventDefault();
     const $promocaoContainer = $(this).closest('.card-container'); // Ou use um seletor mais específico se houver vários
@@ -35,7 +34,7 @@ jQuery(document).ready(($) => {
       error: function(jqXHR, textStatus, errorThrown) {
         console.error('Erro na requisição AJAX: ', textStatus, errorThrown);
         $promocaoContainer.removeClass('is-loading').fadeIn('slow');
-      }
+      },
     });
   });
 });

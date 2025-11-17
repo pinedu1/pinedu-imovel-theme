@@ -8,7 +8,7 @@
       <nav class="navigation pagination paginacao <?php echo $this->getClass( ); ?>" aria-label="Navegação de páginas">
         <?php
           $base_link = get_pagenum_link( 999999999 );
-          $base = $base_link ?? str_replace( 999999999, '%#%', esc_url( $base_link ) );
+          $base = str_replace( 999999999, '%#%', esc_url( $base_link ) );
           echo paginate_links( array(
             'base' => $base
           , 'format' => '?paged=%#%'

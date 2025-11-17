@@ -26,14 +26,7 @@ function ajax_link_nom_priv( ) {
  * Enqueue scripts and styles.
  */
 function enqueue_theme_scripts( ) {
-  if ( true || 'development' === wp_get_environment_type( ) ) {
-    // Enqueue global.css
-    wp_enqueue_style( 'styles', get_theme_file_uri( get_asset_file( 'global.css' ) ) , array( 'dashicons' ) , filemtime( get_theme_file_path( get_asset_file( 'global.css' ) ) ) );
-  } else {
-    // Enqueue style.css
-    wp_enqueue_style( 'styles', get_theme_file_uri( 'style.css' ), array( 'dashicons' ), filemtime( get_theme_file_path( 'style.css' ) ) );
-  }
-
+  enqueue_main_assets( );
   // Enqueue jquery and front-end.js
   wp_enqueue_script( 'jquery-core' );
   enqueue_dropzone_assets( );
@@ -42,7 +35,6 @@ function enqueue_theme_scripts( ) {
   enqueue_glide_js( );
   enqueue_font_awesome( );
   enqueue_nouislider( );
-  wp_enqueue_script( 'scripts', get_theme_file_uri( get_asset_file( 'main.js' ) ), [], filemtime( get_theme_file_path( get_asset_file( 'main.js' ) ) ), true );
   wp_localize_script( 'scripts', 'ajax_object', [ 'ajaxurl' => admin_url( 'admin-ajax.php' ) ] );
   // Required comment-reply script
   if ( is_singular( ) && comments_open( ) && get_option( 'thread_comments' ) ) {
@@ -78,7 +70,7 @@ wp_localize_script( 'scripts', 'air_light_screenReaderText', [
  * @return string file and path of the asset file
  */
 function get_asset_file( $filename ) {
-  $env = 'development' === wp_get_environment_type( ) && ! isset( $_GET['load_production_builds'] ) ? 'dev' : 'prod'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+  $env = 'development' === wp_get_environment_type( ) && ! isset( $_GET['load_production_builds'] ) ? 'dev' : 'prod';
 
   $filetype = pathinfo( $filename )['extension'];
 
@@ -90,6 +82,10 @@ function instala_shortcodes( ) {
 function instala_shortcode_barra_pesquisa( $atts ) {
   require_once get_template_directory( ) . '/inc/classes/PineduShortCodeSearchBar.php';
   \PineduShortCodeSearchBar::do( $atts );
+}
+function enqueue_main_assets( ) {
+  wp_enqueue_style( 'styles', get_theme_file_uri( get_asset_file( 'global.css' ) ) , array( 'dashicons' ) , filemtime( get_theme_file_path( get_asset_file( 'global.css' ) ) ) );
+  wp_enqueue_script( 'scripts', get_theme_file_uri( get_asset_file( 'main.js' ) ), [], filemtime( get_theme_file_path( get_asset_file( 'main.js' ) ) ), true );
 }
 function enqueue_dropzone_assets( ) {
   wp_enqueue_script( 'dropzone-js', get_theme_file_uri( '/assets/js/vendor/dropzone/dropzone-min.js' ), array( ), '6.0.0-beta.2', true );

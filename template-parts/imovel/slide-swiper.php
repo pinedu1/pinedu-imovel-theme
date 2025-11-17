@@ -18,7 +18,8 @@ $swiper_breakpoints = [
     'spaceBetween'  => 40,
   ]
 ];
-
+$options = get_option( 'pinedu_imovel_options', [] );
+$fotos_direitos_autorais = $options['fotos_direitos_autorais']??'Todos os direitos reservados';
 $breakpoints_json = json_encode( $swiper_breakpoints, JSON_HEX_QUOT );
 
 if ( ! empty( $fotografias ) ): ?>
@@ -34,7 +35,7 @@ if ( ! empty( $fotografias ) ): ?>
     loop="true"
     breakpoints='<?php echo $breakpoints_json; ?>' >
 
-    <div class="container-start" slot="container-start">Rendered before wrapper</div>
+    <div class="container-start" slot="container-start"><?php echo $fotos_direitos_autorais; ?></div>
     <div class="container-end" slot="container-end"></div>
     <?php foreach ( $fotografias as $fotografia ): $media_id = $fotografia['id']; ?>
       <?php if ( ! empty( $media_id ) ): ?>
