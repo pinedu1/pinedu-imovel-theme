@@ -2,8 +2,16 @@
 // phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 global $post;
 $empresa = getEmpresa( );
-$captador_id = get_post_meta( $post->ID, 'captadorPrincipalId', true );
+$captador_id = $post->captadorPrincipalId;
+$referencia = $post->referencia;
 $corretor = getCorretor( $captador_id );
+$creci = '';
+if ( !empty( $empresa->creci ) ) {
+  $creci = $empresa->creci;
+}
+if ( !empty( $corretor->creci ) ) {
+  $creci = $corretor->creci;
+}
 if ( $corretor && ! empty( $corretor->creci ) ): ?>
 <div class="card-corretor">
   <div class="card-header">
@@ -35,19 +43,21 @@ if ( $corretor && ! empty( $corretor->creci ) ): ?>
     </div>
     <div class="info-container">
       <div class="info-textos">
-        <h2 class="nome-usuario"><?php echo esc_attr( $corretor->codNome ); ?></h2>
-        <p class="nome-completo"><?php echo esc_attr( $corretor->pessoa_nome ); ?></p>
-        <p class="cargo">Corretor de Imóveis</p>
-        <?php if ( ! empty( $corretor->creci ) ): ?>
-          <?php echo '<p class="creci">Creci: ' . esc_attr( $corretor->creci ) . '</p>' ?>
-        <?php elseif ( ! empty( $empresa->creci ) ): ?>
-          <?php echo '<p class="creci">Creci: ' . esc_attr( $empresa->creci ) . '</p>' ?>
+        <?php if ( !empty( $corretor->codNome ) ): ?>
+          <h2 class="nome-usuario"><?php echo esc_attr( $corretor->codNome ); ?></h2>
+          <p class="nome-completo"><?php echo esc_attr( $corretor->pessoa_nome ); ?></p>
+        <?php else: ?>
+          <h2 class="nome-usuario"><?php echo esc_attr( $corretor->pessoa_nome ); ?></h2>
         <?php endif; ?>
+        <p class="cargo">Corretor de Imóveis</p>
+        <?php echo '<p class="creci">' . esc_attr( $creci ) . '</p>' ?>
       </div>
     </div>
   </div>
   <div class="card-footer">
-    <a href="#" class="btn-contato">Falar com o corretor</a>
+    <button class="cartao btn-contato" type="button" data-codigo-corretor="<?php echo $corretor->codigo; ?>" data-nome-corretor="<?php echo $corretor->pessoa_nome; ?>" data-referencia="<?php echo $referencia; ?>">
+      Falar com o corretor
+    </button>
   </div>
 </div>
 <?php endif; ?>

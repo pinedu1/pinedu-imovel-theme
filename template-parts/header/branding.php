@@ -33,6 +33,8 @@ $description = get_bloginfo( 'description', 'display' );
         </a>
       </h1>
     </div>
+  </header>
+  <footer class="branding-footer">
     <!-- Linha da Descrição -->
     <?php if ( $description || is_customize_preview() ) : ?>
       <p class="branding-description site-description">
@@ -43,7 +45,5 @@ $description = get_bloginfo( 'description', 'display' );
         <?php echo esc_html( 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."' ); ?>
       </p>
     <?php endif; ?>
-    <?php if ( ! empty( $telefonePadrao ) ) : ?>
-    <?php endif; ?>
-  </header>
+  </footer>
 </section>

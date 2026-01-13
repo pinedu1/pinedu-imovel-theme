@@ -3,104 +3,89 @@ import Glide from '@glidejs/glide';
 window.Glide = Glide;
 
 $=jQuery;
-function validarFormularioContato() {
-  const form = $('#contato-form');
-  const inputs = form.find('input[required]');
-  const selects = form.find('select[required]');
+function validarFormulario( componentSelector ) {
+  const form = $( componentSelector );
+  const inputs = form.find( 'input[required]' );
+  const selects = form.find( 'select[required]' );
   let valido = true;
   // Limpar mensagens de erro anteriores
-  $('.error-message').remove();
+  $( '.error-message' ).remove( );
   // Validar cada campo requerido
-  inputs.each(function () {
-    const input = $(this);
-    if (!input.val() && !input.prop('disabled')) {
+  inputs.each( function ( ) {
+    const input = $( this );
+    if ( !input.val( ) && !input.prop( 'disabled' ) ) {
       valido = false;
       // Adicionar uma mensagem de erro se o campo não estiver preenchido
-      const errorMessage = $('<div class="error-message" style="color: red;">');
-      errorMessage.text(`O campo ${input.attr('placeholder')} é obrigatório.`);
-      input.parent().append(errorMessage);
-      setTimeout(() => {
-        errorMessage.remove();
-      }, 10000);
+      const errorMessage = $( '<div class="error-message" style="color: red;">' );
+      errorMessage.text( `O campo ${input.attr( 'placeholder' )} é obrigatório.` );
+      input.parent( ).append( errorMessage );
+      setTimeout( ( ) => {
+        errorMessage.remove( );
+      }, 10000 );
     }
-  });
+  } );
   // Validar cada campo requerido
-  selects.each(() => {
-    const select = $(this);
-    if (!select.val()) {
+  selects.each( ( ) => {
+    const select = $( this );
+    if ( !select.val( ) ) {
       valido = false;
       // Adicionar uma mensagem de erro se o campo não estiver preenchido
-      const errorMessage = $('<div class="error-message" style="color: red;">');
-      errorMessage.text(`O campo ${select.attr('placeholder')} é obrigatório.`);
-      select.parent().append(errorMessage);
-      setTimeout(() => {
-        errorMessage.remove();
-      }, 10000);
+      const errorMessage = $( '<div class="error-message" style="color: red;">' );
+      errorMessage.text( `O campo ${select.attr( 'placeholder' )} é obrigatório.` );
+      select.parent( ).append( errorMessage );
+      setTimeout( ( ) => {
+        errorMessage.remove( );
+      }, 10000 );
     }
-  });
+  } );
   return valido;
 }
-function exibeFormContato(button) {
-  $('#botoes-contato').hide('slow');
-  $('#div-contato').show('slow');
+
+function validarFormularioContato( ) {
+  return validarFormulario( '#contato-form' );
 }
-function ajaxContato() {
-  const form = $('#contato-form');
-  const dadosFormulario = form.serialize();
-  $.ajax({
+function exibeFormContato( button ) {
+  $( '#botoes-contato' ).hide( 'slow' );
+  $( '#div-contato' ).show( 'slow' );
+}
+function ajaxContato( ) {
+  const form = $( '#contato-form' );
+  const dadosFormulario = form.serialize( );
+  $.ajax( {
     url: ajax_object.ajaxurl,
     method: 'POST',
     data: { action: 'CONTATOIMOVEL', form_data: dadosFormulario },
     beforeSend( jqXHR, settings ) {
-      $('#loading-curtain').fadeIn();
+      $( '#loading-curtain' ).fadeIn( );
     },
-    success(response) {
-      if (response.success) {
-        $('section.solicita-visita').replaceWith(response.data);
+    success( response ) {
+      if ( response.success ) {
+        $( 'section.solicita-visita' ).replaceWith( response.data );
       } else {
-        console.error('Erro na requisição AJAX: ', response);
+        console.error( 'Erro na requisição AJAX: ', response );
       }
     },
-    error() {
-      console.error('Erro na requisição desconhecido AJAX');
+    error( ) {
+      console.error( 'Erro na requisição desconhecido AJAX' );
     },
     complete( jqXHR, textStatus ) {
-      $('#loading-curtain').fadeOut();
+      $( '#loading-curtain' ).fadeOut( );
 /*
-      $('html, body').animate({
-        scrollTop: $("#btnProximo").offset().top
-      }, 800);
+      $( 'html, body' ).animate( {
+        scrollTop: $( "#btnProximo" ).offset( ).top
+      }, 800 );
 */
     },
-  });
+  } );
 }
-function enviarContato(button) {
-  const ok = validarFormularioContato();
-  if (ok === true) {
-    ajaxContato();
+function enviarContato( button ) {
+  const ok = validarFormularioContato( );
+  if ( ok === true ) {
+    ajaxContato( );
   }
   return false;
 }
 window.exibeFormContato = exibeFormContato;
 window.enviarContato = enviarContato;
-jQuery(document).ready(($) => {
-  if ( $('body').hasClass('single-imovel') && $('#imovel-carousel').length ) {
-    new Glide('#imovel-carousel', {
-      type: 'carousel',
-      perView: 2,
-      focusAt: 'center',
-      gap: 10,
-      keyboard: true,
-      autoplay: 5000,
-      hoverpause: true,
-      breakpoints: {
-        1600: { perView: 3, gap: 10 }
-        , 1200: { perView: 3, gap: 8 }
-        , 1024: { perView: 2, gap: 8 }
-        , 768: { perView: 2, gap: 6 }
-        , 640: { perView: 1, gap: 5 }
-        , 420: { perView: 1, gap: 1 }
-      }
-    }).mount( );
-  }
-});
+jQuery( document ).ready( ( $ ) => {
+} );

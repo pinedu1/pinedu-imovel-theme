@@ -19,6 +19,8 @@ class Pinedu_Form_Cadastre {
   const HOOK_CIDADECHANGE = 'CIDADEGPBCHANGE';
   const HOOK_AUTOCOMPLETE = 'AUTOCOMPLETEGPBLOGRADOURO';
   const HOOK_CONTATOIMOVEL = 'CONTATOIMOVEL';
+  const HOOK_CONTATOIMOVELCORRETOR = 'CONTATOIMOVELCORRETOR';
+  const HOOK_CONTATOCORRETOR = 'CONTATOCORRETOR';
   public static function init( ) {
     add_action( self::PREFIXO . self::HOOK_IDENTIFICACAO, [ __CLASS__, 'carregar_tipo_imovel' ], 99, 1 );
     add_action( self::PREFIXO . self::HOOK_LOCALIZACAO, [ __CLASS__, 'carregar_localizacao' ], 99, 1 );
@@ -29,6 +31,8 @@ class Pinedu_Form_Cadastre {
     add_action( self::PREFIXO . self::HOOK_CIDADECHANGE, [ __CLASS__, 'carregar_bairros' ], 99, 1 );
     add_action( self::PREFIXO . self::HOOK_AUTOCOMPLETE, [ __CLASS__, 'auto_complete_logradouro' ], 99, 1 );
     add_action( self::PREFIXO . self::HOOK_CONTATOIMOVEL, [ __CLASS__, 'contato_imovel' ], 99, 1 );
+    add_action( self::PREFIXO . self::HOOK_CONTATOIMOVELCORRETOR, [ __CLASS__, 'contato_imovel_corretor' ], 99, 1 );
+    add_action( self::PREFIXO . self::HOOK_CONTATOCORRETOR, [ __CLASS__, 'contato_corretor' ], 99, 1 );
   }
   public static function carregar_tipo_imovel( $form_data ) {
     $form_data = null;
@@ -169,15 +173,65 @@ class Pinedu_Form_Cadastre {
     wp_send_json_success( $data );
     return false;
   }
-  public static function contato_imovel( $form_data ) {
+  public static function contato_corretor( ) {
     $form_data = null;
-    $dados = [];
+    $args = [];
     if ( isset( $_POST[ 'form_data' ] ) ) {
-      // phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
       $form_data = wp_unslash( $_POST[ 'form_data' ] );
     }
     if ( ! empty( $form_data ) ) {
-      parse_str( $form_data, $dados );
+      parse_str( $form_data, $args );
+    }
+    $referencia = $args['referencia'] ?? null;
+    $corretor = $args['corretor'] ?? null;
+    $mensagem = $args['mensagem'] ?? null;
+    $nome = $args['nome'] ?? null;
+    $telefone = $args['telefone'] ?? null;
+    $email = $args['email'] ?? null;
+    $data = enviarCliente( $nome, $telefone, $email, $mensagem, getCookieId( ), $referencia, $corretor );
+    if ( true === $data[ 'success' ] ) {
+      updateCookie( $nome, $telefone, $email );
+      ob_start( );
+      get_template_part( 'template-parts/corretor/contato-success', 'imovel', [ 'nome' => $nome, 'telefone' => $telefone, 'email' => $email, 'corretor' => $corretor, 'mensagem' => $mensagem, 'referencia' => $referencia ] );
+      wp_send_json_success( self::clean_result( ob_get_clean( ) ) );
+    } else {
+      ob_start( );
+      get_template_part( 'template-parts/corretor/contato-error', 'imovel' );
+      wp_send_json_error( self::clean_result( ob_get_clean( ) ) );
+    }
+    return false;
+
+  }
+  public static function contato_imovel_corretor( ) {
+    if ( isset( $_POST['codigoCorretor'] ) ) {
+      $codigoCorretor = sanitize_text_field( $_POST['codigoCorretor'] );
+      $nomeCorretor = sanitize_text_field( $_POST['nomeCorretor'] );
+      $referencia = sanitize_text_field( $_POST['referencia'] );
+      if ( is_development_mode( ) ) {
+        error_log('Código do Corretor Recebido: ' . $codigoCorretor);
+      }
+      set_query_var( 'codigo-corretor', $codigoCorretor );
+      set_query_var( 'nome-corretor', $nomeCorretor );
+      set_query_var( 'referencia', $referencia );
+      ob_start();
+      include locate_template(  'template-parts/corretor/contato-corretor.php' );;
+      wp_send_json_success( \Pinedu_Form_Cadastre::clean_result( ob_get_clean( ) ) );
+    } else {
+      if ( is_development_mode( ) ) {
+        error_log('Erro: Nenhum codigoCorretor foi enviado.');
+      }
+      wp_send_json_error( array( 'message' => 'Parâmetro codigoCorretor faltando.' ) );
+    }
+    wp_die();
+  }
+  public static function contato_imovel( $form_data ) {
+    $form_data = null;
+    $args = [];
+    if ( isset( $_POST[ 'form_data' ] ) ) {
+      $form_data = wp_unslash( $_POST[ 'form_data' ] );
+    }
+    if ( ! empty( $form_data ) ) {
+      parse_str( $form_data, $args );
     }
     $mensagem = isset( $args[ 'mensagem' ] ) ?? $args[ 'mensagem' ];
     $referencia = isset( $args[ 'referencia' ] ) ?? $args[ 'referencia' ];

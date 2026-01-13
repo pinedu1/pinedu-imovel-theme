@@ -138,7 +138,7 @@ $terms_faixa_valor = lista_faixa_valor_valores( $contrato_padrao );
         <ul>
           <li class="referencia sidebar">
             <div><label for="referencia">Referência</label></div>
-            <div><input type="text" name="referencia" id="referencia" placeholder="Re) $terms_ferência" required aria-required="true"></div>
+            <div><input type="text" name="referencia" id="referencia" placeholder="Referência" required aria-required="true"></div>
           </li>
           <li class="submit consulta">
             <div class="submit-container">

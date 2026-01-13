@@ -1,7 +1,7 @@
 <?php
 global $post;
-$referencia = get_post_meta( $post->ID, 'referencia', true );
-$empresa_query = new \WP_Query( array( 'post_type' => 'empresa', 'post_status' => 'publish', 'posts_per_page' => 1, 'meta_query' => [ [ [ 'id'     => '1', 'value'   => '1', 'compare' => '=' ] ] ] ) );
+$referencia = $post->referencia;
+$empresa_query = new \WP_Query( array( 'post_type' => 'empresa', 'post_status' => 'publish', 'posts_per_page' => 1, 'meta_query' => [ [ [ 'id' => '1', 'value' => '1', 'compare' => '=' ] ] ] ) );
 $whatsapp = '';
 if ( $empresa_query->have_posts( ) ) {
   $empresa = $empresa_query->posts[0];
@@ -24,28 +24,7 @@ if ( $empresa_query->have_posts( ) ) {
         </div>
       <?php endif; ?>
     </div>
-    <div id="div-contato" class="contato-form row">
-      <form id="contato-form" class="contato-form" action="contato_imovel">
-        <?php wp_nonce_field( 'contato_imovel', 'contato_nonce' ); ?>
-        <input type="hidden" name="referencia" value="<?php echo $referencia; ?>">
-        <div class="flash-message"></div>
-        <div class="row" title="Informe seus dados para que um dos nossos corretores possa entrar em contato, e marcar sua visita">
-          <label for="nome">Nome <span class="required">*</span></label>
-          <input type="text" name="nome" value="" size="20" required="required" placeholder="Nome para Contato">
-        </div>
-        <div class="row" title="Informe seus dados para que um dos nossos corretores possa entrar em contato, e marcar sua visita">
-          <label for="email">Email <span class="required">*</span></label>
-          <input type="email" name="email" value="" aria-required="true" required="required" placeholder="Email para Contato">
-        </div>
-        <div class="row" title="Informe seus dados para que um dos nossos corretores possa entrar em contato, e marcar sua visita">
-          <label for="telefone">Telefone <span class="required">*</span></label>
-          <input type="text" name="telefone" value="" required="" placeholder="Telefone para Contato">
-        </div>
-        <div class="row submit">
-          <input type="submit" name="submit" class="button button-small" value="Enviar" onClick="return enviarContato( this );">
-        </div>
-      </form>
-    </div>
+    <?php get_template_part( 'template-parts/imovel/contato-form' , 'contato-form' ); ?>
   </div>
 </section>
 <div id="loading-curtain" style="display: none;">
