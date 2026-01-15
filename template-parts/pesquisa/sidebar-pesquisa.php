@@ -183,80 +183,73 @@ add_action('wp_footer', function() use ( $terms_faixa_valor ) {
       fim: fim
     };
   }
+  function instalaSlider( valorMinimo, valorMaximo, passoValor, defaultIni, defaultFim, callbackPost ) {
+    console.log(arguments);
+    const slider = document.getElementById('price-slider');
+    if (slider.noUiSlider) {
+      slider.noUiSlider.destroy();
+    }
+    const margem = (valorMaximo - valorMinimo) / 50;
+    if ( defaultIni === defaultFim ) {
+      // eslint-disable-next-line no-param-reassign
+      defaultIni = defaultFim - passoValor;
+      // eslint-disable-next-line no-param-reassign
+      defaultFim = defaultIni + passoValor;
+    }
+
+    noUiSlider.create(slider, {
+      start: [defaultIni, defaultFim],
+      connect: true,
+      margin: margem,
+      range: { min: valorMinimo, max: valorMaximo },
+      step: 100,
+      tooltips: [false, false],
+      format: {
+        to: value => Number(value).toLocaleString('pt-BR', {style:'currency', currency:'BRL'}),
+        from: value => Number(value.replace(/[^0-9.-]+/g, ""))
+      }
+    });
+    slider.noUiSlider.on('update', (values) => {
+      const inputInicial = document.querySelector('[name="valor-inicial"]');
+      const inputFinal = document.querySelector('[name="valor-final"]');
+      const minLabel = document.getElementById('min-val');
+      const maxLabel = document.getElementById('max-val');
+      const toNumber = v => {
+        const s = String(v)
+          .replace(/[^\d,.-]/g, '')
+          .replace(/\./g, '')
+          .replace(',', '.');
+        return parseFloat(s) || 0;
+      };
+
+      const valMin = parseFloat( toNumber( values[0] ) );
+      const valMax = parseFloat( toNumber( values[1] ) );
+      inputInicial.value = valMin;
+      inputFinal.value = valMax;
+      minLabel.textContent = Number( valMin ).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      maxLabel.textContent = Number( valMax ).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    });
+    $( 'li.faixa-valor-slider' ).css( 'display', 'list-item' );
+    if ( typeof callbackPost === 'function' ) {
+      callbackPost();
+    }
+  }
 
   jQuery( document ).ready( function( $ ) {
-    function instalaSlider( valorMinimo, valorMaximo, passoValor, defaultIni, defaultFim, callbackPost ) {
-      console.log(arguments);
-      const slider = document.getElementById('price-slider');
-      if (slider.noUiSlider) {
-        slider.noUiSlider.destroy();
-      }
-      const margem = (valorMaximo - valorMinimo) / 50;
-      if ( defaultIni === defaultFim ) {
-        // eslint-disable-next-line no-param-reassign
-        defaultIni = defaultFim - passoValor;
-        // eslint-disable-next-line no-param-reassign
-        defaultFim = defaultIni + passoValor;
-      }
-
-      noUiSlider.create(slider, {
-        start: [defaultIni, defaultFim],
-        connect: true,
-        margin: margem,
-        range: { min: valorMinimo, max: valorMaximo },
-        step: 100,
-        tooltips: [false, false],
-        format: {
-          to: value => Number(value).toLocaleString('pt-BR', {style:'currency', currency:'BRL'}),
-          from: value => Number(value.replace(/[^0-9.-]+/g, ""))
-        }
-      });
-      slider.noUiSlider.on('update', (values) => {
-        const inputInicial = document.querySelector('[name="valor-inicial"]');
-        const inputFinal = document.querySelector('[name="valor-final"]');
-        const minLabel = document.getElementById('min-val');
-        const maxLabel = document.getElementById('max-val');
-        const toNumber = v => {
-          const s = String(v)
-            .replace(/[^\d,.-]/g, '')
-            .replace(/\./g, '')
-            .replace(',', '.');
-          return parseFloat(s) || 0;
-        };
-
-        const valMin = parseFloat( toNumber( values[0] ) );
-        const valMax = parseFloat( toNumber( values[1] ) );
-        inputInicial.value = valMin;
-        inputFinal.value = valMax;
-        minLabel.textContent = Number( valMin ).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        maxLabel.textContent = Number( valMax ).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-      });
-      $( 'li.faixa-valor-slider' ).css( 'display', 'list-item' );
-      if ( typeof callbackPost === 'function' ) {
-        callbackPost();
-      }
-    }
-
-    <?php echo 'var rangeSlider = ' . json_encode( $terms_faixa_valor ) . ';' ?>
-    <?php
-    $v_ini = 0;
-    $v_fim = 0;
-    if ( isset( $_REQUEST ) ) {
-      if ( isset( $_REQUEST['valor-inicial'] ) ) {
-        $v_ini = floatval( $_REQUEST['valor-inicial'] );
-      }
-      if ( isset( $_REQUEST['valor-final'] ) ) {
-        $v_fim = floatval( $_REQUEST['valor-final'] );
-      }
-    }
-    ?>
-    var mid = 0, medianLow = <?php echo $v_ini; ?>, medianHigh = <?php echo $v_fim; ?>, minimo = 0, maximo = 0, range = 0;
+    var rangeSlider = <?php echo json_encode( $terms_faixa_valor ) ?>
+      , medianLow = parseFloat( document.querySelector('input[name=valor-inicial]')?.value )
+      , medianHigh = parseFloat( document.querySelector('input[name=valor-final]')?.value )
+      , minimo = 0
+      , maximo = 0
+      , range = 0;
 
     if ( rangeSlider.length > 0 ) {
       range = ( rangeSlider[rangeSlider.length - 1] - rangeSlider[0] ) / rangeSlider.length;
-      const janelaCentral = encontrarJanelaCentral( rangeSlider );
-      const medianLow = janelaCentral.ini;
-      const medianHigh = janelaCentral.fim;
+      if ( medianLow <= 0 && medianHigh <= 0 ) {
+        const janelaCentral = encontrarJanelaCentral( rangeSlider );
+        medianLow = janelaCentral.ini;
+        medianHigh = janelaCentral.fim;
+      }
       minimo = rangeSlider[0];
       maximo = rangeSlider[rangeSlider.length - 1];
       instalaSlider( minimo, maximo, range, medianLow, medianHigh );

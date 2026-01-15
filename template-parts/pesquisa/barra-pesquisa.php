@@ -175,28 +175,22 @@
   }
 
 jQuery( document ).ready( function( $ ) {
-  <?php echo 'var rangeSlider = ' . json_encode( $terms_faixa_valor ) . ';' ?>
-  <?php
-    $v_ini = 0;
-    $v_fim = 0;
-    if ( isset( $_REQUEST ) ) {
-      if ( isset( $_REQUEST['valor-inicial'] ) ) {
-        $v_ini = floatval( $_REQUEST['valor-inicial'] );
-      }
-      if ( isset( $_REQUEST['valor-final'] ) ) {
-        $v_fim = floatval( $_REQUEST['valor-final'] );
-      }
-    }
-  ?>
-  var mid = 0, medianLow = <?php echo $v_ini; ?>, medianHigh = <?php echo $v_fim; ?>, minimo = 0, maximo = 0, range = 0;
+  var rangeSlider = <?php echo json_encode( $terms_faixa_valor ) ?>
+    , medianLow = parseFloat( document.querySelector('input[name=valor-inicial]')?.value )
+    , medianHigh = parseFloat( document.querySelector('input[name=valor-final]')?.value )
+    , minimo = 0
+    , maximo = 0
+    , range = 0;
+
   if ( rangeSlider.length > 0 ) {
     range = ( rangeSlider[rangeSlider.length - 1] - rangeSlider[0] ) / rangeSlider.length;
-    const janelaCentral = encontrarJanelaCentral( rangeSlider );
-    const medianLow = janelaCentral.ini;
-    const medianHigh = janelaCentral.fim;
+    if ( medianLow <= 0 && medianHigh <= 0 ) {
+      const janelaCentral = encontrarJanelaCentral( rangeSlider );
+      medianLow = janelaCentral.ini;
+      medianHigh = janelaCentral.fim;
+    }
     minimo = rangeSlider[0];
     maximo = rangeSlider[rangeSlider.length - 1];
-    alert('oi');
     instalaSlider( minimo, maximo, range, medianLow, medianHigh );
   } else {
     $( 'li.faixa-valor-slider' ).css( 'display', 'none' );
