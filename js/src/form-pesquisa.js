@@ -6,17 +6,45 @@
  * @param {string} emptyText - Texto da opção vazia (padrão: 'Selecione...')
  */
 document.telaInstalada = false;
+function encontrarJanelaCentral(obj) {
+  var keys = Object.keys(obj);
+  var len = keys.length;
+  var pivo = len / 2;
+  var ini, fim;
+  if (len % 2 !== 0) {
+    ini = obj[Math.floor(pivo)];
+    fim = obj[Math.ceil(pivo)];
+  } else {
+    ini = obj[pivo - 1];
+    fim = obj[pivo + 1];
+  }
+  return {
+    length: len,
+    pivo: pivo,
+    ini: ini,
+    fim: fim
+  };
+}
 function instalaSlider( valorMinimo, valorMaximo, passoValor, defaultIni, defaultFim, callbackPost ) {
+  console.log(arguments);
   const slider = document.getElementById('price-slider');
   if (slider.noUiSlider) {
     slider.noUiSlider.destroy();
   }
+  const margem = (valorMaximo - valorMinimo) / 50;
+  if ( defaultIni === defaultFim ) {
+    // eslint-disable-next-line no-param-reassign
+    defaultIni = defaultFim - passoValor;
+    // eslint-disable-next-line no-param-reassign
+    defaultFim = defaultIni + passoValor;
+  }
   noUiSlider.create(slider, {
-    start: [defaultIni, defaultFim], // valores iniciais (dois handles)
+    start: [defaultIni, defaultFim],
     connect: true,
+    margin: margem,
     range: { min: valorMinimo, max: valorMaximo },
-    step: passoValor,
-    tooltips: [false, false], // mostra tooltip nos handles
+    step: 100,
+    tooltips: [false, false],
     format: {
       to: value => Number(value).toLocaleString('pt-BR', {style:'currency', currency:'BRL'}),
       from: value => Number(value.replace(/[^0-9.-]+/g, ""))
@@ -50,6 +78,7 @@ function instalaSlider( valorMinimo, valorMaximo, passoValor, defaultIni, defaul
 
 jQuery(document).ready(($) => {
   /* funcoes */
+  /*console.log(PineduJsVars);*/
   function reloadSelectOptions(selectName, items, addEmptyFirst = false, emptyText = 'Selecione...', callBackOpt = null) {
     const select = $(selectName);
     if (select.attr('data-carregando') === '1') {
@@ -108,9 +137,9 @@ jQuery(document).ready(($) => {
           const fx = dados.data['faixa-valores'];
           if ( fx.length > 0 ) {
             const range = (fx[fx.length - 1] - fx[0]) / fx.length;
-            const mid = parseInt( fx.length / 2 );
-            const medianLow = fx[mid - 1];
-            const medianHigh = fx[mid];
+            const janelaCentral = encontrarJanelaCentral( fx );
+            const medianLow = janelaCentral.ini;
+            const medianHigh = janelaCentral.fim;
             const minimo = fx[0];
             const maximo = fx[fx.length - 1];
             instalaSlider( minimo, maximo, range, medianLow, medianHigh );

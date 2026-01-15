@@ -1,4 +1,12 @@
 main.site-main {
+  section.block.block-blog {
+    header {
+      h3 {
+        margin: 0.250em 0 -1.5em 0;
+        padding-left: 1.5em;
+      }
+    }
+  }
   div.content {
     width: 90%;
     margin: 0 auto;

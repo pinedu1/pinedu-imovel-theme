@@ -98,26 +98,30 @@
               color: $input-text-color;
             }
           }
+          input {
+            max-width: 12em;
+            padding: 0 10px;
+            border: 1px solid $input-border-color;
+            border-radius: 4px;
+            background-color: white;
+            cursor: pointer;
+            font-size: 1em;
+            box-sizing: border-box;
+            color: $input-text-color;
+          }
           .input-container {
             position: relative;
             width: 100%;
-            input {
-              max-width: 12em;
-              height: 40px;
-              padding: 0 10px;
-              border: 1px solid $input-border-color;
-              border-radius: 4px;
-              background-color: white;
-              cursor: pointer;
-              font-size: 1em;
-              box-sizing: border-box;
-              color: $input-text-color;
-            }
           }
         }
         li.referencia {
           max-width: 12rem;
           margin-right: 0;
+          input {
+            max-width: unset;
+            width: 100%;
+            height: 2.5em;
+          }
         }
         li.referencia.sidebar {
           max-width: 100%;
@@ -135,7 +139,7 @@
           width: 100%;
           margin: 1em 5em;
           .faixa-container {
-            margin-top: 1em;
+            margin-top: 0.5em;
           }
           .slider-rotulo {
             margin-top: 10px;

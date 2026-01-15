@@ -3,8 +3,6 @@ jQuery(document).ready(($) => {
     $('form#form-pesquisa input[name=max]').val($('form[name=show] select[name=max]').val());
     $('form#form-pesquisa input[name=sort]').val($('form[name=sort] select[name=sort]').val());
     $('form#form-pesquisa input[name=ordem]').val($('form[name=order] select[name=ordem]').val());
-    $('form#form-pesquisa input[name=valor-inicial]').val($('form[name=order] select[name=valor-inicial]').val());
-    $('form#form-pesquisa input[name=valor-final]').val($('form[name=order] select[name=valor-final]').val());
     $('form#form-pesquisa').submit();
   }
   $('form[name=sort] select[name=sort]').on('change', function () {

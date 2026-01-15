@@ -39,6 +39,13 @@
     $terms_regiao = lista_regiao( $cidade_padrao );
   }
   $terms_faixa_valor = lista_faixa_valor_valores( $contrato_padrao );
+  add_action('wp_footer', function() use ( $terms_faixa_valor ) {
+    ?>
+    <script type="text/javascript">
+      var PineduJsVars = <?php echo json_encode($terms_faixa_valor); ?>;
+    </script>
+    <?php
+  }, 1);
 ?>
 <section class="barra-pesquisa pesquisa">
   <main class="pesquisa-content">
@@ -52,8 +59,8 @@
     </header>
     <form role="search" method="get" id="form-pesquisa" class="barra pesquisa-form" action="<?php echo esc_url( home_url( '/pesquisa' ) ); ?>">
       <input type="hidden" name="tipo_pesquisa_submit" value="imovel">
-      <input type="hidden" name="valor-inicial">
-      <input type="hidden" name="valor-final">
+      <input type="hidden" name="valor-inicial" value="<?php echo isset( $_REQUEST['valor-inicial'] ) ? floatval( $_REQUEST['valor-inicial'] ) : 0; ?>" class="valor-inicial">
+      <input type="hidden" name="valor-final" value="<?php echo isset( $_REQUEST['valor-final'] ) ? floatval( $_REQUEST['valor-final'] ) : 0; ?>" class="valor-final">
       <input type="hidden" name="post_type" value="imovel" />
       <input type="hidden" name="max" value="12">
       <input type="hidden" name="sort" value="dataPreco">
@@ -135,7 +142,7 @@
     <input type="hidden" name="tipo_pesquisa_submit" value="consulta">
     <ul>
       <li class="referencia">
-        <div><label for="referencia">Referencia</label></div>
+        <div><label for="referencia">Referência</label></div>
         <div class="input-container"><input type="text" name="referencia" id="referencia" placeholder="Referência" required aria-required="true"></div>
       </li>
       <li class="submit consulta">
@@ -147,6 +154,26 @@
   </form>
 </section>
 <script>
+  function encontrarJanelaCentral(obj) {
+    var keys = Object.keys(obj);
+    var len = keys.length;
+    var pivo = len / 2;
+    var ini, fim;
+    if (len % 2 !== 0) {
+      ini = obj[Math.floor(pivo)];
+      fim = obj[Math.ceil(pivo)];
+    } else {
+      ini = obj[pivo - 1];
+      fim = obj[pivo + 1];
+    }
+    return {
+      length: len,
+      pivo: pivo,
+      ini: ini,
+      fim: fim
+    };
+  }
+
 jQuery( document ).ready( function( $ ) {
   <?php echo 'var rangeSlider = ' . json_encode( $terms_faixa_valor ) . ';' ?>
   <?php
@@ -164,11 +191,12 @@ jQuery( document ).ready( function( $ ) {
   var mid = 0, medianLow = <?php echo $v_ini; ?>, medianHigh = <?php echo $v_fim; ?>, minimo = 0, maximo = 0, range = 0;
   if ( rangeSlider.length > 0 ) {
     range = ( rangeSlider[rangeSlider.length - 1] - rangeSlider[0] ) / rangeSlider.length;
-    mid = parseInt( rangeSlider.length / 2 );
-    medianLow  = ( medianLow > 0 ) ? medianLow :  rangeSlider[mid - 1];
-    medianHigh =  ( medianHigh > 0 ) ? medianHigh : rangeSlider[mid];
+    const janelaCentral = encontrarJanelaCentral( rangeSlider );
+    const medianLow = janelaCentral.ini;
+    const medianHigh = janelaCentral.fim;
     minimo = rangeSlider[0];
     maximo = rangeSlider[rangeSlider.length - 1];
+    alert('oi');
     instalaSlider( minimo, maximo, range, medianLow, medianHigh );
   } else {
     $( 'li.faixa-valor-slider' ).css( 'display', 'none' );

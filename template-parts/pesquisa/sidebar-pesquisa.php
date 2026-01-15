@@ -40,6 +40,14 @@ if ( '' == $cidade_padrao ) {
   $terms_regiao = lista_regiao( $cidade_padrao );
 }
 $terms_faixa_valor = lista_faixa_valor_valores( $contrato_padrao );
+add_action('wp_footer', function() use ( $terms_faixa_valor ) {
+  ?>
+  <script type="text/javascript">
+    var PineduJsVars = <?php echo json_encode($terms_faixa_valor); ?>;
+  </script>
+  <?php
+}, 1);
+
 ?>
 <aside class="sidebar-pesquisa">
   <?php if ( is_singular( 'imovel' ) ):
@@ -57,12 +65,12 @@ $terms_faixa_valor = lista_faixa_valor_valores( $contrato_padrao );
       </header>
       <form role="search" data-tipo="barra" method="get" id="form-pesquisa" class="barra pesquisa-form" action="<?php echo esc_url( home_url( '/pesquisa' ) ); ?>">
         <input type="hidden" name="tipo_pesquisa_submit" value="imovel">
-        <input type="hidden" name="valor-inicial">
-        <input type="hidden" name="valor-final">
+        <input type="hidden" name="valor-inicial" value="<?php echo isset( $_REQUEST['valor-inicial'] ) ? floatval( $_REQUEST['valor-inicial'] ) : 0; ?>" class="valor-inicial">
+        <input type="hidden" name="valor-final" value="<?php echo isset( $_REQUEST['valor-final'] ) ? floatval( $_REQUEST['valor-final'] ) : 0; ?>" class="valor-final">
+        <input type="hidden" name="max" value="<?php echo isset( $_REQUEST['max'] ) ? intval( $_REQUEST['max'] ) : 12; ?>">
+        <input type="hidden" name="sort" value="<?php echo isset( $_REQUEST['sort'] ) ? sanitize_text_field( $_REQUEST['sort'] ) : "dataPreco"; ?>">
+        <input type="hidden" name="ordem" value="<?php echo isset( $_REQUEST['ordem'] ) ? sanitize_text_field( $_REQUEST['ordem'] ) : "DESC"; ?>">
         <input type="hidden" name="post_type" value="imovel" />
-        <input type="hidden" name="max" value="12">
-        <input type="hidden" name="sort" value="dataPreco">
-        <input type="hidden" name="ordem" value="DESC">
         <ul>
           <li class="contrato">
             <div><label for="contrato">Tipo de Contrato</label></div>
@@ -156,44 +164,77 @@ $terms_faixa_valor = lista_faixa_valor_valores( $contrato_padrao );
   </section>
 </aside>
 <script>
+  function encontrarJanelaCentral(obj) {
+    var keys = Object.keys(obj);
+    var len = keys.length;
+    var pivo = len / 2;
+    var ini, fim;
+    if (len % 2 !== 0) {
+      ini = obj[Math.floor(pivo)];
+      fim = obj[Math.ceil(pivo)];
+    } else {
+      ini = obj[pivo - 1];
+      fim = obj[pivo + 1];
+    }
+    return {
+      length: len,
+      pivo: pivo,
+      ini: ini,
+      fim: fim
+    };
+  }
+
   jQuery( document ).ready( function( $ ) {
-    function instalaSlider( valorMinimo, valorMaximo, passoValor, defaultIni, defaultFim ) {
-      const slider = document.getElementById( 'price-slider' );
-      if ( slider.noUiSlider ) {
-        slider.noUiSlider.destroy( );
+    function instalaSlider( valorMinimo, valorMaximo, passoValor, defaultIni, defaultFim, callbackPost ) {
+      console.log(arguments);
+      const slider = document.getElementById('price-slider');
+      if (slider.noUiSlider) {
+        slider.noUiSlider.destroy();
       }
-      noUiSlider.create( slider, {
-        start: [defaultIni, defaultFim], // valores iniciais ( dois handles )
+      const margem = (valorMaximo - valorMinimo) / 50;
+      if ( defaultIni === defaultFim ) {
+        // eslint-disable-next-line no-param-reassign
+        defaultIni = defaultFim - passoValor;
+        // eslint-disable-next-line no-param-reassign
+        defaultFim = defaultIni + passoValor;
+      }
+
+      noUiSlider.create(slider, {
+        start: [defaultIni, defaultFim],
         connect: true,
+        margin: margem,
         range: { min: valorMinimo, max: valorMaximo },
-        step: passoValor,
-        tooltips: [false, false], // mostra tooltip nos handles
+        step: 100,
+        tooltips: [false, false],
         format: {
-          to: value => Number( value ).toLocaleString( 'pt-BR', {style:'currency', currency:'BRL'} ),
-          from: value => Number( value.replace( /[^0-9.-]+/g, "" ) )
+          to: value => Number(value).toLocaleString('pt-BR', {style:'currency', currency:'BRL'}),
+          from: value => Number(value.replace(/[^0-9.-]+/g, ""))
         }
-      } );
-      slider.noUiSlider.on( 'update', ( values ) => {
-        const inputInicial = document.querySelector( '[name="valor-inicial"]' );
-        const inputFinal = document.querySelector( '[name="valor-final"]' );
-        const minLabel = document.getElementById( 'min-val' );
-        const maxLabel = document.getElementById( 'max-val' );
+      });
+      slider.noUiSlider.on('update', (values) => {
+        const inputInicial = document.querySelector('[name="valor-inicial"]');
+        const inputFinal = document.querySelector('[name="valor-final"]');
+        const minLabel = document.getElementById('min-val');
+        const maxLabel = document.getElementById('max-val');
         const toNumber = v => {
-          const s = String( v )
-            .replace( /[^\d,.-]/g, '' )
-            .replace( /\./g, '' )
-            .replace( ',', '.' );
-          return parseFloat( s ) || 0;
+          const s = String(v)
+            .replace(/[^\d,.-]/g, '')
+            .replace(/\./g, '')
+            .replace(',', '.');
+          return parseFloat(s) || 0;
         };
 
         const valMin = parseFloat( toNumber( values[0] ) );
         const valMax = parseFloat( toNumber( values[1] ) );
         inputInicial.value = valMin;
         inputFinal.value = valMax;
-        minLabel.textContent = Number( valMin ).toLocaleString( 'pt-BR', { style: 'currency', currency: 'BRL' } );
-        maxLabel.textContent = Number( valMax ).toLocaleString( 'pt-BR', { style: 'currency', currency: 'BRL' } );
-      } );
+        minLabel.textContent = Number( valMin ).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        maxLabel.textContent = Number( valMax ).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      });
       $( 'li.faixa-valor-slider' ).css( 'display', 'list-item' );
+      if ( typeof callbackPost === 'function' ) {
+        callbackPost();
+      }
     }
 
     <?php echo 'var rangeSlider = ' . json_encode( $terms_faixa_valor ) . ';' ?>
@@ -210,12 +251,12 @@ $terms_faixa_valor = lista_faixa_valor_valores( $contrato_padrao );
     }
     ?>
     var mid = 0, medianLow = <?php echo $v_ini; ?>, medianHigh = <?php echo $v_fim; ?>, minimo = 0, maximo = 0, range = 0;
+
     if ( rangeSlider.length > 0 ) {
       range = ( rangeSlider[rangeSlider.length - 1] - rangeSlider[0] ) / rangeSlider.length;
-      mid = parseInt( rangeSlider.length / 2 );
-      medianLow  = ( medianLow > 0 ) ? medianLow:  rangeSlider[mid - 1];
-      medianHigh =  ( medianHigh > 0 ) ? medianHigh: rangeSlider[mid];
-      console.log( medianLow, medianHigh );
+      const janelaCentral = encontrarJanelaCentral( rangeSlider );
+      const medianLow = janelaCentral.ini;
+      const medianHigh = janelaCentral.fim;
       minimo = rangeSlider[0];
       maximo = rangeSlider[rangeSlider.length - 1];
       instalaSlider( minimo, maximo, range, medianLow, medianHigh );

@@ -25,6 +25,7 @@ print_r( $_REQUEST );
 echo '</pre>';
 Termina aqui  */
 
+
 get_header(); ?>
 <main class="site-main">
   <?php echo get_template_part('template-parts/slider-home-topo'); ?>
