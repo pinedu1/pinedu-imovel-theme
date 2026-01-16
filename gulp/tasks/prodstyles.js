@@ -1,17 +1,12 @@
 // Dependencies
-const {
-  dest,
-  src
-} = require('gulp');
-const rename = require('gulp-rename');
-const sass = require('gulp-sass')( require('sass') );
+const { src, dest } = require('gulp');
+const sass = require('gulp-sass')(require('sass'));
 const postcss = require('gulp-postcss');
 const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
 const calcFunction = require('postcss-calc');
 const colormin = require('postcss-colormin');
 const discardEmpty = require('postcss-discard-empty');
-const discardUnused = require('postcss-discard-unused');
 const mergeLonghand = require('postcss-merge-longhand');
 const mergeAdjacentRules = require('postcss-merge-rules');
 const minifyGradients = require('postcss-minify-gradients');
@@ -28,7 +23,7 @@ function prodstyles() {
     // Compile first time to CSS to be able to parse CSS files
     .pipe(sass(config.styles.opts.development))
 
-    // Compile SCSS synchronously
+    // Compile SCSS synchronously (produção)
     .pipe(sass.sync(config.styles.opts.production))
 
     // Run PostCSS plugins
@@ -50,42 +45,11 @@ function prodstyles() {
     // Output production CSS size
     .pipe(size(config.size))
 
-    // Save the final version for production
-    .pipe(dest(config.styles.production));
-}
-function prodstyles() {
-  return src(config.styles.src)
+    // 📦 destino oficial do tema (Air-light)
+    .pipe(dest(config.styles.production)) // ex: assets/css
 
-    // Compile first time to CSS to be able to parse CSS files
-    .pipe(sass(config.styles.opts.development))
-
-    // Compile SCSS synchronously
-    .pipe(sass.sync(config.styles.opts.production))
-
-    // Run PostCSS plugins
-    .pipe(postcss([
-      autoprefixer(),
-      colormin(),
-      calcFunction(),
-      discardEmpty(),
-      mergeLonghand(),
-      mergeAdjacentRules(),
-      minifyGradients(),
-      normalizePositions(),
-      normalizeUrl(),
-      uniqueSelectors(),
-      zIndex(),
-      cssnano(config.cssnano)
-    ]))
-
-    // Output production CSS size
-    .pipe(size(config.size))
-
-    // NOVO PASSO: Renomeia o arquivo (de global.css para style.css)
-    /*.pipe(rename('style.css'))*/
-
-    // NOVO PASSO: Salva a versão final na RAIZ do tema (./)
-    .pipe(dest('./'));
+    // 📦 CÓPIA EXTRA EM /css/prod
+    .pipe(dest('css/prod'));
 }
 
 exports.prodstyles = prodstyles;
