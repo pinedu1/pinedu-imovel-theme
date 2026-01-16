@@ -14,5 +14,5 @@ jQuery(document).ready(($) => {
   $('form[name=order] select[name=ordem]').on('change', function () {
     reordenaPesquisa();
   });
-  $('html, body').animate({ scrollTop: $('div.pesquisa-grid').offset().top }, 'slow');
+  $('html, body').animate({ scrollTop: $('div.pesquisa-grid').parent('div.container').parent('section.block.block-blog').offset().top }, 'slow');
 });
