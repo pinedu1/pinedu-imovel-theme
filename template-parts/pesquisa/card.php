@@ -36,16 +36,13 @@
       </table>
       <!-- Detalhes do imóvel -->
       <div class="property-details">
-        <h4 itemprop="additionalType"><?php echo $post->tipoImovelNome; ?></h4>
+        <h4 itemprop="additionalType">
+          <meta itemprop="name" content="Tipo do Imóvel" />
+          <?php echo $post->tipoImovelNome; ?>
+        </h4>
         <!-- Segunda tabela ( 4 colunas, 3 linhas ) -->
         <table role="table" aria-label="Detalhes do imóvel">
           <tbody>
-          <tr>
-            <td colspan="2" itemprop="additionalProperty" itemscope itemtype="https://schema.org/PropertyValue">
-              <meta itemprop="name" content="Tipo do Imóvel" />
-              <span itemprop="value"><?php echo esc_html( $post->tipoImovelNome ); ?></span>
-            </td>
-          </tr>
           <tr colspan="2">
             <td itemprop="address" itemscope itemtype="https://schema.org/PostalAddress"><span itemprop="addressLocality"><?php echo $post->cidade; ?></span></td>
           </tr>

@@ -69,8 +69,9 @@ article.imovel {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 475px;
+  height: 31em;
   @include card-style;
+  maring: 0;
   flex-grow: 1;
   padding: 0.5rem 1rem;
   .property-image {
@@ -79,7 +80,7 @@ article.imovel {
     align-items: center;
     width: 100%;
     height: 250px; // altura fixa se necessário (pode ser ajustada)
-
+    margin: 0;
     img {
       max-width: 100%;
       max-height: 230px;
@@ -95,7 +96,6 @@ article.imovel {
       border-right: 1px solid $color-border-caracteristicas;
       border-bottom: 1px solid $color-border-caracteristicas;
       font-size: $caracteristicas-font-size;
-      padding: 0.25rem;
       text-align: center;
       &:last-child {
         border-right: none;
@@ -103,7 +103,7 @@ article.imovel {
     }
   }
   .property-details {
-    padding: 0.25rem 0 0.25rem 0;
+    padding: 0;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -113,7 +113,7 @@ article.imovel {
       line-height: 1em;
     }
     table.financeiro {
-      min-height: 4em;
+      margin-top: 0.5rem;
     }
     h4 {
       margin-top: 0;
