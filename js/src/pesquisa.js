@@ -14,8 +14,5 @@ jQuery(document).ready(($) => {
   $('form[name=order] select[name=ordem]').on('change', function () {
     reordenaPesquisa();
   });
-  const mobileQuery = window.matchMedia('(max-width: 768px)');
-  if (mobileQuery.matches) {
-    $('html, body').animate({ scrollTop: $('div.pesquisa-grid').offset().top }, 'slow');
-  }
+  $('html, body').animate({ scrollTop: $('div.pesquisa-grid').offset().top }, 'slow');
 });
