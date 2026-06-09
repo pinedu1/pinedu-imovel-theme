@@ -18,6 +18,7 @@ if ( isset( $empresa ) && isset( $empresa->telefonePadrao) ) {
 ?>
 <!doctype html>
 <html <?php language_attributes(); ?>>
+<!-- #HEADER_INICIO -->
 <head>
   <meta charset="<?php bloginfo( 'charset' ); ?>">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -35,4 +36,6 @@ if ( isset( $empresa ) && isset( $empresa->telefonePadrao) ) {
         <?php get_template_part( 'template-parts/header/central-atendimento' ); ?>
       </div>
     </header>
+    <!-- #HEADER_FIM -->
+    <!-- #CONTENT_INICIO -->
     <div class="site-content">

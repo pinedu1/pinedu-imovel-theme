@@ -11,7 +11,8 @@
 namespace Air_Light;
 
 ?>
-
+<!-- #CONTENT_FIM -->
+<!-- #HEADER_INICIO -->
       </div><!-- #content -->
     <footer id="colophon" class="site-footer">
       <?php echo get_template_part('template-parts/footer/footer-template', 'copyright'); ?>
@@ -24,5 +25,6 @@ namespace Air_Light;
     <span class="screen-reader-text"><?php echo esc_html( get_default_localization( 'Back to top' ) ); ?></span>
     <span aria-hidden="true">&uarr;</span>
   </a>
+<!-- #FOOTER_FIM -->
   </body>
 </html>

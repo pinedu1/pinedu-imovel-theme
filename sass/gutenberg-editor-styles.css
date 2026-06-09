@@ -1,0 +1,18 @@
+/* Error: Can't find stylesheet to import.
+ *   ,
+ * 5 |   @import 'gutenberg/blocks/core-blockquote';
+ *   |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ *   '
+ *   gutenberg/_blocks.scss 5:11        @import
+ *   gutenberg-editor-styles.scss 36:9  root stylesheet */
+
+body::before {
+  font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",
+      "Droid Sans Mono", monospace, monospace;
+  white-space: pre;
+  display: block;
+  padding: 1em;
+  margin-bottom: 1em;
+  border-bottom: 2px solid black;
+  content: "Error: Can't find stylesheet to import.\a   \2577 \a 5 \2502    @import 'gutenberg/blocks/core-blockquote';\a   \2502            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\a   \2575 \a   gutenberg/_blocks.scss 5:11        @import\a   gutenberg-editor-styles.scss 36:9  root stylesheet";
+}
