@@ -241,7 +241,7 @@ add_theme_support( 'custom-logo', array(
   'flex-width'    => true, // Permite largura flexível
   'header-text'   => array( 'site-title', 'site-description', ), // Texto alternativo
  ) );
-function formata_endereco_loja( $tipo, $logradouro, $numero, $complemento, $bairro, $cidade, $estado, $cep ) {
+function formata_endereco_loja( $tipo, $logradouro, $numero, $complemento, $bairro, $cidade, $estado, $cep, $quebrarLinha = true ) {
   $end = $tipo . ' ' . $logradouro;
   if ( ! empty( $numero ) ) {
     $end .= ', ' . $numero;
@@ -250,16 +250,16 @@ function formata_endereco_loja( $tipo, $logradouro, $numero, $complemento, $bair
     $end .= ' - ' . $complemento;
   }
   if ( ! empty( $bairro ) ) {
-    $end .= '<br>' . $bairro;
+    $end .=  ( $quebrarLinha === true ? '<br>' : ' - ') . $bairro;
   }
   if ( ! empty( $cidade ) ) {
     $end .= ' - ' . $cidade;
   }
   if ( ! empty( $estado ) ) {
-    $end .= '<br>' . $estado . ', Brasil';
+    $end .= ( $quebrarLinha === true ? '<br>' : '') . $estado . ', Brasil';
   }
   if ( ! empty( $cep ) ) {
-    $end .= '<br>Cep: ' . formata_cep( $cep );
+    $end .= ( $quebrarLinha === true ? '<br>' : '') . ' Cep: ' . formata_cep( $cep );
   }
   return formatar_title_case( $end );
 }

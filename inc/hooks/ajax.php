@@ -278,9 +278,12 @@ class Pinedu_Form_Pesquisa {
     require_once get_template_directory( ) . '/inc/classes/Promocoes.php';
     $contrato = isset( $_REQUEST[ 'contrato' ] ) ? sanitize_text_field( $_REQUEST[ 'contrato' ] ) : '';
     $paged = isset( $_REQUEST[ 'paged' ] ) ? sanitize_text_field( $_REQUEST[ 'paged' ] ) : '';
+    $max = isset( $_REQUEST[ 'max' ] ) ? sanitize_text_field( $_REQUEST[ 'max' ] ) : 8;
+    $tipo_imovel = isset( $_REQUEST[ 'tipo_imovel' ] ) ? sanitize_text_field( $_REQUEST[ 'tipo_imovel' ] ) : null;
     /* Atribui o numero da página para simular o comportamento normal */
     set_query_var( 'paged', $paged );
-    Promocoes::paginar_promocao( $contrato );
+    set_query_var( 'tipo', $tipo_imovel );
+    Promocoes::paginar_promocao( $contrato, $tipo_imovel, $max );
   }
   public static function contrato_change( ) {
     $contrato = isset( $_REQUEST[ 'contrato' ] ) ? sanitize_text_field( $_REQUEST[ 'contrato' ] ) : '';
