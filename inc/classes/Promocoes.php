@@ -132,8 +132,12 @@ class Promocoes extends Pinedu_Base implements PineduPostType {
       ], 500 );
     }
     $contrato = isset( $_REQUEST['contrato'] ) ? sanitize_text_field( $_REQUEST['contrato'] ) : '';
+    $card = isset( $_REQUEST[ 'card' ] ) ? sanitize_text_field( $_REQUEST[ 'card' ] ) : null;
 
     $p = new Promocoes( $contrato, $max );
+    if ( $card && !empty( $card ) ) {
+      $p->setCard( $card );
+    }
     if ( ! empty($tipo_imovel) ) {
       $p->setTipoImovel( $tipo_imovel );
     }

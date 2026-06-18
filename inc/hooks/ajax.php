@@ -281,10 +281,14 @@ class Pinedu_Form_Pesquisa {
     $contrato = isset( $_REQUEST[ 'contrato' ] ) ? sanitize_text_field( $_REQUEST[ 'contrato' ] ) : '';
     $paged = isset( $_REQUEST[ 'paged' ] ) ? sanitize_text_field( $_REQUEST[ 'paged' ] ) : '';
     $max = isset( $_REQUEST[ 'max' ] ) ? sanitize_text_field( $_REQUEST[ 'max' ] ) : 8;
+    $card = isset( $_REQUEST[ 'card' ] ) ? sanitize_text_field( $_REQUEST[ 'card' ] ) : null;
     $tipo_imovel = isset( $_REQUEST[ 'tipo_imovel' ] ) ? sanitize_text_field( $_REQUEST[ 'tipo_imovel' ] ) : null;
     /* Atribui o numero da página para simular o comportamento normal */
     set_query_var( 'paged', $paged );
     set_query_var( 'tipo', $tipo_imovel );
+    if ( $card && !empty( $card ) ) {
+      set_query_var( 'card', $card );
+    }
     Promocoes::paginar_promocao( $contrato, $tipo_imovel, $max );
   }
   public static function paginar_visitados( ) {
