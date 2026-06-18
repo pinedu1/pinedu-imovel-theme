@@ -261,6 +261,7 @@ class Pinedu_Form_Pesquisa {
   const HOOK_REGIAO = 'REGIAOCHANGE';
   const HOOK_CRIAR_COOKIE = 'CRIARCOOKIE';
   const HOOK_PAGINAR_PROMOCAO = 'PAGINARPROMOCAO';
+  const HOOK_PAGINAR_VISITADOS = 'PAGINARVISITADOS';
   const HOOK_PAGINAR_PESQUISA = 'PAGINARPESQUISA';
   // Método estático para inicialização
   public static function init( ) {
@@ -271,6 +272,7 @@ class Pinedu_Form_Pesquisa {
       add_action( $prefixo . self::HOOK_REGIAO, [ __CLASS__, 'regiao_change' ], 99, 1 );
       add_action( $prefixo . self::HOOK_CRIAR_COOKIE, [ __CLASS__, 'criar_cookie' ] );
       add_action( $prefixo . self::HOOK_PAGINAR_PROMOCAO, [ __CLASS__, 'paginar_promocao' ] );
+      add_action( $prefixo . self::HOOK_PAGINAR_VISITADOS, [ __CLASS__, 'paginar_visitados' ] );
     }
   }
   // Métodos estáticos
@@ -284,6 +286,14 @@ class Pinedu_Form_Pesquisa {
     set_query_var( 'paged', $paged );
     set_query_var( 'tipo', $tipo_imovel );
     Promocoes::paginar_promocao( $contrato, $tipo_imovel, $max );
+  }
+  public static function paginar_visitados( ) {
+    require_once get_template_directory( ) . '/inc/classes/Visitados.php';
+    $paged = isset( $_REQUEST[ 'paged' ] ) ? sanitize_text_field( $_REQUEST[ 'paged' ] ) : '';
+    $max = isset( $_REQUEST[ 'max' ] ) ? sanitize_text_field( $_REQUEST[ 'max' ] ) : 8;
+    $titulo = isset( $_REQUEST[ 'titulo' ] ) ? sanitize_text_field( $_REQUEST[ 'titulo' ] ) : 'Imóveis mais visitados';
+    set_query_var( 'paged', $paged );
+    Visitados::paginar_visitados( $titulo, $max );
   }
   public static function contrato_change( ) {
     $contrato = isset( $_REQUEST[ 'contrato' ] ) ? sanitize_text_field( $_REQUEST[ 'contrato' ] ) : '';

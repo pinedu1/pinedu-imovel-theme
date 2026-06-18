@@ -93,4 +93,11 @@ class Visitados extends Pinedu_Base implements PineduPostType {
   public function setTitulo( mixed $titulo ): void {
     $this->titulo = $titulo;
   }
+  public static function paginar_visitados( $msg = 'Imóveis mais visitados', $max = 8 ) {
+    $p = new Visitados( $msg, $max );
+    $p->render( );
+    $html = ob_get_clean( );
+    echo $html;
+    wp_die( );
+  }
 }

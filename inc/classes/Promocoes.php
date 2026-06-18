@@ -10,7 +10,9 @@ require_once get_template_directory( ) . '/inc/classes/Pinedu_Base.php';
  */
 class Promocoes extends Pinedu_Base implements PineduPostType {
   private const TEMPLATE = 'template-parts/promocao/container.php';
-  private const CARD = 'template-parts/promocao/card';
+
+  // Transformado de constante para variável
+  private $card = 'template-parts/promocao/card';
 
   /**
    * @var WP_Post
@@ -117,7 +119,8 @@ class Promocoes extends Pinedu_Base implements PineduPostType {
   }
 
   public function pinedu_promocao_conteudo( $content ) {
-    get_template_part( self::CARD );
+    // Atualizado para usar a variável $this->card em vez da constante self::CARD
+    get_template_part( $this->card );
     return false;
   }
 
@@ -137,8 +140,8 @@ class Promocoes extends Pinedu_Base implements PineduPostType {
 
     // Se o AJAX enviar também o tipo de imóvel, você pode setá-lo e rodar a query novamente aqui:
     if ( isset( $_REQUEST['tipo_imovel'] ) ) {
-       $p->setTipoImovel( sanitize_text_field( $_REQUEST['tipo_imovel'] ) );
-       $p->setQuery( $p->query() ); // Atualiza a query com o novo filtro
+      $p->setTipoImovel( sanitize_text_field( $_REQUEST['tipo_imovel'] ) );
+      $p->setQuery( $p->query() ); // Atualiza a query com o novo filtro
     }
 
     $p->render( );
@@ -161,6 +164,20 @@ class Promocoes extends Pinedu_Base implements PineduPostType {
   // ==========================================
   // GETTERS E SETTERS
   // ==========================================
+
+  /**
+   * @return string
+   */
+  public function getCard() {
+    return $this->card;
+  }
+
+  /**
+   * @param string $card
+   */
+  public function setCard($card): void {
+    $this->card = $card;
+  }
 
   /**
    * @return string|null
