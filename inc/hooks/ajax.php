@@ -263,6 +263,7 @@ class Pinedu_Form_Pesquisa {
   const HOOK_PAGINAR_PROMOCAO = 'PAGINARPROMOCAO';
   const HOOK_PAGINAR_VISITADOS = 'PAGINARVISITADOS';
   const HOOK_PAGINAR_PESQUISA = 'PAGINARPESQUISA';
+  const HOOK_FAIXAVALOR = 'RECUPERAFAIXAVALOR';
   // Método estático para inicialização
   public static function init( ) {
     foreach ( self::PREFIXOS as $prefixo ) {
@@ -273,6 +274,8 @@ class Pinedu_Form_Pesquisa {
       add_action( $prefixo . self::HOOK_CRIAR_COOKIE, [ __CLASS__, 'criar_cookie' ] );
       add_action( $prefixo . self::HOOK_PAGINAR_PROMOCAO, [ __CLASS__, 'paginar_promocao' ] );
       add_action( $prefixo . self::HOOK_PAGINAR_VISITADOS, [ __CLASS__, 'paginar_visitados' ] );
+      add_action( $prefixo . self::HOOK_PAGINAR_PESQUISA, [ __CLASS__, 'paginar_pesquisa' ] );
+      add_action( $prefixo . self::HOOK_FAIXAVALOR, [ __CLASS__, 'recupera_faixavalor' ] );
     }
   }
   // Métodos estáticos
@@ -282,14 +285,23 @@ class Pinedu_Form_Pesquisa {
     $paged = isset( $_REQUEST[ 'paged' ] ) ? sanitize_text_field( $_REQUEST[ 'paged' ] ) : '';
     $max = isset( $_REQUEST[ 'max' ] ) ? sanitize_text_field( $_REQUEST[ 'max' ] ) : 8;
     $card = isset( $_REQUEST[ 'card' ] ) ? sanitize_text_field( $_REQUEST[ 'card' ] ) : null;
+    $template = isset( $_REQUEST[ 'template' ] ) ? sanitize_text_field( $_REQUEST[ 'template' ] ) : null;
     $tipo_imovel = isset( $_REQUEST[ 'tipo_imovel' ] ) ? sanitize_text_field( $_REQUEST[ 'tipo_imovel' ] ) : null;
     /* Atribui o numero da página para simular o comportamento normal */
     set_query_var( 'paged', $paged );
     set_query_var( 'tipo', $tipo_imovel );
+
+    if ( $template && !empty( $template ) ) {
+      set_query_var( 'template', $template );
+    }
     if ( $card && !empty( $card ) ) {
       set_query_var( 'card', $card );
     }
     Promocoes::paginar_promocao( $contrato, $tipo_imovel, $max );
+  }
+  public static function paginar_pesquisa( ) {
+    require_once get_template_directory( ) . '/inc/classes/Pesquisa.php';
+    Pesquisa::paginar_pesquisa( );
   }
   public static function paginar_visitados( ) {
     require_once get_template_directory( ) . '/inc/classes/Visitados.php';
@@ -299,66 +311,208 @@ class Pinedu_Form_Pesquisa {
     set_query_var( 'paged', $paged );
     Visitados::paginar_visitados( $titulo, $max );
   }
-  public static function contrato_change( ) {
-    $contrato = isset( $_REQUEST[ 'contrato' ] ) ? sanitize_text_field( $_REQUEST[ 'contrato' ] ) : '';
+
+  public static function contrato_change() {
+    $contrato = isset( $_REQUEST['contrato'] ) ? sanitize_text_field( $_REQUEST['contrato'] ) : '';
     $options = get_option( 'pinedu_imovel_options' );
     $tipo_imovel_padrao = null;
-    if ( isset( $options[ 'tipo_imovel' ] ) ) { $tipo_imovel_padrao = $options[ 'tipo_imovel' ]; }
+
+    if ( isset( $options['tipo_imovel'] ) ) {
+      $tipo_imovel_padrao = $options['tipo_imovel'];
+    }
 
     $args = array(
-      'taxonomy' => 'tipo-imovel',
+      'taxonomy'   => 'tipo-imovel',
       'hide_empty' => true,
-      'orderby' => 'slug',
-      'order' => 'ASC'
+      'orderby'    => 'slug',
+      'order'      => 'ASC'
     );
 
     $terms_tipo_imovel = get_terms( $args );
 
-    $args = [
-      'taxonomy' => 'faixa-valor'
-      , 'hide_empty' => false
-      , 'meta_query' => [
-        [
-          'key' => 'tipo-contrato'
-          , 'value' => ( (string) $contrato )
-          , 'compare' => '='
-        ]
-      ]
-      , 'orderby' => 'meta_value_num'
-      , 'meta_key' => 'valor-inicial'
-      , 'order' => 'ASC'
-    ];
-    $terms_faixa_valor = get_terms( $args );
     $result = array(
-      'tipo-imoveis' => array( )
-      ,'faixa-valores' => array( )
-      , 'x' => []
+      'tipo-imoveis'  => array(),
+      'faixa-valores' => array(),
+      'x'             => []
     );
+
     if ( ! empty( $terms_tipo_imovel ) && ! is_wp_error( $terms_tipo_imovel ) ) {
       foreach ( $terms_tipo_imovel as $tipo_imovel ) {
         $opt = [ 'id' => $tipo_imovel->slug, 'nome' => $tipo_imovel->name ];
-        if ( $tipo_imovel_padrao && ( strtolower( $tipo_imovel->slug ) == strtolower( $tipo_imovel_padrao ) ) ) $opt[ 'selected' ] = true;
-        $result[ 'tipo-imoveis' ][] = $opt;
+        if ( $tipo_imovel_padrao && ( strtolower( $tipo_imovel->slug ) == strtolower( $tipo_imovel_padrao ) ) ) {
+          $opt['selected'] = true;
+        }
+        $result['tipo-imoveis'][] = $opt;
       }
     }
-    if ( ! empty( $terms_faixa_valor ) && ! is_wp_error( $terms_faixa_valor ) ) {
-      $result[ 'faixa-valores' ][] = 0;
-      foreach ( $terms_faixa_valor as $key ) {
-        $m = get_term_meta( $key->term_id, 'valor-final', true );
-        $result[ 'faixa-valores' ][] = floatval( $m );
-      }
-    }
-    if ( ( isset( $result[ 'tipo-imoveis' ] ) && ! empty( $result[ 'tipo-imoveis' ] ) ) || ( isset( $result[ 'faixa_valores' ] ) && ! empty( $result[ 'faixa_valores' ] ) ) ) {
+
+    // Calcula as faixas baseadas no banco de dados
+    $fx = self::calcula_faixa_valor( $contrato );
+
+    // CORREÇÃO APLICADA: Atribuição direta, sem push []
+    $result['faixa-valores'] = $fx['faixas'];
+    $result['valor-inicial'] = $fx['pivot_menor'];
+    $result['valor-final'] = $fx['pivot_maior'];
+
+    if ( ( isset( $result['tipo-imoveis'] ) && ! empty( $result['tipo-imoveis'] ) ) || ( isset( $result['faixa-valores'] ) && ! empty( $result['faixa-valores'] ) ) ) {
       wp_send_json_success( [
         'message' => 'Processado com sucesso!',
-        'data' => $result
+        'data'    => $result
       ], 200 );
     } else {
       wp_send_json_success( [
         'message' => 'Processado com sucesso!',
-        'data' => $result
+        'data'    => $result
       ], 200 );
     }
+  }
+  public static function recupera_faixavalor( ) {
+    $contrato = isset( $_REQUEST['contrato'] ) ? sanitize_text_field( $_REQUEST['contrato'] ) : '';
+    $fx = self::calcula_faixa_valor( $contrato );
+    $result = [
+      'faixa-valores' => $fx['faixas'],
+      'valor-inicial' => $fx['pivot_menor'],
+      'valor-final'   => $fx['pivot_maior']
+    ];
+    wp_send_json_success( $result );
+  }
+// ==============================================================================
+// 2. O CÁLCULO ESTATÍSTICO (COM CACHE TRANSIENT)
+// ==============================================================================
+  public static function calcula_faixa_valor( $contrato ) {
+    delete_transient( 'pinedu_faixas_contrato_1' );
+    delete_transient( 'pinedu_faixas_contrato_2' );
+    delete_transient( 'pinedu_faixas_contrato_3' );
+    delete_transient( 'pinedu_faixas_contrato_todos' );
+    // 1. Tenta carregar do Cache primeiro (Protege o Banco de Dados)
+    $chave_cache = 'pinedu_faixas_contrato_' . ( empty($contrato) ? 'todos' : $contrato );
+    $dados_cacheados = get_transient( $chave_cache );
+
+    if ( false !== $dados_cacheados ) {
+      return $dados_cacheados;
+    }
+
+    // 2. Se não tem cache, processa o SQL
+    global $wpdb;
+
+    if ( $contrato == '1' ) {
+      $meta_key_sql = "pm_valor.meta_key = 'vendaValor'";
+      $extra_join = "INNER JOIN {$wpdb->postmeta} pm_ativarVenda ON p.ID = pm_ativarVenda.post_id";
+      $extra_where = "AND pm_ativarVenda.meta_key = 'ativarVenda' AND pm_ativarVenda.meta_value = '1'";
+    } elseif ( $contrato == '2' ) {
+      $meta_key_sql = "pm_valor.meta_key = 'locacaoValor'";
+      $extra_join = "INNER JOIN {$wpdb->postmeta} pm_ativarLocacao ON p.ID = pm_ativarLocacao.post_id";
+      $extra_where = "AND pm_ativarLocacao.meta_key = 'ativarLocacao' AND pm_ativarLocacao.meta_value = '1'";
+    } elseif ( $contrato == '3' ) {
+      $meta_key_sql = "pm_valor.meta_key = 'lancamentoValor'";
+      $extra_join = "INNER JOIN {$wpdb->postmeta} pm_ativarLancamento ON p.ID = pm_ativarLancamento.post_id";
+      $extra_where = "AND pm_ativarLancamento.meta_key = 'ativarLancamento' AND pm_ativarLancamento.meta_value = '1'";
+    } else {
+      $meta_key_sql = "pm_valor.meta_key IN ('vendaValor', 'locacaoValor', 'lancamentoValor')";
+    }
+
+    // Query: Extrai valores limpos e ordenados.
+    // O Mínimo será o índice 0 e o Máximo será o último índice.
+    $query = "
+      SELECT CAST(REPLACE(REPLACE(pm_valor.meta_value, '.', ''), ',', '.') AS DECIMAL(15,2)) AS valor
+      FROM {$wpdb->posts} p
+      INNER JOIN {$wpdb->postmeta} pm_valor ON p.ID = pm_valor.post_id
+      INNER JOIN {$wpdb->postmeta} pm_status ON p.ID = pm_status.post_id
+      {$extra_join}
+      WHERE p.post_type = 'imovel'
+        AND p.post_status = 'publish'
+        AND {$meta_key_sql}
+        AND pm_valor.meta_value != ''
+        AND pm_status.meta_key = 'statusImovel'
+        AND pm_status.meta_value = 'D'
+        {$extra_where}
+      ORDER BY valor ASC
+  ";
+
+    $valores_ordenados = $wpdb->get_col($query);
+    error_log('Valores ordenados: ' . print_r($valores_ordenados, true));
+    $qtd_itens = 25;
+
+    // Trava de Segurança: Banco vazio ou sem imóveis no status D
+    if ( empty($valores_ordenados) ) {
+      $resultado = [
+        'faixas'      => array_fill(0, $qtd_itens, 0),
+        'pivot_menor' => 0,
+        'pivot_maior' => 0
+      ];
+      set_transient( $chave_cache, $resultado, 12 * HOUR_IN_SECONDS );
+      return $resultado;
+    }
+    error_log('Valores ordenados: ' . print_r($valores_ordenados, true));
+    $total_imoveis = count($valores_ordenados);
+
+    // 3. Extração de Extremos e Quartis Reais
+    $min_real     = (float) $valores_ordenados[0]; // EQUIVALE AO MIN() DO SQL
+    $q1_real      = (float) $valores_ordenados[(int) floor($total_imoveis * 0.25)];
+    $mediana_real = (float) $valores_ordenados[(int) floor($total_imoveis * 0.50)];
+    $q3_real      = (float) $valores_ordenados[(int) floor($total_imoveis * 0.75)];
+    $max_real     = (float) $valores_ordenados[$total_imoveis - 1]; // EQUIVALE AO MAX() DO SQL
+
+    // Regra Exigida: 15% a menos no Mínimo e 15% a mais no Máximo
+    $novo_min = $min_real * 0.85;
+    $novo_max = $max_real * 1.15;
+
+    $faixas = [];
+
+    if ($novo_max > $novo_min) {
+
+      // CRAVADO O PRIMEIRO ITEM (Índice 0): min * 15% de margem
+      $faixas[0] = (int) round($novo_min);
+
+      // Segmento 1: do Mínimo Ajustado até o Quartil 1 (Índices 1 a 6)
+      $step1 = ($q1_real - $novo_min) / 6;
+      for ($i = 1; $i < 6; $i++) { $faixas[$i] = (int) round($novo_min + ($step1 * $i)); }
+      $faixas[6] = (int) round($q1_real); // Crava o Q1
+
+      // Segmento 2: do Quartil 1 até a Mediana (Índices 7 a 12)
+      $step2 = ($mediana_real - $q1_real) / 6;
+      for ($i = 1; $i < 6; $i++) { $faixas[6 + $i] = (int) round($q1_real + ($step2 * $i)); }
+      $faixas[12] = (int) round($mediana_real); // Crava a Mediana no Pivot Central
+
+      // Segmento 3: da Mediana até o Quartil 3 (Índices 13 a 18)
+      $step3 = ($q3_real - $mediana_real) / 6;
+      for ($i = 1; $i < 6; $i++) { $faixas[12 + $i] = (int) round($mediana_real + ($step3 * $i)); }
+      $faixas[18] = (int) round($q3_real); // Crava o Q3
+
+      // Segmento 4: do Quartil 3 até o Máximo Ajustado (Índices 19 a 24)
+      $step4 = ($novo_max - $q3_real) / 6;
+      for ($i = 1; $i < 6; $i++) { $faixas[18 + $i] = (int) round($q3_real + ($step4 * $i)); }
+
+      // CRAVADO O ÚLTIMO ITEM (Índice 24): max + 15% de margem
+      $faixas[24] = (int) round($novo_max);
+
+      // 4. FIXA OS PIVOTS DA INTERFACE:
+      // A Mediana está no índice 12. Pivots ficam em 11 e 13 para contorná-la.
+      $idx_meio = 12;
+      $idx_menor = 10;
+      $idx_maior = 14;
+
+      $pivot_menor = $faixas[$idx_menor];
+      $pivot_maior = $faixas[$idx_maior];
+
+    } else {
+      // Fallback se min e max forem iguais (apenas 1 imóvel)
+      $valor_inteiro = (int) round($novo_min);
+      $faixas = array_fill(0, $qtd_itens, $valor_inteiro);
+      $pivot_menor = $valor_inteiro;
+      $pivot_maior = $valor_inteiro;
+    }
+
+    $resultado = [
+      'faixas'      => $faixas,
+      'pivot_menor' => $pivot_menor,
+      'pivot_maior' => $pivot_maior
+    ];
+
+    // 5. Salva no Cache por 12 horas
+    set_transient( $chave_cache, $resultado, 12 * HOUR_IN_SECONDS );
+
+    return $resultado;
   }
 
   public static function tipo_imovel_change( ) {
