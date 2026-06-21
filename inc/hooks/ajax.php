@@ -311,30 +311,84 @@ class Pinedu_Form_Pesquisa {
     set_query_var( 'paged', $paged );
     Visitados::paginar_visitados( $titulo, $max );
   }
-
-  public static function contrato_change() {
-    $contrato = isset( $_REQUEST['contrato'] ) ? sanitize_text_field( $_REQUEST['contrato'] ) : '';
-    $options = get_option( 'pinedu_imovel_options' );
-    $tipo_imovel_padrao = null;
-
-    if ( isset( $options['tipo_imovel'] ) ) {
-      $tipo_imovel_padrao = $options['tipo_imovel'];
-    }
-
+  private static function get_tipo_imoveis_terms( ) {
     $args = array(
       'taxonomy'   => 'tipo-imovel',
       'hide_empty' => true,
-      'orderby'    => 'slug',
+      'orderby'    => 'name',
       'order'      => 'ASC'
     );
 
-    $terms_tipo_imovel = get_terms( $args );
+    return get_terms( $args );
+  }
+  private static function get_cidades_terms( ) {
+    $args = array(
+      'taxonomy'   => 'cidade',
+      'hide_empty' => true,
+      'orderby'    => 'name',
+      'order'      => 'ASC'
+    );
 
+    return get_terms( $args );
+  }
+  private static function get_regioes_terms( $cidade = null ) {
+    $args = array(
+      'taxonomy' => 'regiao'
+    , 'hide_empty' => false
+    , 'orderby' => 'name'
+    , 'order' => 'ASC'
+    , 'meta_query' => [
+        [
+          'key' => 'parent_id'
+          , 'value' => $cidade
+          , 'compare' => '='
+        ]
+      ]
+    );
+
+    return get_terms( $args );
+  }
+  public static function contrato_change() {
+    $contrato = isset( $_REQUEST['contrato'] ) ? sanitize_text_field( $_REQUEST['contrato'] ) : '';
+    $tipo_imovel = isset( $_REQUEST['tipo-imovel'] ) ? sanitize_text_field( $_REQUEST['tipo-imovel'] ) : '';
+    $cidade = isset( $_REQUEST['cidade'] ) ? sanitize_text_field( $_REQUEST['cidade'] ) : '';
+    $regiao = isset( $_REQUEST['regiao'] ) ? sanitize_text_field( $_REQUEST['regiao'] ) : '';
+
+    $tipo_imovel_padrao = $tipo_imovel;
+    $cidade_padrao = $cidade;
+    $regiao_padrao = $regiao;
     $result = array(
       'tipo-imoveis'  => array(),
+      'cidades'  => array(),
+      'regioes'  => array(),
       'faixa-valores' => array(),
-      'x'             => []
     );
+
+    $terms_tipo_imovel = self::get_tipo_imoveis_terms();
+    $terms_cidade = self::get_cidades_terms();
+
+    $cidade_padrao = str_pad($cidade_padrao, 4, '0', STR_PAD_LEFT);
+    if ( ! empty( $terms_cidade ) && ! is_wp_error( $terms_cidade ) ) {
+      foreach ($terms_cidade as $cid) {
+        $opt = ['id' => $cid->slug, 'nome' => $cid->name];
+        if ($cidade_padrao && ($cid->slug == $cidade_padrao)) {
+          $opt['selected'] = true;
+        }
+        $result['cidades'][] = $opt;
+      }
+    }
+    if ( !empty( $cidade ) ) {
+      $terms_regiao = self::get_regioes_terms($cidade_padrao);
+      $regiao_padrao = str_pad($regiao_padrao, 4, '0', STR_PAD_LEFT);
+      if (!empty($terms_regiao) && !is_wp_error($terms_regiao)) {
+        foreach ($terms_regiao as $reg) {
+          if ($regiao_padrao && ($reg->slug == $regiao_padrao)) {
+            $opt['selected'] = true;
+          }
+          $result['regioes'][] = $opt;
+        }
+      }
+    }
 
     if ( ! empty( $terms_tipo_imovel ) && ! is_wp_error( $terms_tipo_imovel ) ) {
       foreach ( $terms_tipo_imovel as $tipo_imovel ) {
@@ -430,7 +484,7 @@ class Pinedu_Form_Pesquisa {
   ";
 
     $valores_ordenados = $wpdb->get_col($query);
-    error_log('Valores ordenados: ' . print_r($valores_ordenados, true));
+    //error_log('Valores ordenados: ' . print_r($valores_ordenados, true));
     $qtd_itens = 25;
 
     // Trava de Segurança: Banco vazio ou sem imóveis no status D
@@ -443,7 +497,7 @@ class Pinedu_Form_Pesquisa {
       set_transient( $chave_cache, $resultado, 12 * HOUR_IN_SECONDS );
       return $resultado;
     }
-    error_log('Valores ordenados: ' . print_r($valores_ordenados, true));
+    //error_log('Valores ordenados: ' . print_r($valores_ordenados, true));
     $total_imoveis = count($valores_ordenados);
 
     // 3. Extração de Extremos e Quartis Reais
@@ -516,76 +570,74 @@ class Pinedu_Form_Pesquisa {
   }
 
   public static function tipo_imovel_change( ) {
-    $tipo_imovel = isset( $_REQUEST[ 'tipo_imovel' ] ) ? sanitize_text_field( $_REQUEST[ 'tipo_imovel' ] ) : '';
-    $options = get_option( 'pinedu_imovel_options' );
-    $cidade = null;
-    if ( isset( $options[ 'cidade' ] ) ) { $cidade = $options[ 'cidade' ]; }
+    $tipo_imovel = isset( $_REQUEST['tipo-imovel'] ) ? sanitize_text_field( $_REQUEST['tipo-imovel'] ) : '';
+    $cidade = isset( $_REQUEST['cidade'] ) ? sanitize_text_field( $_REQUEST['cidade'] ) : '';
+    $regiao = isset( $_REQUEST['regiao'] ) ? sanitize_text_field( $_REQUEST['regiao'] ) : '';
 
-    $args = array(
-      'taxonomy' => 'cidade'
-      , 'hide_empty' => true
-      , 'orderby' => 'slug'
-      , 'order' => 'ASC'
+    $tipo_imovel_padrao = $tipo_imovel;
+    $cidade_padrao = $cidade;
+    $regiao_padrao = $regiao;
+    $result = array(
+      'cidades'  => array(),
+      'regioes'  => array(),
     );
 
-    $terms_cidade = get_terms( $args );
-    $result = array( );
-
+    $terms_cidade = self::get_cidades_terms();
+    $cidade_padrao = str_pad($cidade_padrao, 4, '0', STR_PAD_LEFT);
     if ( ! empty( $terms_cidade ) && ! is_wp_error( $terms_cidade ) ) {
-      foreach ( $terms_cidade as $cid ) {
-        $opt = [ 'id' => $cid->slug, 'nome' => $cid->name ];
-        //if ( $cidade && ( ( ( int )$cid->slug ) == ( ( int )$cidade ) ) ) $opt[ 'selected' ] = true;
-        $result[] = $opt;
+      foreach ($terms_cidade as $cid) {
+        $opt = ['id' => $cid->slug, 'nome' => $cid->name];
+        if ($cidade_padrao && ($cid->slug == $cidade_padrao)) {
+          $opt['selected'] = true;
+        }
+        $result['cidades'][] = $opt;
       }
-      wp_send_json_success( [
-        'message' => 'Processado com sucesso!',
-        'data' => $result
-      ], 200 );
-    } else {
-      wp_send_json_success( [
-        'message' => 'Processado com sucesso!',
-        'data' => $result
-      ], 200 );
     }
+    if ( !empty( $cidade ) ) {
+      $terms_regiao = self::get_regioes_terms($cidade_padrao);
+      $regiao_padrao = str_pad($regiao_padrao, 4, '0', STR_PAD_LEFT);
+      if (!empty($terms_regiao) && !is_wp_error($terms_regiao)) {
+        foreach ($terms_regiao as $reg) {
+          $opt = ['id' => $reg->slug, 'nome' => $reg->name];
+          if ($regiao_padrao && ($reg->slug == $regiao_padrao)) {
+            $opt['selected'] = true;
+          }
+          $result['regioes'][] = $opt;
+        }
+      }
+    }
+    wp_send_json_success( [
+      'message' => 'Processado com sucesso!',
+      'data'    => $result
+    ], 200 );
   }
   public static function cidade_change(  ) {
-    $cidade = isset( $_REQUEST[ 'cidade' ] ) ?? sanitize_text_field( $_REQUEST[ 'cidade' ] );
-    $options = get_option( 'pinedu_imovel_options' );
-    $regiao = null;
-    if ( isset( $options[ 'regiao' ] ) ) { $regiao = $options[ 'regiao' ]; }
+    $cidade = isset( $_REQUEST['cidade'] ) ? sanitize_text_field( $_REQUEST['cidade'] ) : '';
+    $regiao = isset( $_REQUEST['regiao'] ) ? sanitize_text_field( $_REQUEST['regiao'] ) : '';
 
-    $args = array(
-      'taxonomy' => 'regiao'
-    , 'hide_empty' => false
-    , 'orderby' => 'slug'
-    , 'order' => 'ASC'
-    , 'meta_query' => [
-        [
-          'key' => 'parent_id'
-          , 'value' => $cidade
-          , 'compare' => '='
-        ]
-      ]
+    $cidade_padrao = $cidade;
+    $regiao_padrao = $regiao;
+    $result = array(
+      'regioes'  => array(),
     );
-    $terms_regiao = get_terms( $args );
-    $result = array( );
 
-    if ( ! empty( $terms_regiao ) && ! is_wp_error( $terms_regiao ) ) {
-      foreach ( $terms_regiao as $reg ) {
-        $opt = [ 'id' => $reg->slug, 'nome' => $reg->name ];
-        //if ( $regiao && ( ( ( int )$reg->slug ) == ( ( int )$regiao ) ) ) $opt[ 'selected' ] = true;
-        $result[] = $opt;
+    if ( !empty( $cidade ) ) {
+      $terms_regiao = self::get_regioes_terms($cidade_padrao);
+      $regiao_padrao = str_pad($regiao_padrao, 4, '0', STR_PAD_LEFT);
+      if (!empty($terms_regiao) && !is_wp_error($terms_regiao)) {
+        foreach ($terms_regiao as $reg) {
+          $opt = ['id' => $reg->slug, 'nome' => $reg->name];
+          if ($regiao_padrao && ($reg->slug == $regiao_padrao)) {
+            $opt['selected'] = true;
+          }
+          $result['regioes'][] = $opt;
+        }
       }
-      wp_send_json_success( [
-        'message' => 'Processado com sucesso!',
-        'data' => $result
-      ], 200 );
-    } else {
-      wp_send_json_success( [
-        'message' => 'Processado com sucesso!',
-        'data' => $result
-      ], 200 );
     }
+    wp_send_json_success( [
+      'message' => 'Processado com sucesso!',
+      'data'    => $result
+    ], 200 );
   }
   public static function regiao_change( $contrato ) {
     wp_send_json_success( [ 'message' => 'Cookie Regiao alterada com sucesso!' ] );
