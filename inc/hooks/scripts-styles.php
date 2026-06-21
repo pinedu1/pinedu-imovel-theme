@@ -35,6 +35,7 @@ function enqueue_theme_scripts( ) {
   enqueue_glide_js( );
   enqueue_font_awesome( );
   enqueue_nouislider( );
+  enqueue_recaptcha_v3();
   wp_localize_script( 'scripts', 'ajax_object', [ 'ajaxurl' => admin_url( 'admin-ajax.php' ) ] );
   // Required comment-reply script
   if ( is_singular( ) && comments_open( ) && get_option( 'thread_comments' ) ) {
@@ -110,4 +111,37 @@ function enqueue_glide_js( ) {
 function enqueue_font_awesome( ) {
   wp_enqueue_style( 'font-awesome-css', get_theme_file_uri( '/assets/css/vendor/fontawesome/all.css' ), array( ), filemtime( get_theme_file_path( '/assets/css/vendor/fontawesome/all.min.css' ) ) );
   wp_enqueue_script( 'font-awesome-js', get_theme_file_uri( '/assets/js/vendor/fontawesome/all.min.js' ), array( ), filemtime( get_theme_file_path( '/assets/js/vendor/fontawesome/all.min.js' ) ), true );
+}
+function enqueue_recaptcha_v3() {
+  if ( ! ( is_page( 'contato' ) || is_page( 'trabalhe-conosco' ) ) && ! is_singular( 'imovel' ) ) {
+    return;
+  }
+
+  $options = get_option( 'pinedu_imovel_options', [] );
+  $chave_recaptcha = $options['chave_publica_recaptcha'] ?? '';
+
+  if ( ! empty( $chave_recaptcha ) ) {
+    // 1. Carrega a API do Google (Exige a chave na URL)
+    wp_enqueue_script(
+      'google-recaptcha',
+      'https://www.google.com/recaptcha/api.js?render=' . $chave_recaptcha,
+      array(),
+      null,
+      true
+    );
+
+    // 2. Registra um script "fictício" ou o seu arquivo .js do tema para ancorar as variáveis
+    wp_register_script( 'pinedu-contato-js', '', array('google-recaptcha'), null, true );
+    wp_enqueue_script( 'pinedu-contato-js' );
+
+    // 3. A MÁGICA: Passa as variáveis do PHP para o JavaScript
+    wp_localize_script(
+      'pinedu-contato-js', // O script onde as variáveis serão injetadas
+      'PineduVars',        // O nome do Objeto Global que existirá no JavaScript
+      array(
+        'chave_site' => $chave_recaptcha,
+        'ajax_url'   => admin_url( 'admin-ajax.php' )
+      )
+    );
+  }
 }
