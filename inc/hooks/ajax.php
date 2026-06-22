@@ -262,6 +262,7 @@ class Pinedu_Form_Pesquisa {
   const HOOK_CRIAR_COOKIE = 'CRIARCOOKIE';
   const HOOK_PAGINAR_PROMOCAO = 'PAGINARPROMOCAO';
   const HOOK_PAGINAR_VISITADOS = 'PAGINARVISITADOS';
+  const HOOK_PAGINAR_VISINHANCA = 'PAGINARVISINHANCA';
   const HOOK_PAGINAR_PESQUISA = 'PAGINARPESQUISA';
   const HOOK_FAIXAVALOR = 'RECUPERAFAIXAVALOR';
   // Método estático para inicialização
@@ -274,6 +275,7 @@ class Pinedu_Form_Pesquisa {
       add_action( $prefixo . self::HOOK_CRIAR_COOKIE, [ __CLASS__, 'criar_cookie' ] );
       add_action( $prefixo . self::HOOK_PAGINAR_PROMOCAO, [ __CLASS__, 'paginar_promocao' ] );
       add_action( $prefixo . self::HOOK_PAGINAR_VISITADOS, [ __CLASS__, 'paginar_visitados' ] );
+      add_action( $prefixo . self::HOOK_PAGINAR_VISINHANCA, [ __CLASS__, 'paginar_visinhanca' ] );
       add_action( $prefixo . self::HOOK_PAGINAR_PESQUISA, [ __CLASS__, 'paginar_pesquisa' ] );
       add_action( $prefixo . self::HOOK_FAIXAVALOR, [ __CLASS__, 'recupera_faixavalor' ] );
     }
@@ -310,6 +312,18 @@ class Pinedu_Form_Pesquisa {
     $titulo = isset( $_REQUEST[ 'titulo' ] ) ? sanitize_text_field( $_REQUEST[ 'titulo' ] ) : 'Imóveis mais visitados';
     set_query_var( 'paged', $paged );
     Visitados::paginar_visitados( $titulo, $max );
+  }
+  public static function paginar_visinhanca( ) {
+    require_once get_template_directory( ) . '/inc/classes/Visinhanca.php';
+    $paged = isset( $_REQUEST[ 'paged' ] ) ? sanitize_text_field( $_REQUEST[ 'paged' ] ) : '';
+    $max = isset( $_REQUEST[ 'max' ] ) ? sanitize_text_field( $_REQUEST[ 'max' ] ) : 8;
+    $titulo = isset( $_REQUEST[ 'titulo' ] ) ? sanitize_text_field( $_REQUEST[ 'titulo' ] ) : 'Imóveis Próximos';
+    $post_id = isset( $_REQUEST['post_id'] ) ? absint( $_REQUEST['post_id'] ) : 0;
+    // 2. Verifica se um ID válido (maior que zero) foi passado
+    if ( $post_id > 0 ) {
+      set_query_var( 'paged', $paged );
+      Visinhanca::paginar_visinhanca( $post_id, $titulo, $max );
+    }
   }
   private static function get_tipo_imoveis_terms( ) {
     $args = array(
@@ -468,20 +482,20 @@ class Pinedu_Form_Pesquisa {
     // Query: Extrai valores limpos e ordenados.
     // O Mínimo será o índice 0 e o Máximo será o último índice.
     $query = "
-      SELECT CAST(REPLACE(REPLACE(pm_valor.meta_value, '.', ''), ',', '.') AS DECIMAL(15,2)) AS valor
-      FROM {$wpdb->posts} p
-      INNER JOIN {$wpdb->postmeta} pm_valor ON p.ID = pm_valor.post_id
-      INNER JOIN {$wpdb->postmeta} pm_status ON p.ID = pm_status.post_id
-      {$extra_join}
-      WHERE p.post_type = 'imovel'
-        AND p.post_status = 'publish'
-        AND {$meta_key_sql}
-        AND pm_valor.meta_value != ''
-        AND pm_status.meta_key = 'statusImovel'
-        AND pm_status.meta_value = 'D'
-        {$extra_where}
-      ORDER BY valor ASC
-  ";
+    SELECT CAST(REPLACE(REPLACE(pm_valor.meta_value, '.', ''), ',', '.') AS DECIMAL(15,2)) AS valor
+    FROM {$wpdb->posts} p
+    INNER JOIN {$wpdb->postmeta} pm_valor ON p.ID = pm_valor.post_id
+    INNER JOIN {$wpdb->postmeta} pm_status ON p.ID = pm_status.post_id
+    {$extra_join}
+    WHERE p.post_type = 'imovel'
+      AND p.post_status = 'publish'
+      AND {$meta_key_sql}
+      AND pm_valor.meta_value != ''
+      AND pm_status.meta_key = 'statusImovel'
+      AND pm_status.meta_value = 'D'
+      {$extra_where}
+    ORDER BY valor ASC
+";
 
     $valores_ordenados = $wpdb->get_col($query);
     //error_log('Valores ordenados: ' . print_r($valores_ordenados, true));
@@ -507,38 +521,43 @@ class Pinedu_Form_Pesquisa {
     $q3_real      = (float) $valores_ordenados[(int) floor($total_imoveis * 0.75)];
     $max_real     = (float) $valores_ordenados[$total_imoveis - 1]; // EQUIVALE AO MAX() DO SQL
 
-    // Regra Exigida: 15% a menos no Mínimo e 15% a mais no Máximo
-    $novo_min = $min_real * 0.85;
-    $novo_max = $max_real * 1.15;
+    // Função auxiliar para arredondar para a centena mais próxima
+    $arredondar_centena = function($valor) {
+      return round($valor / 100) * 100;
+    };
+
+    // Regra Exigida: 15% a menos no Mínimo e 15% a mais no Máximo, arredondados para a centena
+    $novo_min = $arredondar_centena($min_real * 0.85);
+    $novo_max = $arredondar_centena($max_real * 1.15);
 
     $faixas = [];
 
     if ($novo_max > $novo_min) {
 
       // CRAVADO O PRIMEIRO ITEM (Índice 0): min * 15% de margem
-      $faixas[0] = (int) round($novo_min);
+      $faixas[0] = (int) $novo_min;
 
       // Segmento 1: do Mínimo Ajustado até o Quartil 1 (Índices 1 a 6)
       $step1 = ($q1_real - $novo_min) / 6;
-      for ($i = 1; $i < 6; $i++) { $faixas[$i] = (int) round($novo_min + ($step1 * $i)); }
-      $faixas[6] = (int) round($q1_real); // Crava o Q1
+      for ($i = 1; $i < 6; $i++) { $faixas[$i] = (int) $arredondar_centena($novo_min + ($step1 * $i)); }
+      $faixas[6] = (int) $arredondar_centena($q1_real); // Crava o Q1
 
       // Segmento 2: do Quartil 1 até a Mediana (Índices 7 a 12)
       $step2 = ($mediana_real - $q1_real) / 6;
-      for ($i = 1; $i < 6; $i++) { $faixas[6 + $i] = (int) round($q1_real + ($step2 * $i)); }
-      $faixas[12] = (int) round($mediana_real); // Crava a Mediana no Pivot Central
+      for ($i = 1; $i < 6; $i++) { $faixas[6 + $i] = (int) $arredondar_centena($q1_real + ($step2 * $i)); }
+      $faixas[12] = (int) $arredondar_centena($mediana_real); // Crava a Mediana no Pivot Central
 
       // Segmento 3: da Mediana até o Quartil 3 (Índices 13 a 18)
       $step3 = ($q3_real - $mediana_real) / 6;
-      for ($i = 1; $i < 6; $i++) { $faixas[12 + $i] = (int) round($mediana_real + ($step3 * $i)); }
-      $faixas[18] = (int) round($q3_real); // Crava o Q3
+      for ($i = 1; $i < 6; $i++) { $faixas[12 + $i] = (int) $arredondar_centena($mediana_real + ($step3 * $i)); }
+      $faixas[18] = (int) $arredondar_centena($q3_real); // Crava o Q3
 
       // Segmento 4: do Quartil 3 até o Máximo Ajustado (Índices 19 a 24)
       $step4 = ($novo_max - $q3_real) / 6;
-      for ($i = 1; $i < 6; $i++) { $faixas[18 + $i] = (int) round($q3_real + ($step4 * $i)); }
+      for ($i = 1; $i < 6; $i++) { $faixas[18 + $i] = (int) $arredondar_centena($q3_real + ($step4 * $i)); }
 
       // CRAVADO O ÚLTIMO ITEM (Índice 24): max + 15% de margem
-      $faixas[24] = (int) round($novo_max);
+      $faixas[24] = (int) $novo_max;
 
       // 4. FIXA OS PIVOTS DA INTERFACE:
       // A Mediana está no índice 12. Pivots ficam em 11 e 13 para contorná-la.
@@ -551,7 +570,7 @@ class Pinedu_Form_Pesquisa {
 
     } else {
       // Fallback se min e max forem iguais (apenas 1 imóvel)
-      $valor_inteiro = (int) round($novo_min);
+      $valor_inteiro = (int) $arredondar_centena($novo_min);
       $faixas = array_fill(0, $qtd_itens, $valor_inteiro);
       $pivot_menor = $valor_inteiro;
       $pivot_maior = $valor_inteiro;
@@ -568,7 +587,6 @@ class Pinedu_Form_Pesquisa {
 
     return $resultado;
   }
-
   public static function tipo_imovel_change( ) {
     $tipo_imovel = isset( $_REQUEST['tipo-imovel'] ) ? sanitize_text_field( $_REQUEST['tipo-imovel'] ) : '';
     $cidade = isset( $_REQUEST['cidade'] ) ? sanitize_text_field( $_REQUEST['cidade'] ) : '';

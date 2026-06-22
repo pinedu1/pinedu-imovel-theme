@@ -22,7 +22,7 @@ class Visinhanca extends Pinedu_Base implements PineduPostType {
   /**
    * @var string $titulo Titulo do container
    */
-  private $titulo = 'Imóveis mais Visitados';
+  private $titulo = 'Imóveis Próximos';
   /**
    * @var WP_Query $query Armazena a query na instancia
    */
@@ -36,7 +36,7 @@ class Visinhanca extends Pinedu_Base implements PineduPostType {
     $this->max = $max;
     $this->post = $post;
     $this->query = $this->query( );
-    baixar_fotos_destaque( $this->query );
+    //baixar_fotos_destaque( $this->query );
   }
   public function query( ) {
     $paged = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
@@ -109,5 +109,13 @@ class Visinhanca extends Pinedu_Base implements PineduPostType {
 
   public function setTitulo( mixed $titulo ): void {
     $this->titulo = $titulo;
+  }
+  public static function paginar_visinhanca( $post_id, $msg = 'Imóveis Próximos', $max = 8 ) {
+    $post = get_post( $post_id );
+    $p = new Visinhanca( $post, $msg, $max );
+    $p->render( );
+    $html = ob_get_clean( );
+    echo $html;
+    wp_die( );
   }
 }
