@@ -15,3 +15,4 @@ require get_theme_file_path( '/inc/template-tags/entry-footer.php' );
 require get_theme_file_path( '/inc/template-tags/single-comment.php' );
 require get_theme_file_path( '/inc/template-tags/wp-body-open.php' );
 require get_theme_file_path( '/inc/template-tags/edit-link.php' );
+add_post_type_support( 'page', 'excerpt' );
