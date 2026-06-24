@@ -587,17 +587,36 @@ class Pinedu_Form_Pesquisa {
 
     return $resultado;
   }
+  private static function renderiza_filtro_avancado( $terms_dependencias ) {
+    if ( empty( $terms_dependencias ) || is_wp_error( $terms_dependencias ) ) {
+      return '';
+    }
+
+    ob_start();
+
+    // ATENÇÃO: Ajuste o slug 'template-parts/filtro' para o caminho real da sua pasta
+    get_template_part(
+      'template-parts/pesquisa/filtro',
+      'avancado',
+      ['terms_dependencias' => $terms_dependencias]
+    );
+
+    return ob_get_clean();
+  }
   public static function tipo_imovel_change( ) {
-    $tipo_imovel = isset( $_REQUEST['tipo-imovel'] ) ? sanitize_text_field( $_REQUEST['tipo-imovel'] ) : '';
+    $tipo_imovel = isset( $_REQUEST['tipo'] ) ? sanitize_text_field( $_REQUEST['tipo'] ) : '';
     $cidade = isset( $_REQUEST['cidade'] ) ? sanitize_text_field( $_REQUEST['cidade'] ) : '';
     $regiao = isset( $_REQUEST['regiao'] ) ? sanitize_text_field( $_REQUEST['regiao'] ) : '';
 
     $tipo_imovel_padrao = $tipo_imovel;
     $cidade_padrao = $cidade;
     $regiao_padrao = $regiao;
+
     $result = array(
-      'cidades'  => array(),
-      'regioes'  => array(),
+      'cidades'      => array(),
+      'regioes'      => array(),
+      'dependencias' => array(),
+      'html_filtro'  => '',
     );
 
     $terms_cidade = self::get_cidades_terms();
@@ -611,6 +630,7 @@ class Pinedu_Form_Pesquisa {
         $result['cidades'][] = $opt;
       }
     }
+
     if ( !empty( $cidade ) ) {
       $terms_regiao = self::get_regioes_terms($cidade_padrao);
       $regiao_padrao = str_pad($regiao_padrao, 4, '0', STR_PAD_LEFT);
@@ -624,10 +644,85 @@ class Pinedu_Form_Pesquisa {
         }
       }
     }
+
+    $terms_dependencias = self::retorna_dependencias( $tipo_imovel );
+
+    if ( !empty( $terms_dependencias ) && !is_wp_error( $terms_dependencias ) ) {
+      $result['dependencias'] = $terms_dependencias;
+      // Delega a transformação do HTML para o método privado
+      $result['html_filtro']  = self::renderiza_filtro_avancado( $terms_dependencias );
+    }
+
     wp_send_json_success( [
       'message' => 'Processado com sucesso!',
       'data'    => $result
     ], 200 );
+  }
+  private static function retorna_dependencias( $tipo_imovel ) {
+    global $wpdb;
+
+    // 1. Prepara a string do LIKE com segurança (escapa caracteres especiais de SQL)
+    $like_pattern = $wpdb->esc_like( $tipo_imovel ) . '-%';
+
+    // 2. Monta a query usando $wpdb->prepare e os prefixos dinâmicos das tabelas
+    $query = $wpdb->prepare("
+SELECT DISTINCT
+    t.term_id,
+    t.name AS termo_nome,
+    t.slug AS termo_slug,
+    tm_tipo.meta_value AS meta_tipo
+FROM wp_terms t
+INNER JOIN wp_term_taxonomy tt
+    ON t.term_id = tt.term_id
+INNER JOIN wp_termmeta tm_relativo
+    ON t.term_id = tm_relativo.term_id AND tm_relativo.meta_key = 'relativo'
+INNER JOIN wp_termmeta tm_ordem
+    ON t.term_id = tm_ordem.term_id AND tm_ordem.meta_key = 'ordem'
+INNER JOIN wp_termmeta tm_tipo
+    ON t.term_id = tm_tipo.term_id AND tm_tipo.meta_key = 'tipo'
+WHERE tt.taxonomy = 'tipo-dependencia'
+  AND t.slug LIKE %s
+  AND tm_relativo.meta_value = 'CARACTERISTICAS'
+ORDER BY
+    CAST(tm_ordem.meta_value AS UNSIGNED) ASC, tm_tipo.meta_value ASC;
+    ", $like_pattern );
+    // 3. Usa get_results para pegar todas as colunas e linhas
+    // ARRAY_A retorna tudo como arrays associativos (fácil de manipular no foreach)
+    $dependencias = $wpdb->get_results( $query, ARRAY_A );
+    $result = [
+      'BOOLEAN' => [],
+      'INTEIRO' => [],
+      'FLOAT'   => []
+    ];
+    foreach ($dependencias as $dep) {
+      $slug = mb_strtoupper( $dep['termo_slug'] , 'UTF-8');
+      // 2. Coloquei hífen (-) baseado na sua tabela. Se for underline, volte para '_'
+      $p = explode('-', $slug);
+      // 3. Prevenção de erro: se a sigla não tiver hífen/underline, ele não quebra o código
+      $key = isset($p[1]) ? $p[1] : '';
+      // 4. Ponto e vírgula duplo corrigido
+      $a = [
+        'id'    => $slug,
+        'nome'  => $dep['termo_nome'],
+        'chave' => $key
+      ];
+
+      // 5. Agrupei a lógica dos inteiros para economizar código
+      if ( $dep['meta_tipo'] == 'BOOLEAN' ) {
+        $result['BOOLEAN'][] = $a;
+      } elseif ( $dep['meta_tipo'] == 'INTEIRO' || $dep['meta_tipo'] == 'INTEIRO_TEXTO' ) {
+        $a['min'] = 0;
+        $a['max'] = 99;
+        $a['step'] = 1;
+        $result['INTEIRO'][] = $a;
+      } elseif ( $dep['meta_tipo'] == 'FLOAT' ) {
+        $a['min'] = 0;
+        $a['max'] = 99999;
+        $a['step'] = 0.5;
+        $result['FLOAT'][] = $a;
+      }
+    }
+    return $result;
   }
   public static function cidade_change(  ) {
     $cidade = isset( $_REQUEST['cidade'] ) ? sanitize_text_field( $_REQUEST['cidade'] ) : '';
