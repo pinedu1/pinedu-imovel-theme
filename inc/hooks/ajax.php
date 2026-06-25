@@ -658,7 +658,7 @@ class Pinedu_Form_Pesquisa {
       'data'    => $result
     ], 200 );
   }
-  private static function retorna_dependencias( $tipo_imovel ) {
+  public static function retorna_dependencias( $tipo_imovel ) {
     global $wpdb;
 
     // 1. Prepara a string do LIKE com segurança (escapa caracteres especiais de SQL)
