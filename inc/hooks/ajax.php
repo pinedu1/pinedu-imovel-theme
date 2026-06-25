@@ -671,7 +671,7 @@ SELECT DISTINCT
     t.name AS termo_nome,
     t.slug AS termo_slug,
     tm_tipo.meta_value AS meta_tipo
-FROM wp_terms t
+FROM {$wpdb->terms} t
 INNER JOIN wp_term_taxonomy tt
     ON t.term_id = tt.term_id
 INNER JOIN wp_termmeta tm_relativo
