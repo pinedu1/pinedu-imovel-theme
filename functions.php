@@ -269,33 +269,117 @@ add_filter( 'template_include', function( $template ) {
   }
   return $template;
 } );
+
+function busca_caracteristicas_imovel( $post ) {
+  global $wpdb;
+
+  $tipo_imovel = get_post_meta( $post->ID, 'tipoImovel_id', true );
+
+  // Proteção: Se não tiver tipo de imóvel, devolve um array vazio e poupa o banco
+  if ( empty( $tipo_imovel ) ) {
+    return [];
+  }
+
+  // Deixamos a string minúscula para usar tanto no LIKE quanto na chave do cache
+  $tipo_imovel_clean = mb_strtolower( $tipo_imovel, 'UTF-8' );
+
+  // 1. Criar uma chave de cache única (limitada a 172 caracteres pelo WP)
+  // Usamos md5 para garantir que espaços ou acentos não quebrem o nome da chave
+  $cache_key = 'carac_imovel_' . md5( $tipo_imovel_clean );
+
+  // 2. Tentar buscar os dados do cache
+  $dependencias = get_transient( $cache_key );
+
+  // 3. Se retornar 'false', significa que o cache não existe ou expirou
+  if ( false === $dependencias ) {
+
+    $like_pattern = $wpdb->esc_like( $tipo_imovel_clean ) . '-%';
+
+    $query = $wpdb->prepare("
+            SELECT DISTINCT
+                t.term_id,
+                t.name AS termo_nome,
+                t.slug AS termo_slug,
+                tm_tipo.meta_value AS meta_tipo,
+                tm_sigla.meta_value AS meta_sigla
+            FROM {$wpdb->terms} t
+            INNER JOIN {$wpdb->term_taxonomy} tt
+                ON t.term_id = tt.term_id
+            INNER JOIN {$wpdb->termmeta} tm_relativo
+                ON t.term_id = tm_relativo.term_id AND tm_relativo.meta_key = 'relativo'
+            INNER JOIN {$wpdb->termmeta} tm_tipo
+                ON t.term_id = tm_tipo.term_id AND tm_tipo.meta_key = 'tipo'
+            INNER JOIN {$wpdb->termmeta} tm_sigla
+                ON t.term_id = tm_sigla.term_id AND tm_sigla.meta_key = 'sigla'
+            WHERE tt.taxonomy = 'tipo-dependencia'
+              AND t.slug LIKE %s
+              AND tm_relativo.meta_value = 'CARACTERISTICAS';
+        ", $like_pattern );
+
+    $dependencias = $wpdb->get_results( $query, ARRAY_A );
+
+    // 4. Salva o resultado no cache por 10 minutos
+    // O WP possui a constante MINUTE_IN_SECONDS para facilitar a leitura matemática (10 * 60)
+    set_transient( $cache_key, $dependencias, 10 * MINUTE_IN_SECONDS );
+  }
+
+  return $dependencias;
+}
 function busca_campos_destaque_card( $post ) {
   $campos = get_post_meta( $post->ID, '', false );
   $destaques = [];
-  $get_valor = function( $campos, $campo ) {
-    $p = explode( 'Nome', $campo );
-    $sigla = $p[0];
-    return $campos[ $sigla ][0];
-  };
-  foreach ( $campos as $campo   => $cpp ) {
-    if ( ! preg_match( '/^[A-Z]/', $campo ) ) continue;
-    $cp = $cpp[0];
-    if ( str_starts_with( normalizar( $cp ), 'DORMIT' ) ) {
-      $destaques[ 'DOR' ] = [ 'nome'   => $cp, 'valor'   => $get_valor( $campos, $campo ) ];
-    } else if ( str_starts_with( normalizar( $cp ), 'QUARTO' ) ) {
-      $destaques[ 'QUA' ] = [ 'nome'   => $cp, 'valor'   => $get_valor( $campos, $campo ) ];
-    } else if ( str_starts_with( normalizar( $cp ), 'SUITE' ) ) {
-      $destaques[ 'SUI' ] = [ 'nome'   => $cp, 'valor'   => $get_valor( $campos, $campo ) ];
-    } else if ( str_starts_with( normalizar( $cp ), 'BAN' ) ) {
-      $destaques[ 'BAN' ] = [ 'nome'   => $cp, 'valor'   => $get_valor( $campos, $campo ) ];
-    } else if ( str_starts_with( normalizar( $cp ), 'GARAGE' ) ) {
-      $destaques[ 'GAR' ] = [ 'nome'   => $cp, 'valor'   => $get_valor( $campos, $campo ) ];
-    } else if ( str_starts_with( normalizar( $cp ), 'AREA U' ) ) {
-      $destaques[ 'ARU' ] = [ 'nome'   => $cp, 'valor'   => $get_valor( $campos, $campo ) ];
-    } else if ( str_starts_with( normalizar( $cp ), 'AREA T' ) ) {
-      $destaques[ 'ART' ] = [ 'nome'   => $cp, 'valor'   => $get_valor( $campos, $campo ) ];
+  $dependencias = busca_caracteristicas_imovel( $post );
+  foreach ( $dependencias as $dependencia ) {
+    $sigla = $dependencia['meta_sigla'];
+    if ( isset( $campos[ $sigla ]) ) {
+      $cp_val = $campos[$sigla][0];
+      if ( intval($cp_val) <= 0 ) continue;
+      $cp_nome = $campos[ $sigla . 'Nome' ][0];
+      // 1. Normalizamos o nome APENAS UMA VEZ
+      $nome_norm = normalizar( $cp_nome );
+      // 2. Criamos o mapa de Prefixos => Chave do Destaque
+      $mapa_destaques = [
+        'QUARTO SERV' => 'DEPEMP'
+        , 'DORMIT' => 'DOR'
+        , 'SUITE' => 'SUI'
+        , 'BAN' => 'BAN'
+        , 'GARAGE' => 'GAR'
+        , 'N DE VAGA' => 'GAR'
+        , 'AREA UTIL' => 'ARU'
+        , 'AREA P' => 'ARU'
+        , 'AREA TOTAL' => 'ART'
+        , 'AREA CONS' => 'ARC'
+        , 'AREA DO T' => 'ART'
+        , 'REPARTI' => 'REP'
+        , 'NUMERO DE PAVIMETO' => 'PAV'
+        , 'NUMERO DE WC' => 'BAN'
+        , 'NUMERO DE BANHE' => 'BAN'
+        , 'ESQUINA' => 'ZESQ'
+        , 'PATIO' => 'PAT'
+        , 'PORTARIA' => 'POR'
+        , 'INTERFON' => 'INT'
+        , 'PISCINA' => 'PIS'
+        , 'INDUSTR' => 'IND'
+        , 'COMERCIAL' => 'COM'
+        , 'MOBILIADO' => 'MOB'
+        , 'QUINTAL' => 'QUI'
+        , 'N DE SALA' => 'SAL'
+        , 'ESCADA' => 'ESC'
+      ];
+
+      // 3. Percorremos o mapa testando o prefixo
+      foreach ( $mapa_destaques as $prefixo => $chave ) {
+        if ( str_starts_with( $nome_norm, $prefixo ) ) {
+          $destaques[ $chave ] = [
+            'nome'  => $cp_nome,
+            'valor' => $cp_val
+          ];
+          break;
+        }
+      }
     }
   }
+
   return $destaques;
 }
 // Adicionar campo de telefone no Customizer

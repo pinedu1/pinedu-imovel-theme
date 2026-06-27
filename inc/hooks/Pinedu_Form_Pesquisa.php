@@ -270,11 +270,6 @@ class Pinedu_Form_Pesquisa {
    */
   public static function calcula_faixa_valor( $contrato ) {
     // Força limpeza (Remova em produção para usar o cache corretamente)
-    delete_transient( 'pinedu_faixas_contrato_1' );
-    delete_transient( 'pinedu_faixas_contrato_2' );
-    delete_transient( 'pinedu_faixas_contrato_3' );
-    delete_transient( 'pinedu_faixas_contrato_todos' );
-
     $chave_cache = 'pinedu_faixas_contrato_' . ( empty($contrato) ? 'todos' : $contrato );
     $dados_cacheados = get_transient( $chave_cache );
 
@@ -326,7 +321,7 @@ class Pinedu_Form_Pesquisa {
         'pivot_menor' => 0,
         'pivot_maior' => 0
       ];
-      set_transient( $chave_cache, $resultado, 12 * HOUR_IN_SECONDS );
+      set_transient( $chave_cache, $resultado, 10 * MINUTE_IN_SECONDS );
       return $resultado;
     }
 
@@ -385,8 +380,7 @@ class Pinedu_Form_Pesquisa {
       'pivot_menor' => $pivot_menor,
       'pivot_maior' => $pivot_maior
     ];
-
-    set_transient( $chave_cache, $resultado, 12 * HOUR_IN_SECONDS );
+    set_transient( $chave_cache, $resultado, 10 * MINUTE_IN_SECONDS );
 
     return $resultado;
   }
@@ -481,67 +475,85 @@ class Pinedu_Form_Pesquisa {
   public static function retorna_dependencias( $tipo_imovel ) {
     global $wpdb;
 
-    // Prepara a string do LIKE com segurança (escapa caracteres especiais)
-    $like_pattern = $wpdb->esc_like( $tipo_imovel ) . '-%';
+    // 1. Cria a chave de cache baseada no tipo de imóvel (MD5 evita problemas com acentos ou limites de caracteres)
+    $tipo_imovel_clean = mb_strtolower( $tipo_imovel, 'UTF-8' );
+    $cache_key = 'deps_imovel_' . md5( $tipo_imovel_clean );
 
-    // Monta a query usando prefixos dinâmicos das tabelas ($wpdb->terms, etc)
-    $query = $wpdb->prepare("
-        SELECT DISTINCT
-            t.term_id,
-            t.name AS termo_nome,
-            t.slug AS termo_slug,
-            tm_tipo.meta_value AS meta_tipo
-        FROM {$wpdb->terms} t
-        INNER JOIN {$wpdb->term_taxonomy} tt
-            ON t.term_id = tt.term_id
-        INNER JOIN {$wpdb->termmeta} tm_relativo
-            ON t.term_id = tm_relativo.term_id AND tm_relativo.meta_key = 'relativo'
-        INNER JOIN {$wpdb->termmeta} tm_ordem
-            ON t.term_id = tm_ordem.term_id AND tm_ordem.meta_key = 'ordem'
-        INNER JOIN {$wpdb->termmeta} tm_tipo
-            ON t.term_id = tm_tipo.term_id AND tm_tipo.meta_key = 'tipo'
-        WHERE tt.taxonomy = 'tipo-dependencia'
-          AND t.slug LIKE %s
-          AND tm_relativo.meta_value = 'CARACTERISTICAS'
-        ORDER BY
-            CAST(tm_ordem.meta_value AS UNSIGNED) ASC, tm_tipo.meta_value ASC;
-    ", $like_pattern );
+    // 2. Tenta recuperar o array já processado direto do cache
+    $result = get_transient( $cache_key );
 
-    // ARRAY_A retorna os dados como arrays associativos para o foreach
-    $dependencias = $wpdb->get_results( $query, ARRAY_A );
+    // 3. Se não existir no cache (ou expirou), faz o processamento pesado
+    if ( false === $result ) {
 
-    $result = [
-      'BOOLEAN' => [],
-      'INTEIRO' => [],
-      'FLOAT'   => []
-    ];
+      // Prepara a string do LIKE com segurança
+      $like_pattern = $wpdb->esc_like( $tipo_imovel ) . '-%';
 
-    foreach ($dependencias as $dep) {
-      $slug = mb_strtoupper( $dep['termo_slug'] , 'UTF-8');
-      $p = explode('-', $slug);
-      $key = isset($p[1]) ? $p[1] : '';
+      // Monta a query
+      $query = $wpdb->prepare("
+          SELECT DISTINCT
+              t.term_id,
+              t.name AS termo_nome,
+              t.slug AS termo_slug,
+              tm_tipo.meta_value AS meta_tipo
+          FROM {$wpdb->terms} t
+          INNER JOIN {$wpdb->term_taxonomy} tt
+              ON t.term_id = tt.term_id
+          INNER JOIN {$wpdb->termmeta} tm_relativo
+              ON t.term_id = tm_relativo.term_id AND tm_relativo.meta_key = 'relativo'
+          INNER JOIN {$wpdb->termmeta} tm_ordem
+              ON t.term_id = tm_ordem.term_id AND tm_ordem.meta_key = 'ordem'
+          INNER JOIN {$wpdb->termmeta} tm_tipo
+              ON t.term_id = tm_tipo.term_id AND tm_tipo.meta_key = 'tipo'
+          WHERE tt.taxonomy = 'tipo-dependencia'
+            AND t.slug LIKE %s
+            AND tm_relativo.meta_value = 'CARACTERISTICAS'
+          ORDER BY
+              CAST(tm_ordem.meta_value AS UNSIGNED) ASC, tm_tipo.meta_value ASC;
+      ", $like_pattern );
 
-      $a = [
-        'id'    => $slug,
-        'nome'  => $dep['termo_nome'],
-        'chave' => $key
+      // ARRAY_A retorna os dados como arrays associativos para o foreach
+      $dependencias = $wpdb->get_results( $query, ARRAY_A );
+
+      $result = [
+        'BOOLEAN' => [],
+        'INTEIRO' => [],
+        'FLOAT'   => []
       ];
 
-      // Agrupa pelo tipo de campo a ser gerado
-      if ( $dep['meta_tipo'] == 'BOOLEAN' ) {
-        $result['BOOLEAN'][] = $a;
-      } elseif ( $dep['meta_tipo'] == 'INTEIRO' || $dep['meta_tipo'] == 'INTEIRO_TEXTO' ) {
-        $a['min'] = 0;
-        $a['max'] = 99;
-        $a['step'] = 1;
-        $result['INTEIRO'][] = $a;
-      } elseif ( $dep['meta_tipo'] == 'FLOAT' ) {
-        $a['min'] = 0;
-        $a['max'] = 99999;
-        $a['step'] = 0.5;
-        $result['FLOAT'][] = $a;
+      // Se houverem dependências, formata o array
+      if ( $dependencias ) {
+        foreach ($dependencias as $dep) {
+          $slug = mb_strtoupper( $dep['termo_slug'] , 'UTF-8');
+          $p = explode('-', $slug);
+          $key = isset($p[1]) ? $p[1] : '';
+
+          $a = [
+            'id'    => $slug,
+            'nome'  => $dep['termo_nome'],
+            'chave' => $key
+          ];
+
+          // Agrupa pelo tipo de campo a ser gerado
+          if ( $dep['meta_tipo'] == 'BOOLEAN' ) {
+            $result['BOOLEAN'][] = $a;
+          } elseif ( $dep['meta_tipo'] == 'INTEIRO' || $dep['meta_tipo'] == 'INTEIRO_TEXTO' ) {
+            $a['min'] = 0;
+            $a['max'] = 99;
+            $a['step'] = 1;
+            $result['INTEIRO'][] = $a;
+          } elseif ( $dep['meta_tipo'] == 'FLOAT' ) {
+            $a['min'] = 0;
+            $a['max'] = 99999;
+            $a['step'] = 0.5;
+            $result['FLOAT'][] = $a;
+          }
+        }
       }
+
+      // 4. Salva o array `$result` (já formatado e agrupado) por 10 minutos
+      set_transient( $cache_key, $result, 10 * MINUTE_IN_SECONDS );
     }
+
     return $result;
   }
 

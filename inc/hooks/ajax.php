@@ -10,7 +10,7 @@
 // 1. Carrega a classe responsável pelo formulário de Cadastro e Contato de Imóveis
 require_once __DIR__ . '/Pinedu_Form_Cadastre.php';
 
-// 2. Carrega a classe responsável pelo formulário Dinâmico de Pesquisas e Filtros
+// 2. Carrega a classe responsável pelo formulário Dinâmico de Pesquisas e Filtrosnpx gullp
 require_once __DIR__ . '/Pinedu_Form_Pesquisa.php';
 
 // 3. Inicializa os Listeners (Gatilhos AJAX do WordPress)

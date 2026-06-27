@@ -29,6 +29,7 @@ class Pinedu_Form_Cadastre {
   const HOOK_ESTADOCHANGE = 'ESTADOGPBCHANGE';
   const HOOK_CIDADECHANGE = 'CIDADEGPBCHANGE';
   const HOOK_AUTOCOMPLETE = 'AUTOCOMPLETEGPBLOGRADOURO';
+  const HOOK_AUTOCOMPLETECEP = 'AUTOCOMPLETEGPBCEP';
   const HOOK_CONTATOIMOVEL = 'CONTATOIMOVEL';
   const HOOK_CONTATOIMOVELCORRETOR = 'CONTATOIMOVELCORRETOR';
   const HOOK_CONTATOCORRETOR = 'CONTATOCORRETOR';
@@ -47,6 +48,7 @@ class Pinedu_Form_Cadastre {
     add_action( self::PREFIXO . self::HOOK_ESTADOCHANGE, [ __CLASS__, 'carregar_cidades' ], 99, 1 );
     add_action( self::PREFIXO . self::HOOK_CIDADECHANGE, [ __CLASS__, 'carregar_bairros' ], 99, 1 );
     add_action( self::PREFIXO . self::HOOK_AUTOCOMPLETE, [ __CLASS__, 'auto_complete_logradouro' ], 99, 1 );
+    add_action( self::PREFIXO . self::HOOK_AUTOCOMPLETECEP, [ __CLASS__, 'auto_complete_cep' ], 99, 1 );
     add_action( self::PREFIXO . self::HOOK_CONTATOIMOVEL, [ __CLASS__, 'contato_imovel' ], 99, 1 );
     add_action( self::PREFIXO . self::HOOK_CONTATOIMOVELCORRETOR, [ __CLASS__, 'contato_imovel_corretor' ], 99, 1 );
     add_action( self::PREFIXO . self::HOOK_CONTATOCORRETOR, [ __CLASS__, 'contato_corretor' ], 99, 1 );
@@ -239,12 +241,42 @@ class Pinedu_Form_Cadastre {
     if ( ! empty( $form_data ) ) {
       parse_str( $form_data, $dados );
     }
-    $cidade = $dados[ 'cidade' ];
-    $nome = $dados[ 'logradouro' ];
-    $args = [ 'cidade' => $cidade, 'nome' => $nome ];
+    $estado = sanitize_text_field( $dados[ 'estado' ] );
+    $cidade = sanitize_text_field( $dados[ 'cidade' ] );
+    $nome = sanitize_text_field( $dados[ 'logradouro' ] );
+    $max = isset($dados['max']) ? intval($dados['max']) : 10;
+    $args = [ 'estado' => $estado, 'cidade' => $cidade, 'nome' => $nome, 'max' => $max];
     $data = $do->do_get( $token, $server, self::ENDPOINT . 'autocompleteEndereco', $args );
-    wp_send_json_success( $data );
-    return false;
+    if ( !empty($data->success) && $data->success == true ) {
+      wp_send_json_success( $data );
+    } else {
+      wp_send_json_error( [ 'message' => 'Nenhum logradouro encontrado' ] );
+    }
+  }
+  public static function auto_complete_cep( $form_data ) {
+    require_once get_template_directory( ) . '/inc/classes/DoGet.php';
+    $options = get_option( 'pinedu_imovel_options', [ ] );
+    $server = $options[ 'url_servidor' ] ?? '';
+    $token = $options[ 'token' ];
+    $do = new DoGet( );
+    $form_data = null;
+    $dados = [];
+    if ( isset( $_POST[ 'form_data' ] ) ) {
+      // phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+      $form_data = wp_unslash( $_POST[ 'form_data' ] );
+    }
+    if ( ! empty( $form_data ) ) {
+      parse_str( $form_data, $dados );
+    }
+    $cep = sanitize_text_field( $dados[ 'cep' ] );
+    $max = isset($dados['max']) ? intval($dados['max']) : 10;
+    $args = [ 'cep' => $cep, 'max' => $max ];
+    $data = $do->do_get( $token, $server, self::ENDPOINT . 'autocompleteCep', $args );
+    if ( !empty($data->success) && $data->success == true ) {
+      wp_send_json_success( $data );
+    } else {
+      wp_send_json_error( [ 'message' => 'Nenhum logradouro encontrado' ] );
+    }
   }
 
   /**
