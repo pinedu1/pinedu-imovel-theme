@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'WPINC' ) ) {
+  die;
+}
+require_once __DIR__ . '/Pinedu_Estatistica_Robusta.php';
 /**
  * Classe responsável pelo motor do formulário dinâmico de pesquisas do portal.
  * Controla os selects em cascata, cálculo de ranges de valores, paginação via AJAX
@@ -265,20 +269,23 @@ class Pinedu_Form_Pesquisa {
    * Calcula os steps dinâmicos para o Range Slider (Filtro de Preço), dividindo o
    * escopo de preços baseados em quartis estatísticos dos imóveis do banco.
    * Utiliza WordPress Transients para cachear os dados por 12 horas.
-   * * @param string $contrato ID do contrato (1=Venda, 2=Locação, 3=Lançamento)
+   *
+   * @param string $contrato ID do contrato (1=Venda, 2=Locação, 3=Lançamento)
    * @return array Array contendo faixas e pivôs gerados estatisticamente.
    */
   public static function calcula_faixa_valor( $contrato ) {
-    // Força limpeza (Remova em produção para usar o cache corretamente)
+    // Chave do cache dinâmico
     $chave_cache = 'pinedu_faixas_contrato_' . ( empty($contrato) ? 'todos' : $contrato );
-    $dados_cacheados = get_transient( $chave_cache );
 
+    // Tenta recuperar do cache primeiro
+    $dados_cacheados = get_transient( $chave_cache );
     if ( false !== $dados_cacheados ) {
       return $dados_cacheados;
     }
 
     global $wpdb;
 
+    // Monta as condições baseadas no tipo de contrato
     if ( $contrato == '1' ) {
       $meta_key_sql = "pm_valor.meta_key = 'vendaValor'";
       $extra_join = "INNER JOIN {$wpdb->postmeta} pm_ativarVenda ON p.ID = pm_ativarVenda.post_id";
@@ -293,8 +300,11 @@ class Pinedu_Form_Pesquisa {
       $extra_where = "AND pm_ativarLancamento.meta_key = 'ativarLancamento' AND pm_ativarLancamento.meta_value = '1'";
     } else {
       $meta_key_sql = "pm_valor.meta_key IN ('vendaValor', 'locacaoValor', 'lancamentoValor')";
+      $extra_join = "";
+      $extra_where = "";
     }
 
+    // Busca os valores convertidos para decimal e já ordenados
     $query = "
     SELECT CAST(REPLACE(REPLACE(pm_valor.meta_value, '.', ''), ',', '.') AS DECIMAL(15,2)) AS valor
     FROM {$wpdb->posts} p
@@ -302,26 +312,26 @@ class Pinedu_Form_Pesquisa {
     INNER JOIN {$wpdb->postmeta} pm_status ON p.ID = pm_status.post_id
     {$extra_join}
     WHERE p.post_type = 'imovel'
-      AND p.post_status = 'publish'
-      AND {$meta_key_sql}
-      AND pm_valor.meta_value != ''
-      AND pm_status.meta_key = 'statusImovel'
-      AND pm_status.meta_value = 'D'
-      {$extra_where}
+        AND p.post_status = 'publish'
+        AND {$meta_key_sql}
+        AND pm_valor.meta_value != ''
+        AND pm_status.meta_key = 'statusImovel'
+        AND pm_status.meta_value = 'D'
+        {$extra_where}
     ORDER BY valor ASC
     ";
 
     $valores_ordenados = $wpdb->get_col($query);
     $qtd_itens = 25;
 
-    // Trava de Segurança
+    // Trava de Segurança: Se não houver imóveis
     if ( empty($valores_ordenados) ) {
       $resultado = [
         'faixas'      => array_fill(0, $qtd_itens, 0),
         'pivot_menor' => 0,
         'pivot_maior' => 0
       ];
-      set_transient( $chave_cache, $resultado, 10 * MINUTE_IN_SECONDS );
+      set_transient( $chave_cache, $resultado, 12 * HOUR_IN_SECONDS );
       return $resultado;
     }
 
@@ -342,32 +352,62 @@ class Pinedu_Form_Pesquisa {
     $faixas = [];
 
     if ($novo_max > $novo_min) {
+      // 1. GERAÇÃO DOS STEPS (Usa amostra bruta para não perder extremos)
       $faixas[0] = (int) $novo_min;
-
       $step1 = ($q1_real - $novo_min) / 6;
       for ($i = 1; $i < 6; $i++) { $faixas[$i] = (int) $arredondar_centena($novo_min + ($step1 * $i)); }
       $faixas[6] = (int) $arredondar_centena($q1_real);
-
       $step2 = ($mediana_real - $q1_real) / 6;
       for ($i = 1; $i < 6; $i++) { $faixas[6 + $i] = (int) $arredondar_centena($q1_real + ($step2 * $i)); }
       $faixas[12] = (int) $arredondar_centena($mediana_real);
-
       $step3 = ($q3_real - $mediana_real) / 6;
       for ($i = 1; $i < 6; $i++) { $faixas[12 + $i] = (int) $arredondar_centena($mediana_real + ($step3 * $i)); }
       $faixas[18] = (int) $arredondar_centena($q3_real);
-
       $step4 = ($novo_max - $q3_real) / 6;
       for ($i = 1; $i < 6; $i++) { $faixas[18 + $i] = (int) $arredondar_centena($q3_real + ($step4 * $i)); }
-
       $faixas[24] = (int) $novo_max;
 
-      $idx_meio = 12;
-      $idx_menor = 10;
-      $idx_maior = 14;
+      // 2. CÁLCULO DOS PIVÔS (Estatística Robusta com garantia de abertura)
+      if ( class_exists( 'Pinedu_Estatistica_Robusta' ) ) {
+        $dados_robustos = Pinedu_Estatistica_Robusta::calcular_centro_robusto( $valores_ordenados );
+        $pivo_central   = $dados_robustos['pivo_central'];
+        $margem_mad     = $dados_robustos['mad'];
 
-      $pivot_menor = $faixas[$idx_menor];
-      $pivot_maior = $faixas[$idx_maior];
+        // Garante abertura mínima de 30% do centro para cada lado (força robustez)
+        $margem_final = max($margem_mad, ($pivo_central * 0.30));
 
+        $alvo_menor = $pivo_central - $margem_final;
+        $alvo_maior = $pivo_central + $margem_final;
+
+        $encontrar_faixa_proxima = function($alvo) use ($faixas) {
+          $mais_proximo = $faixas[0];
+          $menor_diferenca = abs($alvo - $faixas[0]);
+          foreach($faixas as $f) {
+            $diff = abs($alvo - $f);
+            if($diff < $menor_diferenca) {
+              $menor_diferenca = $diff;
+              $mais_proximo = $f;
+            }
+          }
+          return $mais_proximo;
+        };
+
+        $pivot_menor = (int) $encontrar_faixa_proxima($alvo_menor);
+        $pivot_maior = (int) $encontrar_faixa_proxima($alvo_maior);
+
+        // Trava de segurança: Garante que os pivôs tenham distância de pelo menos 2 steps
+        $idx_menor = array_search($pivot_menor, $faixas);
+        $idx_maior = array_search($pivot_maior, $faixas);
+
+        if (($idx_maior - $idx_menor) < 2) {
+          if (isset($faixas[$idx_menor + 2])) {
+            $pivot_maior = $faixas[$idx_menor + 2];
+          }
+        }
+      } else {
+        $pivot_menor = $faixas[10];
+        $pivot_maior = $faixas[14];
+      }
     } else {
       $valor_inteiro = (int) $arredondar_centena($novo_min);
       $faixas = array_fill(0, $qtd_itens, $valor_inteiro);
@@ -380,11 +420,11 @@ class Pinedu_Form_Pesquisa {
       'pivot_menor' => $pivot_menor,
       'pivot_maior' => $pivot_maior
     ];
+    //delete_transient( $chave_cache );
     set_transient( $chave_cache, $resultado, 10 * MINUTE_IN_SECONDS );
 
     return $resultado;
   }
-
   /**
    * Processa o template HTML para o container de filtros avançados (Checkboxes e Numbers)
    * * @param array $terms_dependencias Array formatado de campos dependentes.
