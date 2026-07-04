@@ -34,8 +34,8 @@ class Pinedu_Form_Pesquisa {
   // --------------------------------------------------------------------------
   const HOOK_CONTRATO = 'CONTRATOCHANGE';
   const HOOK_TIPOIMOVEL = 'TIPOIMOVELCHANGE';
-  const HOOK_CIDADE = 'CIDADECHANGE';
-  const HOOK_REGIAO = 'REGIAOCHANGE';
+  const HOOK_CIDADE = 'CIDADECCHANGE';
+  const HOOK_REGIAO = 'REGIAOCCHANGE';
   const HOOK_CRIAR_COOKIE = 'CRIARCOOKIE';
   const HOOK_PAGINAR_PROMOCAO = 'PAGINARPROMOCAO';
   const HOOK_PAGINAR_VISITADOS = 'PAGINARVISITADOS';

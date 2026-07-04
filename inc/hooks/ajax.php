@@ -12,7 +12,10 @@ require_once __DIR__ . '/Pinedu_Form_Cadastre.php';
 
 // 2. Carrega a classe responsável pelo formulário Dinâmico de Pesquisas e Filtrosnpx gullp
 require_once __DIR__ . '/Pinedu_Form_Pesquisa.php';
+// 2. Carrega a classe responsável pelo formulário Dinâmico de Pesquisas e Filtrosnpx gullp
+require_once __DIR__ . '/Pinedu_Form_Imovel.php';
 
 // 3. Inicializa os Listeners (Gatilhos AJAX do WordPress)
 Pinedu_Form_Pesquisa::init();
 Pinedu_Form_Cadastre::init();
+Pinedu_Form_Imovel::init();
