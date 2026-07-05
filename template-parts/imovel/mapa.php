@@ -1,8 +1,8 @@
 <?php
 global $post;
 $google_maps_key = get_google_maps_key( );
-?>
-<?php if ( ( ! empty( $google_maps_key ) ) && ( ! empty( $post->latitude ) ) && ( 0 != $post->latitude ) && ( ! empty( $post->longitude ) ) && ( 0 != $post->longitude ) ) : ?>
+
+ if ( ( ! empty( $google_maps_key ) ) && ( ! empty( $post->latitude ) ) && ( 0 != $post->latitude ) && ( ! empty( $post->longitude ) ) && ( 0 != $post->longitude ) ) : ?>
   <?php
   $ponto = [ 'latitude' => $post->latitude, 'longitude' => $post->longitude ];
   $circulo = formatCoordinatesToCircle( drawCircle( $ponto, 250 ) );

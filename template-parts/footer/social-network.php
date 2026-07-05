@@ -1,8 +1,8 @@
 <?php
 // phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 $empresa = new \WP_Query( array( 'post_type' => 'empresa', 'post_status' => 'publish', 'posts_per_page' => 1, 'meta_query' => [ [ [ 'id'     => '1', 'value'   => '1', 'compare' => '=' ] ] ] ) );
-if ( $empresa->have_posts( ) ): ?>
-<?php while ( $empresa->have_posts( ) ): $empresa->the_post( ); global $post; ?>
+if ( $empresa->have_posts( ) ):
+ while ( $empresa->have_posts( ) ): $empresa->the_post( ); global $post; ?>
 <div class="social-network">
   <?php if ( isset( $post->faceBook ) && ( ! empty( $post->faceBook ) ) ) : ?>
   <div class="social-contact faceBook">
@@ -45,5 +45,5 @@ if ( $empresa->have_posts( ) ): ?>
     </div>
   <?php endif; ?>
 </div>
-<?php endwhile; ?>
-<?php endif; wp_reset_postdata( ); ?>
+<?php endwhile;
+ endif; wp_reset_postdata( ); ?>
