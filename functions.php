@@ -269,33 +269,35 @@ add_filter( 'template_include', function( $template ) {
   }
   return $template;
 } );
-
 function busca_caracteristicas_imovel( $post ) {
-  global $wpdb;
+    global $wpdb;
 
-  $tipo_imovel = get_post_meta( $post->ID, 'tipoImovel_id', true );
+    // Variável estática para manter o cache apenas durante esta requisição
+    static $static_cache = [];
 
-  // Proteção: Se não tiver tipo de imóvel, devolve um array vazio e poupa o banco
-  if ( empty( $tipo_imovel ) ) {
-    return [];
-  }
+    $tipo_imovel = get_post_meta( $post->ID, 'tipoImovel_id', true );
 
-  // Deixamos a string minúscula para usar tanto no LIKE quanto na chave do cache
-  $tipo_imovel_clean = mb_strtolower( $tipo_imovel, 'UTF-8' );
+    if ( empty( $tipo_imovel ) ) {
+        return [];
+    }
 
-  // 1. Criar uma chave de cache única (limitada a 172 caracteres pelo WP)
-  // Usamos md5 para garantir que espaços ou acentos não quebrem o nome da chave
-  $cache_key = 'carac_imovel_' . md5( $tipo_imovel_clean );
+    $tipo_imovel_clean = mb_strtolower( $tipo_imovel, 'UTF-8' );
+    $cache_key = 'carac_imovel_' . md5( $tipo_imovel_clean );
 
-  // 2. Tentar buscar os dados do cache
-  $dependencias = get_transient( $cache_key );
+    // 1. Verifica se já buscamos isso nesta mesma página (Memória RAM)
+    if ( isset( $static_cache[$cache_key] ) ) {
+        return $static_cache[$cache_key];
+    }
 
-  // 3. Se retornar 'false', significa que o cache não existe ou expirou
-  if ( false === $dependencias ) {
+    // 2. Tenta buscar do Banco de Dados (Transiente)
+    $dependencias = get_transient( $cache_key );
 
-    $like_pattern = $wpdb->esc_like( $tipo_imovel_clean ) . '-%';
+    if ( false === $dependencias ) {
+        $like_pattern = $wpdb->esc_like( $tipo_imovel_clean ) . '-%';
 
-    $query = $wpdb->prepare("
+        // Otimização: A query parece correta, mas certifique-se que as colunas
+        // term_id, taxonomy e slug nas tabelas wp_terms/wp_term_taxonomy estão indexadas.
+        $query = $wpdb->prepare("
             SELECT DISTINCT
                 t.term_id,
                 t.name AS termo_nome,
@@ -316,14 +318,16 @@ function busca_caracteristicas_imovel( $post ) {
               AND tm_relativo.meta_value = 'CARACTERISTICAS';
         ", $like_pattern );
 
-    $dependencias = $wpdb->get_results( $query, ARRAY_A );
+        $dependencias = $wpdb->get_results( $query, ARRAY_A );
 
-    // 4. Salva o resultado no cache por 10 minutos
-    // O WP possui a constante MINUTE_IN_SECONDS para facilitar a leitura matemática (10 * 60)
-    set_transient( $cache_key, $dependencias, 10 * MINUTE_IN_SECONDS );
-  }
+        // 3. Salva no Transiente
+        set_transient( $cache_key, $dependencias, 10 * MINUTE_IN_SECONDS );
+    }
 
-  return $dependencias;
+    // 4. Guarda na variável estática para as próximas chamadas no loop
+    $static_cache[$cache_key] = $dependencias;
+
+    return $dependencias;
 }
 function busca_campos_destaque_card( $post ) {
   $campos = get_post_meta( $post->ID, '', false );

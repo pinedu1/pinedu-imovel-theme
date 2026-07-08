@@ -103,6 +103,8 @@ class Promocoes extends Pinedu_Base implements PineduPostType {
     , 'posts_per_page' => $this->max
     , 'paged' => $paged
     , 'meta_query' => $meta_query
+    , 'update_post_meta_cache' => true
+    , 'update_post_term_cache' => true
     );
 
     // ==========================================
@@ -118,7 +120,23 @@ class Promocoes extends Pinedu_Base implements PineduPostType {
       );
     }
 
-    return new \WP_Query( $args );
+    // ==========================================
+    // CACHE (TRANSIENT) DA WP_QUERY - 10 MINUTOS
+    // ==========================================
+    // Cria uma chave única baseada nos argumentos da pesquisa (MD5 garante o limite de 45 caracteres do WP)
+    $transient_key = 'pnd_promo_q_' . md5( serialize( $args ) );
+    $cached_query = get_transient( $transient_key );
+    if ( false !== $cached_query ) {
+        // Se a query existir no cache, retorna imediatamente
+        return $cached_query;
+    }
+    // Se não houver cache, executa a busca no banco de dados
+    $query = new \WP_Query( $args );
+
+    // Salva o resultado no cache por 10 minutos (600 segundos)
+    set_transient( $transient_key, $query, 10 * MINUTE_IN_SECONDS );
+
+    return $query;
   }
 
   public function pinedu_promocao_titulo( $title ) {
@@ -156,22 +174,37 @@ class Promocoes extends Pinedu_Base implements PineduPostType {
     echo $html;
     wp_die( );
   }
-
-  public function render( ) {
-    if ( $this->query->have_posts( ) ):
-      add_filter( 'the_title', [ $this, 'pinedu_promocao_titulo' ] );
-      add_filter( 'the_content', [ $this, 'pinedu_promocao_conteudo' ] );
-
-      // O get_template_part já resolve a vida do $this->card internamente.
-      // Aqui, nós resolvemos a vida do locate_template adicionando a extensão programaticamente:
-      $arquivo_template = $this->template . '.php';
-      include locate_template( $arquivo_template );
-
-      wp_reset_postdata( );
-      remove_filter( 'the_title', [ $this, 'pinedu_promocao_titulo' ] );
-      remove_filter( 'the_content', [ $this, 'pinedu_promocao_conteudo' ] );
-    endif;
+public function render( ) {
+  if ( $this->query->have_posts( ) ) {
+    try {
+        $posts = $this->query->posts;
+        if ( is_array( $posts ) && ! empty( $posts ) ) {
+            $post_ids = wp_list_pluck( $posts, 'ID' );
+            if ( ! empty( $post_ids ) ) {
+                update_post_caches( $posts, 'imovel', true, true );
+            }
+        }
+        add_filter( 'the_title', [ $this, 'pinedu_promocao_titulo' ] );
+        add_filter( 'the_content', [ $this, 'pinedu_promocao_conteudo' ] );
+        $arquivo_template = $this->template . '.php';
+        $template_file = locate_template( $arquivo_template );
+        if ( ! empty( $template_file ) ) {
+            include $template_file;
+        } else {
+            throw new Exception("Template não encontrado: " . $arquivo_template);
+        }
+        wp_reset_postdata( );
+        remove_filter( 'the_title', [ $this, 'pinedu_promocao_titulo' ] );
+        remove_filter( 'the_content', [ $this, 'pinedu_promocao_conteudo' ] );
+    } catch ( \Throwable $e ) {
+        // Captura o erro e escreve no wp-content/debug.log
+        error_log( 'DEBUG PINEDU RENDER ERROR: ' . $e->getMessage() . ' em ' . $e->getFile() . ':' . $e->getLine() );
+        // Remove os filtros mesmo que ocorra um erro para não quebrar o resto da página
+        remove_filter( 'the_title', [ $this, 'pinedu_promocao_titulo' ] );
+        remove_filter( 'the_content', [ $this, 'pinedu_promocao_conteudo' ] );
+    }
   }
+}
 
   // ==========================================
   // GETTERS E SETTERS
@@ -272,6 +305,16 @@ class Promocoes extends Pinedu_Base implements PineduPostType {
     $contrato = isset( $this->contrato ) ? $this->contrato : 1;
     $limit    = intval( $limit );
 
+    // ==========================================
+    // CACHE (TRANSIENT) DA QUERY BRUTA - 10 MINUTOS
+    // ==========================================
+    $transient_key = 'pnd_top_tipo_' . $contrato . '_' . $limit;
+    $cached_results = get_transient( $transient_key );
+
+    if ( false !== $cached_results ) {
+        return $cached_results;
+    }
+
     $meta_key_promocao = 'vendaPromocao'; // Padrão (1)
     if ( $contrato == 2 ) {
       $meta_key_promocao = 'locacaoPromocao';
@@ -304,6 +347,11 @@ class Promocoes extends Pinedu_Base implements PineduPostType {
 		LIMIT %d
 	", $meta_key_promocao, $limit );
 
-    return $wpdb->get_results( $query );
+    $results = $wpdb->get_results( $query );
+
+    // Salva o resultado no cache por 10 minutos (600 segundos)
+    set_transient( $transient_key, $results, 10 * MINUTE_IN_SECONDS );
+
+    return $results;
   }
 }
