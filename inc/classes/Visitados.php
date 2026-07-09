@@ -42,13 +42,11 @@ class Visitados extends Pinedu_Base implements PineduPostType {
   public function query( ) {
     $paged = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
 
-    // RESTAURADO: A sua condição original e exata!
     $meta_query = array(
         [ 'key'     => 'statusImovel', 'value'   => 'D', 'compare' => '=' ]
       , [ 'key'     => 'clicks',       'value'   => 0,   'compare' => '>' ]
     );
 
-    // RESTAURADO: O ordenamento original pelos cliques!
     $args = array(
       'post_type'      => 'imovel'
     , 'post_status'    => 'publish'
@@ -63,18 +61,50 @@ class Visitados extends Pinedu_Base implements PineduPostType {
     );
 
     // ==========================================
-    // CACHE (TRANSIENT) DA WP_QUERY - 10 MINUTOS
+    // CACHE (TRANSIENT) SEGURO - APENAS IDs + TOTAL
     // ==========================================
-    $transient_key = 'pnd_visitados_q_' . md5( serialize( $args ) );
-    $cached_query = get_transient( $transient_key );
+    $transient_key = 'pnd_visitados_ids_v1_' . md5( serialize( $args ) );
+    $cached_data = get_transient( $transient_key );
 
-    if ( false !== $cached_query ) {
-        return $cached_query;
+    if ( false !== $cached_data && is_array( $cached_data ) ) {
+        $cached_ids = $cached_data['ids'];
+        $total_posts = $cached_data['total'];
+
+        // Se não houver cliques, evita quebrar a query retornando um falso id
+        if ( empty( $cached_ids ) ) {
+            return new \WP_Query( ['post__in' => [0]] );
+        }
+
+        // Refaz a query ultraleve. O segredo é o 'post__in' no orderby.
+        // Ele garante que a ordem decrescente de cliques salva no cache seja respeitada.
+        $query = new \WP_Query( [
+            'post_type'              => 'imovel',
+            'post__in'               => $cached_ids,
+            'posts_per_page'         => $this->max,
+            'paged'                  => 1, // Página 1 pois o array já está fatiado na página certa
+            'orderby'                => 'post__in',
+            'update_post_meta_cache' => true,
+            'update_post_term_cache' => true,
+        ] );
+
+        // Injeção manual para preservar a paginação matemática
+        $query->found_posts = $total_posts;
+        $query->max_num_pages = ceil( $total_posts / $this->max );
+
+        return $query;
     }
 
+    // Se não houver cache, o SGBD é acionado para calcular os CASTs e fazer o sort.
     $query = new \WP_Query( $args );
 
-    set_transient( $transient_key, $query, 10 * MINUTE_IN_SECONDS );
+    $ids_para_salvar = $query->have_posts() ? wp_list_pluck( $query->posts, 'ID' ) : [];
+
+    $data_to_cache = [
+        'ids'   => $ids_para_salvar,
+        'total' => $query->found_posts
+    ];
+
+    set_transient( $transient_key, $data_to_cache, 10 * MINUTE_IN_SECONDS );
 
     return $query;
   }
@@ -152,5 +182,37 @@ class Visitados extends Pinedu_Base implements PineduPostType {
 
   public function setQuery( WP_Query $query ): void {
     $this->query = $query;
+  }
+  /**
+   * Método estático chamado via AJAX (admin-ajax.php)
+   * pelo hook na classe Pinedu_Form_Pesquisa para paginar os Visitados
+   */
+  public static function paginar_visitados() {
+    // Para debugar o que está vindo do AJAX, se necessário
+    if ( is_development_mode() ) {
+        error_log( 'paginar_visitados: ' . print_r( $_REQUEST, true ) );
+    }
+
+    // Resgata os parâmetros da requisição AJAX (com valores padrão seguros)
+    $max = isset( $_REQUEST['max'] ) ? intval( $_REQUEST['max'] ) : 6;
+    $titulo = isset( $_REQUEST['titulo'] ) ? sanitize_text_field( $_REQUEST['titulo'] ) : 'Imóveis mais Visitados';
+
+    // Instancia a classe
+    $v = new Visitados( $titulo, $max );
+
+    // Inicia o buffer de saída (output buffering)
+    ob_start();
+
+    // Roda a query e imprime o template
+    $v->render();
+
+    // Captura o HTML gerado e limpa o buffer
+    $html = ob_get_clean();
+
+    // Ecoa o HTML para o frontend
+    echo $html;
+
+    // Encerra a execução do WordPress (obrigatório em retornos AJAX)
+    wp_die();
   }
 }

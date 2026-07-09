@@ -121,20 +121,52 @@ class Promocoes extends Pinedu_Base implements PineduPostType {
     }
 
     // ==========================================
-    // CACHE (TRANSIENT) DA WP_QUERY - 10 MINUTOS
+    // CACHE (TRANSIENT) SEGURO - APENAS IDs + TOTAL
     // ==========================================
     // Cria uma chave única baseada nos argumentos da pesquisa (MD5 garante o limite de 45 caracteres do WP)
-    $transient_key = 'pnd_promo_q_' . md5( serialize( $args ) );
-    $cached_query = get_transient( $transient_key );
-    if ( false !== $cached_query ) {
-        // Se a query existir no cache, retorna imediatamente
-        return $cached_query;
+    $transient_key = 'pnd_promo_ids_v2_' . md5( serialize( $args ) );
+    $cached_data = get_transient( $transient_key );
+
+    if ( false !== $cached_data && is_array( $cached_data ) ) {
+        $cached_ids = $cached_data['ids'];
+        $total_posts = $cached_data['total'];
+
+        // Se o cache diz que não achou nenhum imóvel, devolvemos uma query vazia segura
+        if ( empty( $cached_ids ) ) {
+            return new \WP_Query( ['post__in' => [0]] );
+        }
+
+        // Refaz a query DE FORMA ULTRALEVE usando apenas os IDs cacheados
+        $query = new \WP_Query( [
+            'post_type'              => 'imovel',
+            'post__in'               => $cached_ids,
+            'posts_per_page'         => $this->max,
+            'paged'                  => 1, // Passa 1 porque os IDs do array já são os da página correta
+            'orderby'                => 'post__in', // Respeita a ordem exata em que foram salvos
+            'update_post_meta_cache' => true,
+            'update_post_term_cache' => true,
+        ] );
+
+        // Injeta os dados matemáticos reais para a paginação não quebrar
+        $query->found_posts = $total_posts;
+        $query->max_num_pages = ceil( $total_posts / $this->max );
+
+        return $query;
     }
-    // Se não houver cache, executa a busca no banco de dados
+
+    // Se não houver cache, executa a busca pesada no banco de dados
     $query = new \WP_Query( $args );
 
+    // Prepara um array simples e leve: apenas IDs encontrados e o total matemático
+    $ids_para_salvar = $query->have_posts() ? wp_list_pluck( $query->posts, 'ID' ) : [];
+
+    $data_to_cache = [
+        'ids'   => $ids_para_salvar,
+        'total' => $query->found_posts
+    ];
+
     // Salva o resultado no cache por 10 minutos (600 segundos)
-    set_transient( $transient_key, $query, 10 * MINUTE_IN_SECONDS );
+    set_transient( $transient_key, $data_to_cache, 10 * MINUTE_IN_SECONDS );
 
     return $query;
   }
@@ -156,7 +188,9 @@ class Promocoes extends Pinedu_Base implements PineduPostType {
         , 'error_code' => 'contrato_required'
       ], 500 );
     }
-    error_log( 'paginar_promocao' . print_r($_REQUEST, true) );
+    if ( is_development_mode( ) ) {
+      error_log( 'paginar_promocao' . print_r($_REQUEST, true) );
+    }
     $contrato = isset( $_REQUEST['contrato'] ) ? sanitize_text_field( $_REQUEST['contrato'] ) : '';
     $card = isset( $_REQUEST[ 'card' ] ) ? sanitize_text_field( $_REQUEST[ 'card' ] ) : null;
     $template = isset( $_REQUEST[ 'template' ] ) ? sanitize_text_field( $_REQUEST[ 'template' ] ) : null;
@@ -174,37 +208,38 @@ class Promocoes extends Pinedu_Base implements PineduPostType {
     echo $html;
     wp_die( );
   }
-public function render( ) {
-  if ( $this->query->have_posts( ) ) {
-    try {
-        $posts = $this->query->posts;
-        if ( is_array( $posts ) && ! empty( $posts ) ) {
-            $post_ids = wp_list_pluck( $posts, 'ID' );
-            if ( ! empty( $post_ids ) ) {
-                update_post_caches( $posts, 'imovel', true, true );
-            }
-        }
-        add_filter( 'the_title', [ $this, 'pinedu_promocao_titulo' ] );
-        add_filter( 'the_content', [ $this, 'pinedu_promocao_conteudo' ] );
-        $arquivo_template = $this->template . '.php';
-        $template_file = locate_template( $arquivo_template );
-        if ( ! empty( $template_file ) ) {
-            include $template_file;
-        } else {
-            throw new Exception("Template não encontrado: " . $arquivo_template);
-        }
-        wp_reset_postdata( );
-        remove_filter( 'the_title', [ $this, 'pinedu_promocao_titulo' ] );
-        remove_filter( 'the_content', [ $this, 'pinedu_promocao_conteudo' ] );
-    } catch ( \Throwable $e ) {
-        // Captura o erro e escreve no wp-content/debug.log
-        error_log( 'DEBUG PINEDU RENDER ERROR: ' . $e->getMessage() . ' em ' . $e->getFile() . ':' . $e->getLine() );
-        // Remove os filtros mesmo que ocorra um erro para não quebrar o resto da página
-        remove_filter( 'the_title', [ $this, 'pinedu_promocao_titulo' ] );
-        remove_filter( 'the_content', [ $this, 'pinedu_promocao_conteudo' ] );
+
+  public function render( ) {
+    if ( $this->query->have_posts( ) ) {
+      try {
+          $posts = $this->query->posts;
+          if ( is_array( $posts ) && ! empty( $posts ) ) {
+              $post_ids = wp_list_pluck( $posts, 'ID' );
+              if ( ! empty( $post_ids ) ) {
+                  update_post_caches( $posts, 'imovel', true, true );
+              }
+          }
+          add_filter( 'the_title', [ $this, 'pinedu_promocao_titulo' ] );
+          add_filter( 'the_content', [ $this, 'pinedu_promocao_conteudo' ] );
+          $arquivo_template = $this->template . '.php';
+          $template_file = locate_template( $arquivo_template );
+          if ( ! empty( $template_file ) ) {
+              include $template_file;
+          } else {
+              throw new Exception("Template não encontrado: " . $arquivo_template);
+          }
+          wp_reset_postdata( );
+          remove_filter( 'the_title', [ $this, 'pinedu_promocao_titulo' ] );
+          remove_filter( 'the_content', [ $this, 'pinedu_promocao_conteudo' ] );
+      } catch ( \Throwable $e ) {
+          // Captura o erro e escreve no wp-content/debug.log
+          error_log( 'DEBUG PINEDU RENDER ERROR: ' . $e->getMessage() . ' em ' . $e->getFile() . ':' . $e->getLine() );
+          // Remove os filtros mesmo que ocorra um erro para não quebrar o resto da página
+          remove_filter( 'the_title', [ $this, 'pinedu_promocao_titulo' ] );
+          remove_filter( 'the_content', [ $this, 'pinedu_promocao_conteudo' ] );
+      }
     }
   }
-}
 
   // ==========================================
   // GETTERS E SETTERS
@@ -323,29 +358,29 @@ public function render( ) {
     }
 
     $query = $wpdb->prepare( "
-		SELECT
-			t.term_id,
-			t.name,
-			t.slug,
-			COUNT(tr.object_id) as promocao_count
-		FROM {$wpdb->terms} t
-		INNER JOIN {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id
-		INNER JOIN {$wpdb->term_relationships} tr ON tt.term_taxonomy_id = tr.term_taxonomy_id
-		INNER JOIN {$wpdb->posts} p ON tr.object_id = p.ID
-		INNER JOIN {$wpdb->postmeta} pm1 ON p.ID = pm1.post_id
-		INNER JOIN {$wpdb->postmeta} pm2 ON p.ID = pm2.post_id
-		WHERE
-			tt.taxonomy = 'tipo-imovel'
-			AND p.post_type = 'imovel'
-			AND p.post_status = 'publish'
-			AND pm1.meta_key = 'statusImovel' AND pm1.meta_value = 'D'
-			AND pm2.meta_key = %s AND pm2.meta_value = '1'
-		GROUP BY
-			t.term_id, t.name, t.slug
-		ORDER BY
-			promocao_count DESC
-		LIMIT %d
-	", $meta_key_promocao, $limit );
+        SELECT
+            t.term_id,
+            t.name,
+            t.slug,
+            COUNT(tr.object_id) as promocao_count
+        FROM {$wpdb->terms} t
+        INNER JOIN {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id
+        INNER JOIN {$wpdb->term_relationships} tr ON tt.term_taxonomy_id = tr.term_taxonomy_id
+        INNER JOIN {$wpdb->posts} p ON tr.object_id = p.ID
+        INNER JOIN {$wpdb->postmeta} pm1 ON p.ID = pm1.post_id
+        INNER JOIN {$wpdb->postmeta} pm2 ON p.ID = pm2.post_id
+        WHERE
+            tt.taxonomy = 'tipo-imovel'
+            AND p.post_type = 'imovel'
+            AND p.post_status = 'publish'
+            AND pm1.meta_key = 'statusImovel' AND pm1.meta_value = 'D'
+            AND pm2.meta_key = %s AND pm2.meta_value = '1'
+        GROUP BY
+            t.term_id, t.name, t.slug
+        ORDER BY
+            promocao_count DESC
+        LIMIT %d
+    ", $meta_key_promocao, $limit );
 
     $results = $wpdb->get_results( $query );
 
