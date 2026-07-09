@@ -101,8 +101,8 @@ class Visitados extends Pinedu_Base implements PineduPostType {
           // Captura o erro e escreve no wp-content/debug.log
           error_log( 'DEBUG PINEDU RENDER ERROR: ' . $e->getMessage() . ' em ' . $e->getFile() . ':' . $e->getLine() );
           // Remove os filtros mesmo que ocorra um erro para não quebrar o resto da página
-          remove_filter( 'the_title', [ $this, 'pinedu_promocao_titulo' ] );
-          remove_filter( 'the_content', [ $this, 'pinedu_promocao_conteudo' ] );
+          remove_filter( 'the_title', [ $this, 'pinedu_visitados_titulo' ] );
+          remove_filter( 'the_content', [ $this, 'pinedu_visitados_conteudo' ] );
       }
     }
   }
