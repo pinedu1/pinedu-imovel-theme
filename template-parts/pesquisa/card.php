@@ -79,7 +79,7 @@
               </td>
             </tr>
           <?php endif; ?>
-          <?php if ( '1' == $post->ativarVenda ) : ?>
+          <?php if ( 1 == intval( $post->ativarVenda ) ) : ?>
             <tr class="venda">
               <td>
                 <div>Venda</div>
@@ -97,7 +97,7 @@
               </td>
             </tr>
           <?php endif; ?>
-          <?php if ( '1' == $post->ativarLancamento ) : ?>
+          <?php if ( 1 == intval( $post->ativarLancamento ) ) : ?>
             <tr class="lancamento">
               <td>
                 <div>Venda</div>
@@ -115,7 +115,7 @@
               </td>
             </tr>
           <?php endif; ?>
-          <?php if ( '1' == $post->ativarLocacao ) : ?>
+          <?php if ( 1 == intval( $post->ativarLocacao ) ) : ?>
             <tr class="locacao">
               <td>
                 <div>Locação</div>

@@ -60,7 +60,7 @@ $titulo = [
           <span class="value" itemprop="value"><?php echo formata_valor( $post->valorIptu, 0, 'R$ ' ); ?></span>
         </div>
       <?php endif; ?>
-      <?php if ( '1' == $post->ativarVenda ): ?>
+      <?php if ( 1 == intval( $post->ativarVenda ) ): ?>
         <div class="info-row valor" itemprop="additionalProperty" itemscope itemtype="https://schema.org/PropertyValue" title="Valor para Venda">
           <i class="fa-solid fa-tag"></i>
           <meta itemprop="name" content="Venda" />
@@ -72,7 +72,7 @@ $titulo = [
           <span class="value" itemprop="priceCurrency" content="BRL">R$ <?php echo formata_valor( $post->vendaValor, 0 ); ?></span>
         </div>
       <?php endif; ?>
-      <?php if ( '1' == $post->ativarLancamento ): ?>
+      <?php if ( 1 == intval( $post->ativarLancamento ) ): ?>
         <div class="info-row valor" itemprop="additionalProperty" itemscope itemtype="https://schema.org/PropertyValue" title="Valor para Venda">
           <i class="fa-solid fa-tag"></i>
           <meta itemprop="name" content="Venda" />
@@ -84,7 +84,7 @@ $titulo = [
           <span class="value" itemprop="priceCurrency" content="BRL">R$ <?php echo formata_valor( $post->lancamentoValor, 0 ); ?></span>
         </div>
       <?php endif; ?>
-      <?php if ( '1' == $post->ativarLocacao ): ?>
+      <?php if ( 1 == intval( $post->ativarLocacao ) ): ?>
         <div class="info-row valor" itemprop="additionalProperty" itemscope itemtype="https://schema.org/PropertyValue" title="Valor para Aluguel">
           <i class="fa-solid fa-handshake"></i>
           <meta itemprop="name" content="Locação" />
