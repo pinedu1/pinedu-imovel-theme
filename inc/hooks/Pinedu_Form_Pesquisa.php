@@ -589,9 +589,7 @@ class Pinedu_Form_Pesquisa {
           }
         }
       }
-
-      // 4. Salva o array `$result` (já formatado e agrupado) por 10 minutos
-      set_transient( $cache_key, $result, 10 * MINUTE_IN_SECONDS );
+      set_transient( $cache_key, $result, 60 * MINUTE_IN_SECONDS );
     }
 
     return $result;
