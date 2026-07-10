@@ -110,7 +110,17 @@ $dados_form = [
   'email_enviado' => isset( $email_enviado ) ? $email_enviado : false,
   'chave_publica' => $chave_publica
 ];
-get_template_part( 'template-parts/contato/trabalhe-conosco-template-form', 'imovel', $dados_form );
+if ( isset( $email_enviado ) && $email_enviado ) {
+?>
+<h3 style="color: #1ebe5a; margin-bottom: 20px;">Sua solicitação foi enviada!</h3>
+<div class="row">
+    <p style="margin-bottom: 12px; color: #444; line-height: 1.5;">Seus dados foram recebidos com sucesso!<br/>Agradecemos por querer fazer parte de nossa equipe!</p>
+    <p style="margin-bottom: 12px; color: #444; line-height: 1.5;">Por favor, aguarde o nosso contato, ou nos ligue a qualquer momento:<br>
+</div>
+<?php
+} else {
+  get_template_part( 'template-parts/contato/trabalhe-conosco-template-form', 'imovel', $dados_form );
+}
 // 9. Gatilho do reCAPTCHA
 if ( ! empty( $chave_publica ) && empty( $email_enviado ) ) : ?>
   <script>
