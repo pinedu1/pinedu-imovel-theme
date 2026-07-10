@@ -51,9 +51,9 @@
         <label>Fale um pouco sobre você </label>
         <textarea name="mensagem" id="mensagem" rows="5" placeholder="Conte brevemente sua experiência e objetivos profissionais."><?php echo esc_textarea($args['mensagem']); ?></textarea>
       </div>
-      <div class="form-group">
+      <div class="form-group upload">
         <label>Envie seu Currículo *</label>
-        <input type="file" name="curriculo" id="curriculo" accept=".pdf,.doc,.docx" required>
+        <input type="file" class="btn-curriculo" name="curriculo" id="curriculo" accept=".pdf,.doc,.docx" required>
         <small>Formatos aceitos: PDF, DOC ou DOCX(máx . 5 MB).</small>
       </div>
       <button type="submit" class="btn-enviar-curriculo">
