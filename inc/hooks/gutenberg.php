@@ -103,20 +103,18 @@ function register_block_editor_assets() {
   // Enqueue the bundled block JS file
   wp_enqueue_script(
     'block-editor-js',
-    get_theme_file_uri( get_asset_file( 'gutenberg-editor.js' ) ),
+    get_theme_file_uri( 'js/dev/js_src_gutenberg-editor_js.js' ),
     $dependencies,
-    filemtime( get_theme_file_path( get_asset_file( 'gutenberg-editor.js' ) ) ),
-    'all'
+    filemtime( get_theme_file_path( 'js/dev/js_src_gutenberg-editor_js.js' ) ),
+    true // Alterado de 'all' para true. O 5º parâmetro de wp_enqueue_script define se ele vai no footer (true/false)
   );
-
   // Enqueue optional editor only styles
   wp_enqueue_style(
     'block-editor-styles',
-    get_theme_file_uri( get_asset_file( 'gutenberg-editor-styles.css' ) ),
+    get_theme_file_uri( 'css/dev/gutenberg-editor-styles.css' ),
     [],
-    filemtime( get_theme_file_path( get_asset_file( 'gutenberg-editor-styles.css' ) ) ),
-    'all',
-    true
+    filemtime( get_theme_file_path( 'css/dev/gutenberg-editor-styles.css' ) ),
+    'all' // O 6º parâmetro (true) que existia no seu código original foi removido, pois wp_enqueue_style aceita apenas 5 parâmetros.
   );
 } // end register_block_editor_assets
 

@@ -80,16 +80,22 @@ class Pinedu_Form_Cadastre {
    * @return void
    */
   public static function carregar_localizacao( $form_data ) {
-    $form_data = null;
     $dados = [];
     if ( isset( $_POST[ 'form_data' ] ) ) {
       // phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-      $form_data = wp_unslash( $_POST[ 'form_data' ] );
+      $f = wp_unslash( $_POST[ 'form_data' ] );
     }
-    if ( ! empty( $form_data ) ) {
-      parse_str( $form_data, $dados );
+    if ( ! empty( $f ) ) {
+      parse_str( $f, $dados );
     }
-    $tipo_imovel = isset( $dados[ 'tipo-imovel' ] ) ?? $dados[ 'tipo-imovel' ];
+    $tipo_imovel = '';
+    if ( isset( $dados[ 'tipo-imovel' ] ) ) {
+      $tipo_imovel = $dados[ 'tipo-imovel' ];
+    }
+    if ( !empty( $tipo_imovel ) ) {
+      $tipo_imovel = strtoupper( $tipo_imovel );
+    }
+
     set_query_var( 'tipoImovel', $tipo_imovel );
     ob_start( );
     get_template_part( 'template-parts/cadastre/localizacao', 'imovel' );

@@ -60,7 +60,6 @@ wp_localize_script( 'scripts', 'air_light_screenReaderText', [
   /*
    * Instala meus ShortCodes Pinedu
    * */
-  instala_shortcodes( );
 } // end air_light_scripts
 
 /**
@@ -78,11 +77,16 @@ function get_asset_file( $filename ) {
   return "{$filetype}/{$env}/{$filename}";
 } // end get_asset_file
 function instala_shortcodes( ) {
-  add_shortcode( 'barra_pesquisa', 'instala_shortcode_barra_pesquisa' );
+  add_shortcode( 'barra_pesquisa', __NAMESPACE__ . '\instala_shortcode_barra_pesquisa' );
+  add_shortcode( 'financeiras', __NAMESPACE__ . '\instala_shortcode_financeiras' );
 }
 function instala_shortcode_barra_pesquisa( $atts ) {
   require_once get_template_directory( ) . '/inc/classes/PineduShortCodeSearchBar.php';
-  \PineduShortCodeSearchBar::do( $atts );
+  return \PineduShortCodeSearchBar::do( $atts );
+}
+function instala_shortcode_financeiras( $atts ) {
+  require_once get_template_directory( ) . '/inc/classes/PineduShortInstituicaoFinanceira.php';
+  return \PineduShortInstituicaoFinanceira::do( $atts );
 }
 function enqueue_main_assets( ) {
   wp_enqueue_style( 'styles', get_theme_file_uri( get_asset_file( 'global.css' ) ) , array( 'dashicons' ) , filemtime( get_theme_file_path( get_asset_file( 'global.css' ) ) ) );

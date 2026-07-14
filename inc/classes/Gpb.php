@@ -23,6 +23,7 @@ class Gpb extends DoGet {
     $this->token = $options['token'];
   }
   public function localizacao( $tipoImovel = 1 ) {
+    error_log('TipoImovel:', print_r($tipoImovel));
     return $this->do_get( $this->token, $this->url, self::ENDPOINT . 'localizacao', [ 'tipoImovel' => $tipoImovel ] );
   }
   public function estados( $estado = '' ) {
