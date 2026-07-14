@@ -84,6 +84,7 @@ add_action( 'after_setup_theme', function( ) {
      */
     'menu_locations'   => [
       'primary'   => __( 'Primary Menu', 'air-light' ),
+      'footer'    => __( 'Menu do Rodapé', 'air-light' ),
     ],
 
     /**
