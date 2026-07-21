@@ -333,7 +333,9 @@ class Promocoes extends Pinedu_Base implements PineduPostType {
   public function setContrato( $contrato ): void {
     $this->contrato = $contrato;
   }
-
+  /*
+  Esta função
+  */
   public function get_top_tipo_imovel( $limit = 3 ) {
     global $wpdb;
 
