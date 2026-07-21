@@ -20,11 +20,22 @@ const uniqueSelectors = require('postcss-unique-selectors');
 const zIndex = require('postcss-zindex');
 const config = require('../config.js');
 
-// ALTERAÇÃO 1: Importe o plugin de renomear
+// Plugins adicionais para manipular o arquivo final
 const rename = require('gulp-rename');
+const header = require('gulp-header'); // <- Plugin novo aqui!
+
+// Cabeçalho obrigatório do WordPress
+const wpHeader = `/*
+Theme Name: Pinedu Imovel Theme
+Description: Tema base para imóveis
+Author: Eduardo Pinheiro da Silva
+Version: 1.0.0
+Text Domain: pinedu-imovel-theme
+*/
+`;
 
 function devstyles() {
-  return src(config.styles.src) // Mantém a origem vinda do config.js[cite: 3]
+  return src(config.styles.src)
     .pipe(bs.stream())
     .pipe(sourcemaps.init())
     .pipe(sass.sync(config.styles.opts.development))
@@ -43,11 +54,14 @@ function devstyles() {
     ]))
     .pipe(sourcemaps.write())
 
-    // ALTERAÇÃO 2: Renomeia o arquivo gerado para "style.css"
+    // 1. Renomeia para style.css
     .pipe(rename('style.css'))
 
-    // ALTERAÇÃO 3: Muda o destino final para a raiz do tema ('./') em vez do caminho que estava no config[cite: 3]
-    .pipe(dest('./'))
+    // 2. Injeta o cabeçalho no topo do arquivo (escapando do minificador)
+    .pipe(header(wpHeader))
+
+    // 3. Salva na raiz do tema
+    .pipe(dest('./'));
 }
 
 exports.devstyles = devstyles;

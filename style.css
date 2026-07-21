@@ -1,3 +1,10 @@
+/*
+Theme Name: Pinedu Imovel Theme
+Description: Tema base para imóveis
+Author: Eduardo Pinheiro da Silva
+Version: 1.0.0
+Text Domain: pinedu-imovel-theme
+*/
 *,*::after,*::before,html {
   /* autoprefixer: ignore next */
   box-sizing: border-box;
