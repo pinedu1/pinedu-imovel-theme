@@ -20,8 +20,11 @@ const uniqueSelectors = require('postcss-unique-selectors');
 const zIndex = require('postcss-zindex');
 const config = require('../config.js');
 
+// ALTERAÇÃO 1: Importe o plugin de renomear
+const rename = require('gulp-rename');
+
 function devstyles() {
-  return src(config.styles.src)
+  return src(config.styles.src) // Mantém a origem vinda do config.js[cite: 3]
     .pipe(bs.stream())
     .pipe(sourcemaps.init())
     .pipe(sass.sync(config.styles.opts.development))
@@ -39,7 +42,12 @@ function devstyles() {
       uniqueSelectors()
     ]))
     .pipe(sourcemaps.write())
-    .pipe(dest(config.styles.development))
+
+    // ALTERAÇÃO 2: Renomeia o arquivo gerado para "style.css"
+    .pipe(rename('style.css'))
+
+    // ALTERAÇÃO 3: Muda o destino final para a raiz do tema ('./') em vez do caminho que estava no config[cite: 3]
+    .pipe(dest('./'))
 }
 
 exports.devstyles = devstyles;
